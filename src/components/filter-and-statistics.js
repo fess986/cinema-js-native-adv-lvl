@@ -1,4 +1,6 @@
 
+import {createNewElement} from '../utils';
+
 const filterItem = (filter, isActive) => {
   const {name, count} = filter;
   return (
@@ -23,4 +25,26 @@ export const createFilterAndStatistics = (filters) => {
       </nav>`
   );
 };
+
+export class FilterAndStatisticsComponent {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterAndStatistics(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 

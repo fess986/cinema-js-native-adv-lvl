@@ -1,9 +1,13 @@
+import { render } from './utils';
 import {addElement} from './add-elements';
 import {createRankUser} from './components/rank-user';
-import {createFilterAndStatistics} from './components/filter-and-statistics';
+import {createFilterAndStatistics, FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {createSorting} from './components/sorting';
+import {createFilmsContainer} from './components/films-container';
 import {createFilmArticle} from './components/film-article';
 import {createShowMoreButton} from './components/show-more-button';
+import {createTopFilmsContainer} from './components/top-reated-films-container';
+import {createMostCommendedFilmsContainer} from './components/most-commended-films';
 import {createStatistics} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {sortDataMock} from './mock/sorting-mock';
@@ -11,29 +15,21 @@ import {filmArticleDataMock, generateFilms} from './mock/film-articles-mock';
 // import { createUserStats } from './components/user-stats';
 // import {createPopup} from './components/popup/popup';
 
-// console.log(filmArticleDataMock());
-// console.log(generateFilms(5));
-
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
 addElement(rankUserContainer, createRankUser());
-addElement(mainContainer, createFilterAndStatistics(filtersDataMock()), `afterbegin`);
+// addElement(mainContainer, createFilterAndStatistics(filtersDataMock()), `afterbegin`);
+render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()).getElement());
 addElement(mainContainer, createSorting(sortDataMock));
 
 // контейнер для секции "фильмы"
-const filmsContainer = document.createElement(`section`);
-filmsContainer.className = `films`;
-filmsContainer.innerHTML = `
-<section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-      <div class="films-list__container">
-      </div>`;
+addElement(mainContainer, createFilmsContainer());
 
-mainContainer.append(filmsContainer);
-const articleFilmsContainer = filmsContainer.querySelector(`.films-list__container`); // добавляем контейнер непосредственно для карточек фильмов
+const filmsContainer = mainContainer.querySelector(`.films`);
+const articleFilmsContainer = mainContainer.querySelector(`.films-list__container`); // добавляем контейнер непосредственно для карточек фильмов
 
 const TOTAL_FILMS = 20;
 const SHOWN_FILMS = 5;
@@ -62,29 +58,20 @@ moreButton.addEventListener(`click`, () => {
 });
 
 // добавляем топ-рейтинг фильмы
-const topRatedFilms = document.createElement(`section`);
-topRatedFilms.className = `films-list--extra`;
-topRatedFilms.innerHTML = `<h2 class="films-list__title">Top rated</h2>
-<div class="films-list__container"> </div>`;
-
-filmsContainer.append(topRatedFilms);
-const topListFilmsArticles = topRatedFilms.querySelector(`.films-list__container`);
+addElement(filmsContainer, createTopFilmsContainer());
+const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1];  // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
-  addElement(topListFilmsArticles, createFilmArticle(filmArticleDataMock()));
+  addElement(topFilmsContainer, createFilmArticle(filmArticleDataMock()));
 }
 
-// добавляем рейтинг самых просматриваемых фильмов
-const mostCommendedFilms = document.createElement(`section`);
-mostCommendedFilms.className = `films-list--extra`;
-mostCommendedFilms.innerHTML = `<h2 class="films-list__title">Most commented</h2>
-<div class="films-list__container"> </div>`;
-
-filmsContainer.append(mostCommendedFilms);
-const mostCommendedFilmsArticles = mostCommendedFilms.querySelector(`.films-list__container`);
+// добавляем самые комментируемые фильмы
+addElement(filmsContainer, createMostCommendedFilmsContainer());
+const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
+console.log(mostCommentedFilmsContainer);
 
 for (let i = 0; i < 2; i++) {
-  addElement(mostCommendedFilmsArticles, createFilmArticle(filmArticleDataMock()));
+  addElement(mostCommentedFilmsContainer, createFilmArticle(filmArticleDataMock()));
 }
 
 // добавление статистики пользователя по необходимости
@@ -94,3 +81,4 @@ addElement(footerContainer, createStatistics());
 
 // добавление попапа по необходимости
 // addElement(footerContainer, createPopup(films[0]), `afterEnd`);
+
