@@ -1,3 +1,5 @@
+import {createNewElement} from "../../utils";
+
 const createComment = (comments) => {
   const watchingDate = new Date(Date.parse(comments.date));
   const fullWatchingDate = `${watchingDate.getFullYear()}/${watchingDate.getMonth() + 1}/${watchingDate.getDate()} ${watchingDate.getHours()}:${watchingDate.getMinutes()}`;
@@ -26,4 +28,52 @@ export const createComments = (comments) => {
   }
   return allComents;
 };
+
+export class CommentComponent {
+  constructor(comment) {
+    this._comment = comment;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createComment(this._comment);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+// export class CommentsComponent {
+//   constructor(comments) {
+//     this._comments = comments;
+//     this._element = null;
+//   }
+
+//   getTemplate() {
+//     return createComments(this._comments);
+//   }
+
+//   getElement() {
+//     if (!this._element) {
+//       this._element = this.getTemplate();
+//       console.log(this._element)
+//       //this._element = createNewElement(elem);
+//     }
+//     return this._element.lastChild;
+//   }
+
+//   removeElement() {
+//     this._element = null;
+//   }
+// }
+
+
 

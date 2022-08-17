@@ -13,5 +13,8 @@ export const render = (container, element, place = `beforeend`) => {
     case `afterbegin`:
       container.prepend(element);
       break;
+    case `afterend`:
+      container.after(element);
+      break;
   }
 };

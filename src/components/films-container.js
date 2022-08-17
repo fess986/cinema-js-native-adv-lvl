@@ -1,6 +1,8 @@
-export const createFilmsContainer = () => {
+import {createNewElement} from "../utils";
+
+const createFilmsContainer = () => {
   return (
-    `<section class="films">
+    `<section class="films" >
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
@@ -9,3 +11,25 @@ export const createFilmsContainer = () => {
       </section>`
   );
 };
+
+export class FilmsContainerComponent {
+  constructor() {
+    this._containerTemplate = null;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmsContainer();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

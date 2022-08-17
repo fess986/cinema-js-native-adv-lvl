@@ -1,6 +1,8 @@
-export const createUserStats = () => {
-  return(
-  `<section class="statistic">
+import {createNewElement} from "../utils";
+
+const createUserStats = () => {
+  return (
+    `<section class="statistic">
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -47,3 +49,25 @@ export const createUserStats = () => {
 
 </section>`);
 };
+
+export class UserStatsComponent {
+  constructor() {
+    this._filters = null;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserStats(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

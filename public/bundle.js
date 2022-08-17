@@ -2,26 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/add-elements.js":
-/*!*****************************!*\
-  !*** ./src/add-elements.js ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "addElement": () => (/* binding */ addElement)
-/* harmony export */ });
-// универсальная функция по добавлению элементов в вёрстку
-const addElement = function (container, element, where = `beforeend`) {
-  container.insertAdjacentHTML(where, element);
-};
-
-
-
-
-/***/ }),
-
 /***/ "./src/components/film-article.js":
 /*!****************************************!*\
   !*** ./src/components/film-article.js ***!
@@ -30,8 +10,11 @@ const addElement = function (container, element, where = `beforeend`) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createFilmArticle": () => (/* binding */ createFilmArticle)
+/* harmony export */   "FilmArticleComponent": () => (/* binding */ FilmArticleComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
 const createFilmArticle = (filmArticle) => {
 
   const {title, rating, year, runTime, genre, img, description, comments, userDetails} = filmArticle;
@@ -60,6 +43,78 @@ const createFilmArticle = (filmArticle) => {
   );
 };
 
+class FilmArticleComponent {
+  constructor(filmArticle) {
+    this._article = filmArticle;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmArticle(this._article);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/components/films-container.js":
+/*!*******************************************!*\
+  !*** ./src/components/films-container.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FilmsContainerComponent": () => (/* binding */ FilmsContainerComponent)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
+const createFilmsContainer = () => {
+  return (
+    `<section class="films">
+    <section class="films-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+
+      <div class="films-list__container">
+      </div>
+      </section>`
+  );
+};
+
+class FilmsContainerComponent {
+  constructor() {
+    this._containerTemplate = null;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmsContainer();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
 
 /***/ }),
 
@@ -71,18 +126,20 @@ const createFilmArticle = (filmArticle) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createFilterAndStatistics": () => (/* binding */ createFilterAndStatistics)
+/* harmony export */   "FilterAndStatisticsComponent": () => (/* binding */ FilterAndStatisticsComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 
+
+// создаем шаблон одного пункта меню
 const filterItem = (filter, isActive) => {
   const {name, count} = filter;
   return (
     `<a href="#watchlist" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">${name} ${count !== 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
   );
 };
+
 // создаем шаблон элемента "Меню (фильтры и статистика)"
-
-
 const createFilterAndStatistics = (filters) => {
   const textData = filters.map((item, index) => {
     return filterItem(item, index === 0);
@@ -99,6 +156,78 @@ const createFilterAndStatistics = (filters) => {
   );
 };
 
+class FilterAndStatisticsComponent {
+  constructor(filters) {
+    this._filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterAndStatistics(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+
+/***/ }),
+
+/***/ "./src/components/most-commended-films.js":
+/*!************************************************!*\
+  !*** ./src/components/most-commended-films.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MostCommendedFilmsContainerComponent": () => (/* binding */ MostCommendedFilmsContainerComponent),
+/* harmony export */   "createMostCommendedFilmsContainer": () => (/* binding */ createMostCommendedFilmsContainer)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
+const createMostCommendedFilmsContainer = () => {
+  return (
+    `<section class="films-list--extra">
+    <h2 id="ass1" class="films-list__title" >Most commented</h2>
+
+    <div class="films-list__container" id='mostCommentedFilmsContainer' >
+    </div>
+    </section>`
+
+  );
+};
+
+class MostCommendedFilmsContainerComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMostCommendedFilmsContainer();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -111,9 +240,12 @@ const createFilterAndStatistics = (filters) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createRankUser": () => (/* binding */ createRankUser)
+/* harmony export */   "RankUserComponent": () => (/* binding */ RankUserComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
 // создаем шаблон элемента "Звание пользователя"
+
+
 const createRankUser = () => {
   return (
     `<section class="header__profile profile">
@@ -122,6 +254,27 @@ const createRankUser = () => {
   </section>`
   );
 };
+
+class RankUserComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRankUser();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -134,13 +287,37 @@ const createRankUser = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createShowMoreButton": () => (/* binding */ createShowMoreButton)
+/* harmony export */   "ShowMoreButtonComponent": () => (/* binding */ ShowMoreButtonComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
 const createShowMoreButton = () => {
   return (
     `<button class="films-list__show-more">Show more</button>`
   );
 };
+
+class ShowMoreButtonComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createShowMoreButton();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -153,8 +330,11 @@ const createShowMoreButton = () => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createSorting": () => (/* binding */ createSorting)
+/* harmony export */   "SortingComponent": () => (/* binding */ SortingComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
 const sortItem = (name, isActive) => {
   return (
     `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a></li>
@@ -174,6 +354,28 @@ const createSorting = (data) => {
   );
 };
 
+class SortingComponent {
+  constructor(data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSorting(this._data);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
 
 /***/ }),
 
@@ -185,8 +387,11 @@ const createSorting = (data) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createStatistics": () => (/* binding */ createStatistics)
+/* harmony export */   "StatisticsComponent": () => (/* binding */ StatisticsComponent)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
 const createStatistics = () => {
   return (
     `<section class="footer__statistics">
@@ -194,6 +399,75 @@ const createStatistics = () => {
   </section>`
   );
 };
+
+class StatisticsComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatistics();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+/***/ }),
+
+/***/ "./src/components/top-reated-films-container.js":
+/*!******************************************************!*\
+  !*** ./src/components/top-reated-films-container.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TopFilmsContainerComponent": () => (/* binding */ TopFilmsContainerComponent)
+/* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.js");
+
+
+const createTopFilmsContainer = () => {
+  return (
+    `<section class="films-list--extra">
+    <h2 class="films-list__title">Top rated</h2>
+
+    <div class="films-list__container">
+    </div>
+    </section>`
+  );
+};
+
+class TopFilmsContainerComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTopFilmsContainer();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.createNewElement)(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 
 
 /***/ }),
@@ -414,6 +688,41 @@ Sort by rating`];
 
 
 
+/***/ }),
+
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createNewElement": () => (/* binding */ createNewElement),
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+// создаем полноценный ДОМ-элемент из строки
+const createNewElement = (templateString) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = templateString;
+  return newElement.firstChild;
+};
+
+const render = (container, element, place = `beforeend`) => {
+  switch (place) {
+    case `beforeend`:
+      container.append(element);
+      break;
+    case `afterbegin`:
+      container.prepend(element);
+      break;
+    case `afterend`:
+      container.after(element);
+      break;
+  }
+};
+
+
 /***/ })
 
 /******/ 	});
@@ -479,16 +788,19 @@ var __webpack_exports__ = {};
   !*** ./src/main.js ***!
   \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _add_elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add-elements */ "./src/add-elements.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
 /* harmony import */ var _components_rank_user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/rank-user */ "./src/components/rank-user.js");
 /* harmony import */ var _components_filter_and_statistics__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/filter-and-statistics */ "./src/components/filter-and-statistics.js");
 /* harmony import */ var _components_sorting__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/sorting */ "./src/components/sorting.js");
-/* harmony import */ var _components_film_article__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/film-article */ "./src/components/film-article.js");
-/* harmony import */ var _components_show_more_button__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/show-more-button */ "./src/components/show-more-button.js");
-/* harmony import */ var _components_statistics__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/statistics */ "./src/components/statistics.js");
-/* harmony import */ var _mock_filter_and_statistics_mok__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./mock/filter-and-statistics-mok */ "./src/mock/filter-and-statistics-mok.js");
-/* harmony import */ var _mock_sorting_mock__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./mock/sorting-mock */ "./src/mock/sorting-mock.js");
-/* harmony import */ var _mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./mock/film-articles-mock */ "./src/mock/film-articles-mock.js");
+/* harmony import */ var _components_films_container__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/films-container */ "./src/components/films-container.js");
+/* harmony import */ var _components_film_article__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/film-article */ "./src/components/film-article.js");
+/* harmony import */ var _components_show_more_button__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/show-more-button */ "./src/components/show-more-button.js");
+/* harmony import */ var _components_top_reated_films_container__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/top-reated-films-container */ "./src/components/top-reated-films-container.js");
+/* harmony import */ var _components_most_commended_films__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/most-commended-films */ "./src/components/most-commended-films.js");
+/* harmony import */ var _components_statistics__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/statistics */ "./src/components/statistics.js");
+/* harmony import */ var _mock_filter_and_statistics_mok__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./mock/filter-and-statistics-mok */ "./src/mock/filter-and-statistics-mok.js");
+/* harmony import */ var _mock_sorting_mock__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mock/sorting-mock */ "./src/mock/sorting-mock.js");
+/* harmony import */ var _mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./mock/film-articles-mock */ "./src/mock/film-articles-mock.js");
 
 
 
@@ -499,52 +811,48 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { createUserStats } from './components/user-stats';
-// import {createPopup} from './components/popup/popup';
 
-// console.log(filmArticleDataMock());
-// console.log(generateFilms(5));
+
+
+// import {UserStatsComponent} from './components/user-stats';
+// import {PopupComponent} from './components/popup/popup';
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
-(0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(rankUserContainer, (0,_components_rank_user__WEBPACK_IMPORTED_MODULE_1__.createRankUser)());
-(0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(mainContainer, (0,_components_filter_and_statistics__WEBPACK_IMPORTED_MODULE_2__.createFilterAndStatistics)((0,_mock_filter_and_statistics_mok__WEBPACK_IMPORTED_MODULE_7__.filtersDataMock)()), `afterbegin`);
-(0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(mainContainer, (0,_components_sorting__WEBPACK_IMPORTED_MODULE_3__.createSorting)(_mock_sorting_mock__WEBPACK_IMPORTED_MODULE_8__.sortDataMock));
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(rankUserContainer, new _components_rank_user__WEBPACK_IMPORTED_MODULE_1__.RankUserComponent().getElement());
+// addElement(mainContainer, createFilterAndStatistics(filtersDataMock()), `afterbegin`);
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(mainContainer, new _components_filter_and_statistics__WEBPACK_IMPORTED_MODULE_2__.FilterAndStatisticsComponent((0,_mock_filter_and_statistics_mok__WEBPACK_IMPORTED_MODULE_10__.filtersDataMock)()).getElement());
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(mainContainer, new _components_sorting__WEBPACK_IMPORTED_MODULE_3__.SortingComponent(_mock_sorting_mock__WEBPACK_IMPORTED_MODULE_11__.sortDataMock).getElement());
 
 // контейнер для секции "фильмы"
-const filmsContainer = document.createElement(`section`);
-filmsContainer.className = `films`;
-filmsContainer.innerHTML = `
-<section class="films-list">
-      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-      <div class="films-list__container">
-      </div>`;
 
-mainContainer.append(filmsContainer);
-const articleFilmsContainer = filmsContainer.querySelector(`.films-list__container`); // добавляем контейнер непосредственно для карточек фильмов
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(mainContainer, new _components_films_container__WEBPACK_IMPORTED_MODULE_4__.FilmsContainerComponent().getElement());
+
+const filmsContainer = mainContainer.querySelector(`.films`);
+const articleFilmsContainer = mainContainer.querySelector(`.films-list__container`); // добавляем контейнер непосредственно для карточек фильмов
 
 const TOTAL_FILMS = 20;
 const SHOWN_FILMS = 5;
 const ADD_FILMS = 5;
 
-const films = (0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_9__.generateFilms)(TOTAL_FILMS);
+const films = (0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_12__.generateFilms)(TOTAL_FILMS);
 
 films.slice(0, SHOWN_FILMS).forEach((item) => {
-  (0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(articleFilmsContainer, (0,_components_film_article__WEBPACK_IMPORTED_MODULE_4__.createFilmArticle)(item));
+  (0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(articleFilmsContainer, new _components_film_article__WEBPACK_IMPORTED_MODULE_5__.FilmArticleComponent(item).getElement());
 });
 
 // добавляем кнопку "показать больше фильмов"
-(0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(articleFilmsContainer, (0,_components_show_more_button__WEBPACK_IMPORTED_MODULE_5__.createShowMoreButton)(), `afterEnd`);
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(articleFilmsContainer, new _components_show_more_button__WEBPACK_IMPORTED_MODULE_6__.ShowMoreButtonComponent().getElement(), `afterend`);
 const moreButton = mainContainer.querySelector(`.films-list__show-more`);
 let prevFilms = SHOWN_FILMS;
 
 moreButton.addEventListener(`click`, () => {
   let currentFilms = prevFilms + ADD_FILMS;
   films.slice(prevFilms, currentFilms).forEach((item) => {
-    (0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(articleFilmsContainer, (0,_components_film_article__WEBPACK_IMPORTED_MODULE_4__.createFilmArticle)(item));
+    (0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(articleFilmsContainer, new _components_film_article__WEBPACK_IMPORTED_MODULE_5__.FilmArticleComponent(item).getElement());
   });
   prevFilms = currentFilms;
   if (currentFilms >= TOTAL_FILMS) {
@@ -553,38 +861,29 @@ moreButton.addEventListener(`click`, () => {
 });
 
 // добавляем топ-рейтинг фильмы
-const topRatedFilms = document.createElement(`section`);
-topRatedFilms.className = `films-list--extra`;
-topRatedFilms.innerHTML = `<h2 class="films-list__title">Top rated</h2>
-<div class="films-list__container"> </div>`;
-
-filmsContainer.append(topRatedFilms);
-const topListFilmsArticles = topRatedFilms.querySelector(`.films-list__container`);
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(filmsContainer, new _components_top_reated_films_container__WEBPACK_IMPORTED_MODULE_7__.TopFilmsContainerComponent().getElement());
+const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1];  // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
-  (0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(topListFilmsArticles, (0,_components_film_article__WEBPACK_IMPORTED_MODULE_4__.createFilmArticle)((0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_9__.filmArticleDataMock)()));
+  (0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(topFilmsContainer, new _components_film_article__WEBPACK_IMPORTED_MODULE_5__.FilmArticleComponent((0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_12__.filmArticleDataMock)()).getElement());
 }
 
-// добавляем рейтинг самых просматриваемых фильмов
-const mostCommendedFilms = document.createElement(`section`);
-mostCommendedFilms.className = `films-list--extra`;
-mostCommendedFilms.innerHTML = `<h2 class="films-list__title">Most commented</h2>
-<div class="films-list__container"> </div>`;
-
-filmsContainer.append(mostCommendedFilms);
-const mostCommendedFilmsArticles = mostCommendedFilms.querySelector(`.films-list__container`);
+// добавляем самые комментируемые фильмы
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(filmsContainer, new _components_most_commended_films__WEBPACK_IMPORTED_MODULE_8__.MostCommendedFilmsContainerComponent().getElement());
+const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
 for (let i = 0; i < 2; i++) {
-  (0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(mostCommendedFilmsArticles, (0,_components_film_article__WEBPACK_IMPORTED_MODULE_4__.createFilmArticle)((0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_9__.filmArticleDataMock)()));
+  (0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(mostCommentedFilmsContainer, new _components_film_article__WEBPACK_IMPORTED_MODULE_5__.FilmArticleComponent((0,_mock_film_articles_mock__WEBPACK_IMPORTED_MODULE_12__.filmArticleDataMock)()).getElement());
 }
 
 // добавление статистики пользователя по необходимости
-// addElement(mainContainer, createUserStats());
+// render(mainContainer, new UserStatsComponent().getElement());
 
-(0,_add_elements__WEBPACK_IMPORTED_MODULE_0__.addElement)(footerContainer, (0,_components_statistics__WEBPACK_IMPORTED_MODULE_6__.createStatistics)());
+(0,_utils__WEBPACK_IMPORTED_MODULE_0__.render)(footerContainer, new _components_statistics__WEBPACK_IMPORTED_MODULE_9__.StatisticsComponent().getElement());
 
 // добавление попапа по необходимости
-// addElement(footerContainer, createPopup(films[0]), `afterEnd`);
+//render(footerContainer, new PopupComponent(films[0]).getElement(), `afterend`);
+
 
 })();
 

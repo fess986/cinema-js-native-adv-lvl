@@ -1,3 +1,5 @@
+import {createNewElement} from '../utils';
+
 export const createMostCommendedFilmsContainer = () => {
   return (
     `<section class="films-list--extra">
@@ -9,3 +11,24 @@ export const createMostCommendedFilmsContainer = () => {
 
   );
 };
+
+export class MostCommendedFilmsContainerComponent {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMostCommendedFilmsContainer();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
