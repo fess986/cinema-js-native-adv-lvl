@@ -1,20 +1,23 @@
 import {createNewElement} from "../utils";
 
-const createStatistics = () => {
+const createTopFilmsContainer = () => {
   return (
-    `<section class="footer__statistics">
-    <p>130 291 movies inside</p>
-  </section>`
+    `<section class="films-list--extra">
+    <h2 class="films-list__title">Top rated</h2>
+
+    <div class="films-list__container">
+    </div>
+    </section>`
   );
 };
 
-export class StatisticsComponent {
+export class TopFilmsContainerComponent {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createStatistics();
+    return createTopFilmsContainer();
   }
 
   getElement() {

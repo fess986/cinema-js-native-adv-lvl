@@ -1,4 +1,6 @@
-export const createFilmArticle = (filmArticle) => {
+import {createNewElement} from "../utils";
+
+const createFilmArticle = (filmArticle) => {
 
   const {title, rating, year, runTime, genre, img, description, comments, userDetails} = filmArticle;
 
@@ -25,3 +27,25 @@ export const createFilmArticle = (filmArticle) => {
       </article>`
   );
 };
+
+export class FilmArticleComponent {
+  constructor(filmArticle) {
+    this._article = filmArticle;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmArticle(this._article);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

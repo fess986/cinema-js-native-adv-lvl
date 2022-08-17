@@ -1,5 +1,6 @@
 import {createComments} from "./comments";
 import {MONTH} from "../../const/const";
+import {createNewElement} from "../../utils";
 
 export const createPopup = (filmArticle) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
@@ -95,7 +96,7 @@ export const createPopup = (filmArticle) => {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
           <ul class="film-details__comments-list">
-            ${createComments(comments)}
+
           </ul>
 
           <div class="film-details__new-comment">
@@ -133,3 +134,26 @@ export const createPopup = (filmArticle) => {
   </section>`
   );
 };
+
+export class PopupComponent {
+  constructor(filmArticle) {
+    this._filmArticle = filmArticle;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopup(this._filmArticle);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createNewElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+    this._filmArticle = null;
+  }
+}
