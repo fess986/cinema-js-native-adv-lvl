@@ -36,8 +36,14 @@ let prevFilms = SHOWN_FILMS;
 const filmsBoard = new FilmsContainerComponent();
 const articleFilmsContainer = filmsBoard.getElement().querySelector(`.films-list__container`);
 const filmsContainer = filmsBoard.getElement();
-console.log(filmsBoard.getElement());
 
+articleFilmsContainer.addEventListener(`click`, (evt) => {
+  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
+    const thisFilm = evt.target.parentElement.dataset.id;
+    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+    renderPopup(targetFilm);
+  }
+});
 
 const renderFilms = () => {
   films.slice(0, SHOWN_FILMS).forEach((item) => {
@@ -75,16 +81,32 @@ render(filmsContainer, new TopFilmsContainerComponent().getElement());
 const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1]; // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
-  render(topFilmsContainer, new FilmArticleComponent(filmArticleDataMock()).getElement());
+  render(topFilmsContainer, new FilmArticleComponent(films[i]).getElement());
 }
+
+topFilmsContainer.addEventListener(`click`, (evt) => {
+  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
+    const thisFilm = evt.target.parentElement.dataset.id;
+    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+    renderPopup(targetFilm);
+  }
+});
 
 // добавляем самые комментируемые фильмы
 render(filmsContainer, new MostCommendedFilmsContainerComponent().getElement());
 const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
 for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainer, new FilmArticleComponent(filmArticleDataMock()).getElement());
+  render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]).getElement());
 }
+
+mostCommentedFilmsContainer.addEventListener(`click`, (evt) => {
+  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
+    const thisFilm = evt.target.parentElement.dataset.id;
+    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+    renderPopup(targetFilm);
+  }
+});
 
 // добавление статистики пользователя по необходимости
 // render(mainContainer, new UserStatsComponent().getElement());
@@ -102,36 +124,38 @@ const renderComments = (commentsContainer, comments) => {
 };
 
 
-const renderPopup = () => {
+const renderPopup = (film) => {
 
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
-  console.log(document.body.clientWidth);
-  const popupComponent = new PopupComponent(films[0]);
-  render(footerContainer, popupComponent.getElement(), `afterend`);
-
-  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
-  renderComments(commentsContainer, films[0].comments);
-
-  // popupComponent.getElement().hidden = true;
 
   const unRenderPopup = () => {
     popupComponent.getElement().remove();
     popupComponent.removeElement();
   };
 
+  const popupComponent = new PopupComponent(film);
+  render(footerContainer, popupComponent.getElement(), `afterend`);
+
+  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
+  renderComments(commentsContainer, film.comments);
+
+  // popupComponent.getElement().hidden = true;
+
   const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
-  console.log(closePopup);
 
   closePopup.addEventListener(`click`, () => {
     document.body.style.overflowY = `auto`; // возвращаем прокрутку
     unRenderPopup();
-
   });
 
-  // unRenderPopup();
+  const closePopupWidthKeybord = (evt) => {
+    if (evt.code === `Escape`) {
+      document.body.style.overflowY = `auto`; // возвращаем прокрутку
+      unRenderPopup();
+      document.removeEventListener(`keydown`, closePopupWidthKeybord);
+    }
+  };
+
+  document.addEventListener(`keydown`, closePopupWidthKeybord);
 };
-
-
-renderPopup();
-
 

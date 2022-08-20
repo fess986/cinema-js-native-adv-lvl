@@ -2,13 +2,13 @@ import {createNewElement} from "../utils";
 
 const createFilmArticle = (filmArticle) => {
 
-  const {title, rating, year, runTime, genre, img, description, comments, userDetails} = filmArticle;
+  const {title, rating, year, runTime, genre, img, description, comments, userDetails, id} = filmArticle;
 
   const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
   const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
 
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-id = '${id}'>
         <h3 class="film-card__title">${title}</h3>
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
