@@ -1,4 +1,4 @@
-import {render} from './components/utils/render';
+import {render, remove} from './components/utils/render';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
@@ -72,7 +72,7 @@ moreButton.addEventListener(`click`, () => {
   });
   prevFilms = currentFilms;
   if (currentFilms >= TOTAL_FILMS) {
-    moreButton.remove();
+    remove(moreButton);
   }
 });
 
@@ -129,7 +129,7 @@ const renderPopup = (film) => {
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
   const unRenderPopup = () => {
-    popupComponent.getElement().remove();
+    remove(popupComponent.getElement());
     popupComponent.removeElement();
   };
 
