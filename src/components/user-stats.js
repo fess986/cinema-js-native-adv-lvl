@@ -1,4 +1,4 @@
-import {createNewElement} from "../utils";
+import {AbstractComponent} from "./abstract-component";
 
 const createUserStats = () => {
   return (
@@ -50,24 +50,10 @@ const createUserStats = () => {
 </section>`);
 };
 
-export class UserStatsComponent {
-  constructor() {
-    this._filters = null;
-    this._element = null;
-  }
+export class UserStatsComponent extends AbstractComponent {
 
   getTemplate() {
     return createUserStats(this._filters);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

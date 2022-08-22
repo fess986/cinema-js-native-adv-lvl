@@ -10,11 +10,10 @@ import {MostCommendedFilmsContainerComponent} from './components/most-commended-
 import {StatisticsComponent} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {sortDataMock} from './mock/sorting-mock';
-import {filmArticleDataMock, generateFilms} from './mock/film-articles-mock';
+import {generateFilms} from './mock/film-articles-mock';
 // import {UserStatsComponent} from './components/user-stats';
 import {PopupComponent} from './components/popup/popup';
 import {CommentComponent} from './components/popup/comments';
-import { AbstractComponent } from './components/abstract-component';
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);

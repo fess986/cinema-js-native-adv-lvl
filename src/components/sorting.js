@@ -1,4 +1,4 @@
-import {createNewElement} from '../utils';
+import {AbstractComponent} from './abstract-component';
 
 const sortItem = (name, isActive) => {
   return (
@@ -19,24 +19,14 @@ const createSorting = (data) => {
   );
 };
 
-export class SortingComponent {
+export class SortingComponent extends AbstractComponent {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createSorting(this._data);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

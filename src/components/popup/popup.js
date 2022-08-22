@@ -1,17 +1,11 @@
-import {createComments} from "./comments";
 import {MONTH} from "../../const/const";
-import {createNewElement} from "../../utils";
+import {AbstractComponent} from "../abstract-component";
 
 export const createPopup = (filmArticle) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
 
   const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
   const releaseFullDate = `${releaseDate.getDate()} ${MONTH[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
-
-  // const watchingDate = new Date(Date.parse(userDetails.watchingDate));
-  // const fullWatchingDate = `${watchingDate.getFullYear()}/${watchingDate.getMonth() + 1}/${watchingDate.getDate()} ${watchingDate.getHours()}:${watchingDate.getMinutes()}`;
-  // console.log(watchingDate);
-  // console.log(fullWatchingDate);
 
   const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
 
@@ -135,25 +129,13 @@ export const createPopup = (filmArticle) => {
   );
 };
 
-export class PopupComponent {
+export class PopupComponent extends AbstractComponent {
   constructor(filmArticle) {
+    super();
     this._filmArticle = filmArticle;
-    this._element = null;
   }
 
   getTemplate() {
     return createPopup(this._filmArticle);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-    this._filmArticle = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createNewElement} from "../utils";
+import {AbstractComponent} from "./abstract-component";
 
 const createTopFilmsContainer = () => {
   return (
@@ -11,23 +11,10 @@ const createTopFilmsContainer = () => {
   );
 };
 
-export class TopFilmsContainerComponent {
-  constructor() {
-    this._element = null;
-  }
+export class TopFilmsContainerComponent extends AbstractComponent {
 
   getTemplate() {
     return createTopFilmsContainer();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
