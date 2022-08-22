@@ -1,5 +1,5 @@
 import {render, remove} from './components/utils/render';
-import {FilmBoardController} from './controlers/film-board-controler';
+// import {FilmBoardController} from './controlers/film-board-controler';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
@@ -32,25 +32,40 @@ const ADD_FILMS = 5;
 const films = generateFilms(TOTAL_FILMS);
 let prevFilms = SHOWN_FILMS;
 
+// класс рендербоад
+
+class FilmBoardController {
+
+  constructor(container) {
+    this._container = container;
+  }
+
+  render(filmsForBoard) {
+    renderBoard(this._container, filmsForBoard);
+  }
+
+}
+
 // контейнер для секции "фильмы"
 const filmsBoard = new FilmsContainerComponent();
 const boardController = new FilmBoardController(filmsBoard.getElement());
 
-const renderBoard = (filmsBoardComponent) => {
-  const articleFilmsContainer = filmsBoard.getElement().querySelector(`.films-list__container`);
+const renderBoard = (container, filmsForBoard) => {
+  const articleFilmsContainer = container.querySelector(`.films-list__container`);
+
   filmsBoard.setClickHandler((evt) => {
     if (event.defaultPrevented) {
       return;
     }
     if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
       const thisFilm = evt.target.parentElement.dataset.id;
-      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+      const targetFilm = filmsForBoard.find((item) => item.id.toString() === thisFilm);
       renderPopup(targetFilm);
     }
   });
 
   const renderFilms = () => {
-    films.slice(0, SHOWN_FILMS).forEach((item) => {
+    filmsForBoard.slice(0, SHOWN_FILMS).forEach((item) => {
       render(articleFilmsContainer, new FilmArticleComponent(item));
     });
   };
@@ -59,11 +74,9 @@ const renderBoard = (filmsBoardComponent) => {
   const moreButton = new ShowMoreButtonComponent();
   render(articleFilmsContainer, moreButton, `afterend`);
 
-  // логика добавления фильмов на доску
-
   moreButton.setClickHandler(() => {
     let currentFilms = prevFilms + ADD_FILMS;
-    films.slice(prevFilms, currentFilms).forEach((item) => {
+    filmsForBoard.slice(prevFilms, currentFilms).forEach((item) => {
       render(articleFilmsContainer, new FilmArticleComponent(item));
     });
     prevFilms = currentFilms;
@@ -72,12 +85,16 @@ const renderBoard = (filmsBoardComponent) => {
     }
   });
 
-  render(mainContainer, filmsBoardComponent);
   // добавляем контейнер непосредственно для карточек фильмов
+  render(mainContainer, filmsBoard);
+
   renderFilms();
+
 };
 
-renderBoard(filmsBoard);
+// boardController.render();
+// renderBoard(filmsBoard.getElement(), films);
+boardController.render(films);
 
 // добавляем топ-рейтинг фильмы
 const topFilms = new TopFilmsContainerComponent();
