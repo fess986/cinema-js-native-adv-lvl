@@ -5,7 +5,7 @@ import {SortingComponent} from './components/sorting';
 import {FilmsContainerComponent} from './components/films-container';
 import {FilmArticleComponent} from './components/film-article';
 import {ShowMoreButtonComponent} from './components/show-more-button';
-import {TopFilmsContainerComponent} from './components/top-reated-films-container';
+import {TopFilmsContainerComponent} from './components/top-rated-films-container';
 import {MostCommendedFilmsContainerComponent} from './components/most-commended-films';
 import {StatisticsComponent} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
@@ -21,7 +21,6 @@ const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
 render(rankUserContainer, new RankUserComponent());
-// addElement(mainContainer, createFilterAndStatistics(filtersDataMock()), `afterbegin`);
 render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()));
 render(mainContainer, new SortingComponent(sortDataMock));
 
@@ -37,8 +36,11 @@ const filmsBoard = new FilmsContainerComponent();
 const articleFilmsContainer = filmsBoard.getElement().querySelector(`.films-list__container`);
 const filmsContainer = filmsBoard.getElement();
 
-articleFilmsContainer.addEventListener(`click`, (evt) => {
-  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
+filmsBoard.setClickHandler((evt) => {
+  if (event.defaultPrevented) {
+    return;
+  }
+  if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
     const thisFilm = evt.target.parentElement.dataset.id;
     const targetFilm = films.find((item) => item.id.toString() === thisFilm);
     renderPopup(targetFilm);
@@ -65,7 +67,7 @@ render(articleFilmsContainer, moreButton, `afterend`);
 
 // логика добавления фильмов на доску
 
-moreButton.getElement().addEventListener(`click`, () => {
+moreButton.setClickHandler(() => {
   let currentFilms = prevFilms + ADD_FILMS;
   films.slice(prevFilms, currentFilms).forEach((item) => {
     render(articleFilmsContainer, new FilmArticleComponent(item));
@@ -77,34 +79,44 @@ moreButton.getElement().addEventListener(`click`, () => {
 });
 
 // добавляем топ-рейтинг фильмы
-render(filmsContainer, new TopFilmsContainerComponent());
+const topFilms = new TopFilmsContainerComponent();
+render(filmsContainer, topFilms);
 const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1]; // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
   render(topFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
-topFilmsContainer.addEventListener(`click`, (evt) => {
+topFilms.setClickHandler((evt) => {
+  evt.preventDefault();
   if (evt.target.className === `film-card__poster` || `film-card__comments`) {
     const thisFilm = evt.target.parentElement.dataset.id;
     const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-    renderPopup(targetFilm);
+    if (targetFilm) {
+      renderPopup(targetFilm);
+    }
   }
 });
 
 // добавляем самые комментируемые фильмы
-render(filmsContainer, new MostCommendedFilmsContainerComponent());
+const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
+render(filmsContainer, mostRecomendedFilms);
 const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
 for (let i = 0; i < 2; i++) {
   render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
-mostCommentedFilmsContainer.addEventListener(`click`, (evt) => {
+mostRecomendedFilms.setClickHandler((evt) => {
+  evt.preventDefault();
   if (evt.target.className === `film-card__poster` || `film-card__comments`) {
     const thisFilm = evt.target.parentElement.dataset.id;
     const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-    renderPopup(targetFilm);
+    if (targetFilm) {
+      renderPopup(targetFilm);
+    }
+  } else {
+    return;
   }
 });
 
@@ -130,7 +142,6 @@ const renderPopup = (film) => {
 
   const unRenderPopup = () => {
     remove(popupComponent);
-    // popupComponent.removeElement();
   };
 
   const popupComponent = new PopupComponent(film);

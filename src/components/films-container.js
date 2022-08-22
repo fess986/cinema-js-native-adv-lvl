@@ -18,4 +18,8 @@ export class FilmsContainerComponent extends AbstractComponent {
     return createFilmsContainer();
   }
 
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
+  }
+
 }

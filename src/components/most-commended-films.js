@@ -18,4 +18,8 @@ export class MostCommendedFilmsContainerComponent extends AbstractComponent {
     return createMostCommendedFilmsContainer();
   }
 
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
+  }
+
 }
