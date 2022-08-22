@@ -1,11 +1,11 @@
 import {render, remove} from './components/utils/render';
-// import {FilmBoardController} from './controlers/film-board-controler';
+import {FilmBoardController} from './controlers/film-board-controler';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
 import {FilmsContainerComponent} from './components/films-container';
 import {FilmArticleComponent} from './components/film-article';
-import {ShowMoreButtonComponent} from './components/show-more-button';
+// import {ShowMoreButtonComponent} from './components/show-more-button';
 import {TopFilmsContainerComponent} from './components/top-rated-films-container';
 import {MostCommendedFilmsContainerComponent} from './components/most-commended-films';
 import {StatisticsComponent} from './components/statistics';
@@ -18,7 +18,7 @@ import {CommentComponent} from './components/popup/comments';
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
-const mainContainer = document.querySelector(`.main`);
+export const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
 render(rankUserContainer, new RankUserComponent());
@@ -26,74 +26,15 @@ render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()));
 render(mainContainer, new SortingComponent(sortDataMock));
 
 // константы
-const TOTAL_FILMS = 20;
-const SHOWN_FILMS = 5;
-const ADD_FILMS = 5;
-const films = generateFilms(TOTAL_FILMS);
-let prevFilms = SHOWN_FILMS;
+export const TOTAL_FILMS = 20;
 
-// класс рендербоад
+// генерируем массив фильмов количеством TOTAL_FILMS
+export const films = generateFilms(TOTAL_FILMS);
 
-class FilmBoardController {
-
-  constructor(container) {
-    this._container = container;
-  }
-
-  render(filmsForBoard) {
-    renderBoard(this._container, filmsForBoard);
-  }
-
-}
-
-// контейнер для секции "фильмы"
-const filmsBoard = new FilmsContainerComponent();
+// секция "фильмы"
+export const filmsBoard = new FilmsContainerComponent();
 const boardController = new FilmBoardController(filmsBoard.getElement());
 
-const renderBoard = (container, filmsForBoard) => {
-  const articleFilmsContainer = container.querySelector(`.films-list__container`);
-
-  filmsBoard.setClickHandler((evt) => {
-    if (event.defaultPrevented) {
-      return;
-    }
-    if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
-      const thisFilm = evt.target.parentElement.dataset.id;
-      const targetFilm = filmsForBoard.find((item) => item.id.toString() === thisFilm);
-      renderPopup(targetFilm);
-    }
-  });
-
-  const renderFilms = () => {
-    filmsForBoard.slice(0, SHOWN_FILMS).forEach((item) => {
-      render(articleFilmsContainer, new FilmArticleComponent(item));
-    });
-  };
-
-  // добавляем кнопку "показать больше фильмов"
-  const moreButton = new ShowMoreButtonComponent();
-  render(articleFilmsContainer, moreButton, `afterend`);
-
-  moreButton.setClickHandler(() => {
-    let currentFilms = prevFilms + ADD_FILMS;
-    filmsForBoard.slice(prevFilms, currentFilms).forEach((item) => {
-      render(articleFilmsContainer, new FilmArticleComponent(item));
-    });
-    prevFilms = currentFilms;
-    if (currentFilms >= TOTAL_FILMS) {
-      remove(moreButton);
-    }
-  });
-
-  // добавляем контейнер непосредственно для карточек фильмов
-  render(mainContainer, filmsBoard);
-
-  renderFilms();
-
-};
-
-// boardController.render();
-// renderBoard(filmsBoard.getElement(), films);
 boardController.render(films);
 
 // добавляем топ-рейтинг фильмы
@@ -133,8 +74,6 @@ mostRecomendedFilms.setClickHandler((evt) => {
     if (targetFilm) {
       renderPopup(targetFilm);
     }
-  } else {
-    return;
   }
 });
 
@@ -154,7 +93,7 @@ const renderComments = (commentsContainer, comments) => {
 };
 
 
-const renderPopup = (film) => {
+export const renderPopup = (film) => {
 
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
