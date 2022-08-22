@@ -15,6 +15,7 @@ import {generateFilms} from './mock/film-articles-mock';
 // import {UserStatsComponent} from './components/user-stats';
 import {PopupComponent} from './components/popup/popup';
 import {CommentComponent} from './components/popup/comments';
+import {popupOpenHandlerParams} from './components/popup/popup';
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
@@ -46,16 +47,8 @@ for (let i = 0; i < 2; i++) {
   render(topFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
-topFilms.setClickHandler((evt) => {
-  evt.preventDefault();
-  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
-    const thisFilm = evt.target.parentElement.dataset.id;
-    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-    if (targetFilm) {
-      renderPopup(targetFilm);
-    }
-  }
-});
+
+topFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавляем самые комментируемые фильмы
 const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
@@ -66,16 +59,7 @@ for (let i = 0; i < 2; i++) {
   render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
-mostRecomendedFilms.setClickHandler((evt) => {
-  evt.preventDefault();
-  if (evt.target.className === `film-card__poster` || `film-card__comments`) {
-    const thisFilm = evt.target.parentElement.dataset.id;
-    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-    if (targetFilm) {
-      renderPopup(targetFilm);
-    }
-  }
-});
+mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавление статистики пользователя по необходимости
 // render(mainContainer, new UserStatsComponent().getElement());

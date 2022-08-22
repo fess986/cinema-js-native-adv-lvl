@@ -1,5 +1,8 @@
 import {MONTH} from "../../const/const";
 import {AbstractComponent} from "../abstract-component";
+import {films} from "../../main";
+import {renderPopup} from "../../main";
+
 
 export const createPopup = (filmArticle) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
@@ -127,6 +130,26 @@ export const createPopup = (filmArticle) => {
     </form>
   </section>`
   );
+};
+
+export const popupOpenHandlerParams = (isMainFilmsContainer) => {
+  return (function (evt) {
+    if (isMainFilmsContainer) {
+      if (event.defaultPrevented) {
+        return;
+      }
+    } else {
+      evt.preventDefault();
+    }
+
+    if (evt.target.className === `film-card__poster` || `film-card__comments`) {
+      const thisFilm = evt.target.parentElement.dataset.id;
+      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+      if (targetFilm) {
+        renderPopup(targetFilm);
+      }
+    }
+  });
 };
 
 export class PopupComponent extends AbstractComponent {

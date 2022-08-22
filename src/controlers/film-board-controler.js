@@ -1,12 +1,12 @@
 import {ShowMoreButtonComponent} from "../components/show-more-button";
 import {filmsBoard} from "../main";
-import {renderPopup} from "../main";
 import {render} from "../components/utils/render";
 import {FilmArticleComponent} from "../components/film-article";
 import {TOTAL_FILMS} from "../main";
 import {remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 import {films} from "../main";
+import {popupOpenHandlerParams} from "../components/popup/popup";
 
 const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
@@ -15,16 +15,10 @@ let prevFilms = SHOWN_FILMS;
 const renderBoard = (container) => {
   const articleFilmsContainer = container.querySelector(`.films-list__container`);
 
-  filmsBoard.setClickHandler((evt) => {
-    if (event.defaultPrevented) {
-      return;
-    }
-    if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
-      const thisFilm = evt.target.parentElement.dataset.id;
-      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-      renderPopup(targetFilm);
-    }
-  });
+  // таймаут для того чтобы успела проинициализироваться ф-ция popupOpenHandlerParams
+  setTimeout(() => {
+    filmsBoard.setClickHandler(popupOpenHandlerParams(true));
+  }, 0);
 
   const renderFilms = () => {
     films.slice(0, SHOWN_FILMS).forEach((item) => {
