@@ -1,4 +1,5 @@
 import {render, remove} from './components/utils/render';
+import {FilmBoardController} from './controlers/film-board-controler';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
@@ -33,54 +34,54 @@ let prevFilms = SHOWN_FILMS;
 
 // контейнер для секции "фильмы"
 const filmsBoard = new FilmsContainerComponent();
-const articleFilmsContainer = filmsBoard.getElement().querySelector(`.films-list__container`);
-const filmsContainer = filmsBoard.getElement();
+const boardController = new FilmBoardController(filmsBoard.getElement());
 
-filmsBoard.setClickHandler((evt) => {
-  if (event.defaultPrevented) {
-    return;
-  }
-  if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
-    const thisFilm = evt.target.parentElement.dataset.id;
-    const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-    renderPopup(targetFilm);
-  }
-});
-
-const renderFilms = () => {
-  films.slice(0, SHOWN_FILMS).forEach((item) => {
-    render(articleFilmsContainer, new FilmArticleComponent(item));
+const renderBoard = (filmsBoardComponent) => {
+  const articleFilmsContainer = filmsBoard.getElement().querySelector(`.films-list__container`);
+  filmsBoard.setClickHandler((evt) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (evt.target.className === (`film-card__poster` || `film-card__comments`)) {
+      const thisFilm = evt.target.parentElement.dataset.id;
+      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
+      renderPopup(targetFilm);
+    }
   });
-};
 
-const renderBoard = (board) => {
-  render(mainContainer, board);
+  const renderFilms = () => {
+    films.slice(0, SHOWN_FILMS).forEach((item) => {
+      render(articleFilmsContainer, new FilmArticleComponent(item));
+    });
+  };
+
+  // добавляем кнопку "показать больше фильмов"
+  const moreButton = new ShowMoreButtonComponent();
+  render(articleFilmsContainer, moreButton, `afterend`);
+
+  // логика добавления фильмов на доску
+
+  moreButton.setClickHandler(() => {
+    let currentFilms = prevFilms + ADD_FILMS;
+    films.slice(prevFilms, currentFilms).forEach((item) => {
+      render(articleFilmsContainer, new FilmArticleComponent(item));
+    });
+    prevFilms = currentFilms;
+    if (currentFilms >= TOTAL_FILMS) {
+      remove(moreButton);
+    }
+  });
+
+  render(mainContainer, filmsBoardComponent);
   // добавляем контейнер непосредственно для карточек фильмов
   renderFilms();
 };
 
 renderBoard(filmsBoard);
 
-// добавляем кнопку "показать больше фильмов"
-const moreButton = new ShowMoreButtonComponent();
-render(articleFilmsContainer, moreButton, `afterend`);
-
-// логика добавления фильмов на доску
-
-moreButton.setClickHandler(() => {
-  let currentFilms = prevFilms + ADD_FILMS;
-  films.slice(prevFilms, currentFilms).forEach((item) => {
-    render(articleFilmsContainer, new FilmArticleComponent(item));
-  });
-  prevFilms = currentFilms;
-  if (currentFilms >= TOTAL_FILMS) {
-    remove(moreButton);
-  }
-});
-
 // добавляем топ-рейтинг фильмы
 const topFilms = new TopFilmsContainerComponent();
-render(filmsContainer, topFilms);
+render(filmsBoard.getElement(), topFilms);
 const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1]; // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
@@ -100,7 +101,7 @@ topFilms.setClickHandler((evt) => {
 
 // добавляем самые комментируемые фильмы
 const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
-render(filmsContainer, mostRecomendedFilms);
+render(filmsBoard.getElement(), mostRecomendedFilms);
 const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
 for (let i = 0; i < 2; i++) {
