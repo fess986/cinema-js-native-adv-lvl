@@ -6,16 +6,16 @@ export const createNewElement = (templateString) => {
 };
 
 // функция рендеринга элементов в ДОМ-элемент container
-export const render = (container, element, place = `beforeend`) => {
+export const render = (container, component, place = `beforeend`) => {
   switch (place) {
     case `beforeend`:
-      container.append(element);
+      container.append(component.getElement());
       break;
     case `afterbegin`:
-      container.prepend(element);
+      container.prepend(component.getElement());
       break;
     case `afterend`:
-      container.after(element);
+      container.after(component.getElement());
       break;
   }
 };

@@ -20,10 +20,10 @@ const rankUserContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
-render(rankUserContainer, new RankUserComponent().getElement());
+render(rankUserContainer, new RankUserComponent());
 // addElement(mainContainer, createFilterAndStatistics(filtersDataMock()), `afterbegin`);
-render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()).getElement());
-render(mainContainer, new SortingComponent(sortDataMock).getElement());
+render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()));
+render(mainContainer, new SortingComponent(sortDataMock));
 
 // константы
 const TOTAL_FILMS = 20;
@@ -47,12 +47,12 @@ articleFilmsContainer.addEventListener(`click`, (evt) => {
 
 const renderFilms = () => {
   films.slice(0, SHOWN_FILMS).forEach((item) => {
-    render(articleFilmsContainer, new FilmArticleComponent(item).getElement());
+    render(articleFilmsContainer, new FilmArticleComponent(item));
   });
 };
 
 const renderBoard = (board) => {
-  render(mainContainer, board.getElement());
+  render(mainContainer, board);
   // добавляем контейнер непосредственно для карточек фильмов
   renderFilms();
 };
@@ -60,15 +60,15 @@ const renderBoard = (board) => {
 renderBoard(filmsBoard);
 
 // добавляем кнопку "показать больше фильмов"
-const moreButton = new ShowMoreButtonComponent().getElement();
+const moreButton = new ShowMoreButtonComponent();
 render(articleFilmsContainer, moreButton, `afterend`);
 
 // логика добавления фильмов на доску
 
-moreButton.addEventListener(`click`, () => {
+moreButton.getElement().addEventListener(`click`, () => {
   let currentFilms = prevFilms + ADD_FILMS;
   films.slice(prevFilms, currentFilms).forEach((item) => {
-    render(articleFilmsContainer, new FilmArticleComponent(item).getElement());
+    render(articleFilmsContainer, new FilmArticleComponent(item));
   });
   prevFilms = currentFilms;
   if (currentFilms >= TOTAL_FILMS) {
@@ -77,11 +77,11 @@ moreButton.addEventListener(`click`, () => {
 });
 
 // добавляем топ-рейтинг фильмы
-render(filmsContainer, new TopFilmsContainerComponent().getElement());
+render(filmsContainer, new TopFilmsContainerComponent());
 const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1]; // лучше через айдишник - тут чисто для разминки
 
 for (let i = 0; i < 2; i++) {
-  render(topFilmsContainer, new FilmArticleComponent(films[i]).getElement());
+  render(topFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
 topFilmsContainer.addEventListener(`click`, (evt) => {
@@ -93,11 +93,11 @@ topFilmsContainer.addEventListener(`click`, (evt) => {
 });
 
 // добавляем самые комментируемые фильмы
-render(filmsContainer, new MostCommendedFilmsContainerComponent().getElement());
+render(filmsContainer, new MostCommendedFilmsContainerComponent());
 const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
 for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]).getElement());
+  render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
 mostCommentedFilmsContainer.addEventListener(`click`, (evt) => {
@@ -111,14 +111,14 @@ mostCommentedFilmsContainer.addEventListener(`click`, (evt) => {
 // добавление статистики пользователя по необходимости
 // render(mainContainer, new UserStatsComponent().getElement());
 
-render(footerContainer, new StatisticsComponent().getElement());
+render(footerContainer, new StatisticsComponent());
 
 // добавление попапа по необходимости
 // рендер комментариев
 const renderComments = (commentsContainer, comments) => {
   let renderComment;
   for (let i = 0; i < comments.length; i++) {
-    renderComment = new CommentComponent(comments[i]).getElement();
+    renderComment = new CommentComponent(comments[i]);
     render(commentsContainer, renderComment);
   }
 };
@@ -134,7 +134,7 @@ const renderPopup = (film) => {
   };
 
   const popupComponent = new PopupComponent(film);
-  render(footerContainer, popupComponent.getElement(), `afterend`);
+  render(footerContainer, popupComponent, `afterend`);
 
   const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
   renderComments(commentsContainer, film.comments);
