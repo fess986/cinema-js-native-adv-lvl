@@ -5,6 +5,7 @@ export const createNewElement = (templateString) => {
   return newElement.firstChild;
 };
 
+// функция рендеринга элементов в ДОМ-элемент container
 export const render = (container, element, place = `beforeend`) => {
   switch (place) {
     case `beforeend`:

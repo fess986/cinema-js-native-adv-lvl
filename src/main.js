@@ -1,4 +1,4 @@
-import {render} from './utils';
+import {render} from './components/utils/render';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
