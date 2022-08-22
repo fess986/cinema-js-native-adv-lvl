@@ -129,8 +129,8 @@ const renderPopup = (film) => {
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
   const unRenderPopup = () => {
-    remove(popupComponent.getElement());
-    popupComponent.removeElement();
+    remove(popupComponent);
+    // popupComponent.removeElement();
   };
 
   const popupComponent = new PopupComponent(film);

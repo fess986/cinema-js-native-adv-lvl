@@ -20,6 +20,11 @@ export const render = (container, component, place = `beforeend`) => {
   }
 };
 
-export const remove = (element) => {
-  element.remove();
+// export const remove = (element) => {
+//   element.remove();
+// };
+
+export const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
 };
