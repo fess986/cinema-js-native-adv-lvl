@@ -12,10 +12,16 @@ import {StatisticsComponent} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {sortDataMock} from './mock/sorting-mock';
 import {generateFilms} from './mock/film-articles-mock';
-// import {UserStatsComponent} from './components/user-stats';
+import {UserStatsComponent} from './components/user-stats';
 import {PopupComponent} from './components/popup/popup';
 import {CommentComponent} from './components/popup/comments';
 import {popupOpenHandlerParams} from './components/popup/popup';
+
+// константы
+export const TOTAL_FILMS = 20;
+
+// генерируем массив фильмов количеством TOTAL_FILMS
+export const films = generateFilms(TOTAL_FILMS);
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
@@ -26,11 +32,13 @@ render(rankUserContainer, new RankUserComponent());
 render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()));
 render(mainContainer, new SortingComponent(sortDataMock));
 
-// константы
-export const TOTAL_FILMS = 20;
-
-// генерируем массив фильмов количеством TOTAL_FILMS
-export const films = generateFilms(TOTAL_FILMS);
+// добавление статистики пользователя по нажатию `stats`
+const userStats = new UserStatsComponent();
+const statsButton = mainContainer.querySelector(`.main-navigation__additional`);
+statsButton.addEventListener(`click`, () => {
+  remove(filmsBoard);
+  render(mainContainer, userStats);
+});
 
 // секция "фильмы"
 export const filmsBoard = new FilmsContainerComponent();
@@ -47,7 +55,6 @@ for (let i = 0; i < 2; i++) {
   render(topFilmsContainer, new FilmArticleComponent(films[i]));
 }
 
-
 topFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавляем самые комментируемые фильмы
@@ -61,9 +68,6 @@ for (let i = 0; i < 2; i++) {
 
 mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 
-// добавление статистики пользователя по необходимости
-// render(mainContainer, new UserStatsComponent().getElement());
-
 render(footerContainer, new StatisticsComponent());
 
 // добавление попапа по необходимости
@@ -76,9 +80,7 @@ const renderComments = (commentsContainer, comments) => {
   }
 };
 
-
 export const renderPopup = (film) => {
-
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
   const unRenderPopup = () => {
