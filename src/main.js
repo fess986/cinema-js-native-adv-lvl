@@ -4,8 +4,6 @@ import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {SortingComponent} from './components/sorting';
 import {FilmsContainerComponent} from './components/films-container';
-import {FilmArticleComponent} from './components/film-article';
-// import {ShowMoreButtonComponent} from './components/show-more-button';
 import {TopFilmsContainerComponent} from './components/top-rated-films-container';
 import {MostCommendedFilmsContainerComponent} from './components/most-commended-films';
 import {StatisticsComponent} from './components/statistics';
@@ -28,14 +26,15 @@ const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
 const footerContainer = document.querySelector(`.footer`);
 
+const filterAndStatistics = new FilterAndStatisticsComponent(filtersDataMock());
 render(rankUserContainer, new RankUserComponent());
-render(mainContainer, new FilterAndStatisticsComponent(filtersDataMock()));
+render(mainContainer, filterAndStatistics);
 render(mainContainer, new SortingComponent(sortDataMock));
 
-// добавление статистики пользователя по нажатию `stats`
-const userStats = new UserStatsComponent();
-const statsButton = mainContainer.querySelector(`.main-navigation__additional`);
-statsButton.addEventListener(`click`, () => {
+
+// статистика
+const userStats = new UserStatsComponent(); // инициализация компонента
+filterAndStatistics.setClickHandler(() => { // листнер на кнопку статистики
   remove(filmsBoard);
   render(mainContainer, userStats);
 });
@@ -43,7 +42,6 @@ statsButton.addEventListener(`click`, () => {
 // секция "фильмы"
 export const filmsBoard = new FilmsContainerComponent();
 const boardController = new FilmBoardController(filmsBoard.getElement());
-
 boardController.render(films);
 
 // добавляем топ-рейтинг фильмы
@@ -53,14 +51,12 @@ topFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавляем самые комментируемые фильмы
 const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
-
 mostRecomendedFilms.render();
-
 mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 
+// добавление статистики
 render(footerContainer, new StatisticsComponent());
 
-// добавление попапа по необходимости
 // рендер комментариев
 const renderComments = (commentsContainer, comments) => {
   let renderComment;

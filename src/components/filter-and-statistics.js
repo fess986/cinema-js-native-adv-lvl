@@ -35,5 +35,9 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
     return createFilterAndStatistics(this._filters);
   }
 
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
+  }
+
 }
 

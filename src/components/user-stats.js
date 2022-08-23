@@ -53,7 +53,7 @@ const createUserStats = () => {
 export class UserStatsComponent extends AbstractComponent {
 
   getTemplate() {
-    return createUserStats(this._filters);
+    return createUserStats();
   }
 
 }
