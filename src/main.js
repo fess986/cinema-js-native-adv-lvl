@@ -48,20 +48,13 @@ boardController.render(films);
 
 // добавляем топ-рейтинг фильмы
 const topFilms = new TopFilmsContainerComponent();
-// const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1];
-// console.log(mainContainer.querySelectorAll(`.films-list__container`))
 topFilms.render();
-
 topFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавляем самые комментируемые фильмы
 const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
-render(filmsBoard.getElement(), mostRecomendedFilms);
-const mostCommentedFilmsContainer = document.querySelector(`#mostCommentedFilmsContainer`);
 
-for (let i = 0; i < 2; i++) {
-  render(mostCommentedFilmsContainer, new FilmArticleComponent(films[i]));
-}
+mostRecomendedFilms.render();
 
 mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 

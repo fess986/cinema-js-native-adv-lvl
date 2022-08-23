@@ -1,4 +1,8 @@
 import {AbstractComponent} from './abstract-component';
+import {FilmArticleComponent} from './film-article';
+import {filmsBoard} from '../main';
+import {render} from './utils/render';
+import {films} from '../main';
 
 export const createMostCommendedFilmsContainer = () => {
   return (
@@ -20,6 +24,14 @@ export class MostCommendedFilmsContainerComponent extends AbstractComponent {
 
   setClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
+  }
+
+  render() {
+    render(filmsBoard.getElement(), this);
+
+    for (let i = 0; i < 2; i++) {
+      render(document.querySelector(`#mostCommentedFilmsContainer`), new FilmArticleComponent(films[i]));
+    }
   }
 
 }
