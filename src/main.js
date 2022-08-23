@@ -11,8 +11,6 @@ import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {sortDataMock} from './mock/sorting-mock';
 import {generateFilms} from './mock/film-articles-mock';
 import {UserStatsComponent} from './components/user-stats';
-import {PopupComponent} from './components/popup/popup';
-import {CommentComponent} from './components/popup/comments';
 import {popupOpenHandlerParams} from './components/popup/popup';
 
 // константы
@@ -24,13 +22,12 @@ export const films = generateFilms(TOTAL_FILMS);
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
-const footerContainer = document.querySelector(`.footer`);
+export const footerContainer = document.querySelector(`.footer`);
 
 const filterAndStatistics = new FilterAndStatisticsComponent(filtersDataMock());
 render(rankUserContainer, new RankUserComponent());
 render(mainContainer, filterAndStatistics);
 render(mainContainer, new SortingComponent(sortDataMock));
-
 
 // статистика
 const userStats = new UserStatsComponent(); // инициализация компонента
@@ -56,44 +53,3 @@ mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавление статистики
 render(footerContainer, new StatisticsComponent());
-
-// рендер комментариев
-const renderComments = (commentsContainer, comments) => {
-  let renderComment;
-  for (let i = 0; i < comments.length; i++) {
-    renderComment = new CommentComponent(comments[i]);
-    render(commentsContainer, renderComment);
-  }
-};
-
-export const renderPopup = (film) => {
-  document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
-
-  const unRenderPopup = () => {
-    remove(popupComponent);
-  };
-
-  const popupComponent = new PopupComponent(film);
-  render(footerContainer, popupComponent, `afterend`);
-
-  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
-  renderComments(commentsContainer, film.comments);
-
-  const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
-
-  closePopup.addEventListener(`click`, () => {
-    document.body.style.overflowY = `auto`; // возвращаем прокрутку
-    unRenderPopup();
-  });
-
-  const closePopupWidthKeybord = (evt) => {
-    if (evt.code === `Escape`) {
-      document.body.style.overflowY = `auto`; // возвращаем прокрутку
-      unRenderPopup();
-      document.removeEventListener(`keydown`, closePopupWidthKeybord);
-    }
-  };
-
-  document.addEventListener(`keydown`, closePopupWidthKeybord);
-};
-

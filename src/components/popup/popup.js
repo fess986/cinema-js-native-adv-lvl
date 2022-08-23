@@ -1,8 +1,10 @@
 import {MONTH} from "../../const/const";
 import {AbstractComponent} from "../abstract-component";
 import {films} from "../../main";
-import {renderPopup} from "../../main";
-
+// import {renderPopup} from "../../main";
+import {CommentComponent} from "./comments";
+import {render, remove} from "../utils/render";
+import {footerContainer} from "../../main";
 
 export const createPopup = (filmArticle) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
@@ -152,6 +154,45 @@ export const popupOpenHandlerParams = (isMainFilmsContainer) => {
   });
 };
 
+export const renderPopup = (film) => {
+
+  const renderComments = (commentsContainer, comments) => {
+    let renderComment;
+    for (let i = 0; i < comments.length; i++) {
+      renderComment = new CommentComponent(comments[i]);
+      render(commentsContainer, renderComment);
+    }
+  };
+  document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
+
+  const unRenderPopup = () => {
+    remove(popupComponent);
+  };
+
+  const popupComponent = new PopupComponent(film);
+  render(footerContainer, popupComponent, `afterend`);
+
+  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
+  renderComments(commentsContainer, film.comments);
+
+  const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
+
+  closePopup.addEventListener(`click`, () => {
+    document.body.style.overflowY = `auto`; // возвращаем прокрутку
+    unRenderPopup();
+  });
+
+  const closePopupWidthKeybord = (evt) => {
+    if (evt.code === `Escape`) {
+      document.body.style.overflowY = `auto`; // возвращаем прокрутку
+      unRenderPopup();
+      document.removeEventListener(`keydown`, closePopupWidthKeybord);
+    }
+  };
+
+  document.addEventListener(`keydown`, closePopupWidthKeybord);
+};
+
 export class PopupComponent extends AbstractComponent {
   constructor(filmArticle) {
     super();
@@ -160,5 +201,9 @@ export class PopupComponent extends AbstractComponent {
 
   getTemplate() {
     return createPopup(this._filmArticle);
+  }
+
+  render(film) {
+    renderPopup(film);
   }
 }
