@@ -48,12 +48,9 @@ boardController.render(films);
 
 // добавляем топ-рейтинг фильмы
 const topFilms = new TopFilmsContainerComponent();
-render(filmsBoard.getElement(), topFilms);
-const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1]; // лучше через айдишник - тут чисто для разминки
-
-for (let i = 0; i < 2; i++) {
-  render(topFilmsContainer, new FilmArticleComponent(films[i]));
-}
+// const topFilmsContainer = mainContainer.querySelectorAll(`.films-list__container`)[1];
+// console.log(mainContainer.querySelectorAll(`.films-list__container`))
+topFilms.render();
 
 topFilms.setClickHandler(popupOpenHandlerParams(false));
 
@@ -92,8 +89,6 @@ export const renderPopup = (film) => {
 
   const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
   renderComments(commentsContainer, film.comments);
-
-  // popupComponent.getElement().hidden = true;
 
   const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
 
