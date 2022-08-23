@@ -1,10 +1,10 @@
-import {createNewElement} from "../utils";
+import {AbstractComponent} from "./abstract-component";
 
 const createFilmArticle = (filmArticle) => {
 
-  const {title, rating, year, runTime, genre, img, description, comments, userDetails, id} = filmArticle;
+  const {title, rating, year, genre, img, description, comments, userDetails, id} = filmArticle;
 
-  const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
+  // const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
   const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
 
   return (
@@ -28,24 +28,15 @@ const createFilmArticle = (filmArticle) => {
   );
 };
 
-export class FilmArticleComponent {
+export class FilmArticleComponent extends AbstractComponent {
+
   constructor(filmArticle) {
+    super();
     this._article = filmArticle;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmArticle(this._article);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

@@ -1,4 +1,4 @@
-import {createNewElement} from '../utils';
+import {AbstractComponent} from './abstract-component';
 
 // создаем шаблон одного пункта меню
 const filterItem = (filter, isActive) => {
@@ -25,25 +25,19 @@ const createFilterAndStatistics = (filters) => {
   );
 };
 
-export class FilterAndStatisticsComponent {
+export class FilterAndStatisticsComponent extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilterAndStatistics(this._filters);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }
 

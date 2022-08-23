@@ -1,4 +1,8 @@
-import {createNewElement} from '../utils';
+import {AbstractComponent} from './abstract-component';
+import {FilmArticleComponent} from './film-article';
+import {filmsBoard} from '../main';
+import {render} from './utils/render';
+import {films} from '../main';
 
 export const createMostCommendedFilmsContainer = () => {
   return (
@@ -12,23 +16,22 @@ export const createMostCommendedFilmsContainer = () => {
   );
 };
 
-export class MostCommendedFilmsContainerComponent {
-  constructor() {
-    this._element = null;
-  }
+export class MostCommendedFilmsContainerComponent extends AbstractComponent {
 
   getTemplate() {
     return createMostCommendedFilmsContainer();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
   }
 
-  removeElement() {
-    this._element = null;
+  render() {
+    render(filmsBoard.getElement(), this);
+
+    for (let i = 0; i < 2; i++) {
+      render(document.querySelector(`#mostCommentedFilmsContainer`), new FilmArticleComponent(films[i]));
+    }
   }
+
 }

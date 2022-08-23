@@ -1,4 +1,5 @@
-import {createNewElement} from "../../utils";
+import {AbstractComponent} from "../abstract-component";
+import {render} from "../utils/render";
 
 const createComment = (comments) => {
   const watchingDate = new Date(Date.parse(comments.date));
@@ -21,59 +22,22 @@ const createComment = (comments) => {
   );
 };
 
-export const createComments = (comments) => {
-  let allComents = [];
+export const renderComments = (commentsContainer, comments) => {
+  let renderComment;
   for (let i = 0; i < comments.length; i++) {
-    allComents.push(createComment(comments[i]));
+    renderComment = new CommentComponent(comments[i]);
+    render(commentsContainer, renderComment);
   }
-  return allComents;
 };
 
-export class CommentComponent {
+export class CommentComponent extends AbstractComponent {
   constructor(comment) {
+    super();
     this._comment = comment;
-    this._element = null;
   }
 
   getTemplate() {
     return createComment(this._comment);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
-
-// export class CommentsComponent {
-//   constructor(comments) {
-//     this._comments = comments;
-//     this._element = null;
-//   }
-
-//   getTemplate() {
-//     return createComments(this._comments);
-//   }
-
-//   getElement() {
-//     if (!this._element) {
-//       this._element = this.getTemplate();
-//       console.log(this._element)
-//       //this._element = createNewElement(elem);
-//     }
-//     return this._element.lastChild;
-//   }
-
-//   removeElement() {
-//     this._element = null;
-//   }
-// }
-
-
-

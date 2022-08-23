@@ -1,5 +1,4 @@
-// создаем шаблон элемента "Звание пользователя"
-import {createNewElement} from '../utils';
+import {AbstractComponent} from './abstract-component';
 
 const createRankUser = () => {
   return (
@@ -10,23 +9,10 @@ const createRankUser = () => {
   );
 };
 
-export class RankUserComponent {
-  constructor() {
-    this._element = null;
-  }
+export class RankUserComponent extends AbstractComponent {
 
   getTemplate() {
     return createRankUser();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createNewElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
