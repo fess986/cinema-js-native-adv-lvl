@@ -1,4 +1,5 @@
 import {AbstractComponent} from "../abstract-component";
+import {render} from "../utils/render";
 
 const createComment = (comments) => {
   const watchingDate = new Date(Date.parse(comments.date));
@@ -19,6 +20,14 @@ const createComment = (comments) => {
     </div>
   </li>`
   );
+};
+
+export const renderComments = (commentsContainer, comments) => {
+  let renderComment;
+  for (let i = 0; i < comments.length; i++) {
+    renderComment = new CommentComponent(comments[i]);
+    render(commentsContainer, renderComment);
+  }
 };
 
 export class CommentComponent extends AbstractComponent {

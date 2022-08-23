@@ -2,9 +2,9 @@ import {MONTH} from "../../const/const";
 import {AbstractComponent} from "../abstract-component";
 import {films} from "../../main";
 // import {renderPopup} from "../../main";
-import {CommentComponent} from "./comments";
 import {render, remove} from "../utils/render";
 import {footerContainer} from "../../main";
+import {renderComments} from "./comments";
 
 export const createPopup = (filmArticle) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
@@ -156,13 +156,6 @@ export const popupOpenHandlerParams = (isMainFilmsContainer) => {
 
 export const renderPopup = (film) => {
 
-  const renderComments = (commentsContainer, comments) => {
-    let renderComment;
-    for (let i = 0; i < comments.length; i++) {
-      renderComment = new CommentComponent(comments[i]);
-      render(commentsContainer, renderComment);
-    }
-  };
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
   const unRenderPopup = () => {
@@ -173,6 +166,7 @@ export const renderPopup = (film) => {
   render(footerContainer, popupComponent, `afterend`);
 
   const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
+
   renderComments(commentsContainer, film.comments);
 
   const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
