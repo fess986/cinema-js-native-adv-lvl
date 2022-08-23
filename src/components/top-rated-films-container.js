@@ -5,7 +5,6 @@ import {mainContainer} from "../main";
 import {films} from "../main";
 import {FilmArticleComponent} from "./film-article";
 
-
 const createTopFilmsContainer = () => {
   return (
     `<section class="films-list--extra">
@@ -16,9 +15,6 @@ const createTopFilmsContainer = () => {
     </section>`
   );
 };
-
-// render(filmsBoard.getElement(), topFilms);
- // лучше через айдишник - тут чисто для разминки
 
 export class TopFilmsContainerComponent extends AbstractComponent {
 
