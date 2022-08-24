@@ -1,8 +1,8 @@
 import {AbstractComponent} from './abstract-component';
 
-const sortItem = (name, isActive) => {
+const sortItem = (item, isActive) => {
   return (
-    `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a></li>
+    `<li><a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}" data-sorting="${item.dataSet}">${item.value}</a></li>
     `
   );
 };
@@ -27,6 +27,14 @@ export class SortingComponent extends AbstractComponent {
 
   getTemplate() {
     return createSorting(this._data);
+  }
+
+  getSortType(evt) {
+    return evt.target.dataset.sorting;
+  }
+
+  sortByType(type) {
+
   }
 
 }

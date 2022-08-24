@@ -19,6 +19,7 @@ export const renderFilm = (container, film) => {
   render(container, filmComponent);
 };
 
+
 export class FilmBoardController {
 
   constructor(container) {
@@ -27,16 +28,39 @@ export class FilmBoardController {
     this._sortingComponent = new SortingComponent(sortDataMock);
   }
 
+
   render() {
     const articleFilmsContainer = this._container.querySelector(`.films-list__container`);
 
-    render(mainContainer, this._sortingComponent);
+    let sortType = `default`;
 
-    const renderFilms = () => {
+    const renderFilms = (films) => {
       films.slice(0, SHOWN_FILMS).forEach((item) => {
         renderFilm(articleFilmsContainer, item);
       });
     };
+
+    render(mainContainer, this._sortingComponent);
+
+    this._sortingComponent.getElement().addEventListener(`click`, (evt) => {
+
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+
+      if (sortType === this._sortingComponent.getSortType(evt)) {
+        return;
+      } else {
+        sortType = this._sortingComponent.getSortType(evt);
+      }
+
+      articleFilmsContainer.innerHTML = ``;
+      // let filmsList = films;
+      setTimeout(() => {
+        renderFilms(films);
+      }, 500);
+
+    });
 
     // таймаут для того чтобы успела проинициализироваться ф-ция popupOpenHandlerParams
     setTimeout(() => {
@@ -60,7 +84,7 @@ export class FilmBoardController {
     // добавляем контейнер непосредственно для карточек фильмов
     render(mainContainer, filmsBoard);
 
-    renderFilms();
+    renderFilms(films);
 
   }
 }
