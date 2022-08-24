@@ -3,7 +3,7 @@ import {render} from "./utils/render";
 import {filmsBoard} from "../main";
 import {mainContainer} from "../main";
 import {films} from "../main";
-import {FilmArticleComponent} from "./film-article";
+import {renderFilm} from "../controlers/film-board-controler";
 
 const createTopFilmsContainer = () => {
   return (
@@ -30,7 +30,7 @@ export class TopFilmsContainerComponent extends AbstractComponent {
     render(filmsBoard.getElement(), this);
 
     for (let i = 0; i < 2; i++) {
-      render(mainContainer.querySelectorAll(`.films-list__container`)[1], new FilmArticleComponent(films[i]));
+      renderFilm(mainContainer.querySelectorAll(`.films-list__container`)[1], films[i]);
     }
   }
 
