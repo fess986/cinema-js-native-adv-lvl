@@ -14,6 +14,7 @@ const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
 let prevFilms = SHOWN_FILMS;
 
+
 export const renderFilm = (container, film) => {
   const filmComponent = new FilmArticleComponent(film);
   render(container, filmComponent);
@@ -28,17 +29,17 @@ export class FilmBoardController {
     this._sortingComponent = new SortingComponent(sortDataMock);
   }
 
-
   render() {
+    console.log(this._container);
     const articleFilmsContainer = this._container.querySelector(`.films-list__container`);
-
-    let sortType = `default`;
 
     const renderFilms = (films) => {
       films.slice(0, SHOWN_FILMS).forEach((item) => {
         renderFilm(articleFilmsContainer, item);
       });
     };
+
+    let sortType = `default`;
 
     render(mainContainer, this._sortingComponent);
 
@@ -48,17 +49,21 @@ export class FilmBoardController {
         return;
       }
 
+      let sortedFilms = [];
+
+      // сортировка происходит при условии, что нажата другая кнопка. Иначе игнорируем
+
       if (sortType === this._sortingComponent.getSortType(evt)) {
         return;
       } else {
+        // console.log(this._sortingComponent.getElement());
         sortType = this._sortingComponent.getSortType(evt);
       }
 
       articleFilmsContainer.innerHTML = ``;
-      // let filmsList = films;
-      setTimeout(() => {
-        renderFilms(films);
-      }, 500);
+      sortedFilms = this._sortingComponent.getSortListByType(films, sortType);
+
+      renderFilms(sortedFilms);
 
     });
 
