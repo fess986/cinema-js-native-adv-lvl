@@ -56,8 +56,11 @@ export class FilmBoardController {
       if (sortType === this._sortingComponent.getSortType(evt)) {
         return;
       } else {
-        // console.log(this._sortingComponent.getElement());
+        this._sortingComponent.getElement().querySelector(`[data-sorting = '${sortType}']`).classList.remove(`sort__button--active`);
+
         sortType = this._sortingComponent.getSortType(evt);
+
+        this._sortingComponent.getElement().querySelector(`[data-sorting = '${sortType}']`).classList.add(`sort__button--active`);
       }
 
       articleFilmsContainer.innerHTML = ``;
