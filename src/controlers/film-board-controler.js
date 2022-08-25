@@ -14,10 +14,12 @@ const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
 let prevFilms = SHOWN_FILMS;
 
+
 export const renderFilm = (container, film) => {
   const filmComponent = new FilmArticleComponent(film);
   render(container, filmComponent);
 };
+
 
 export class FilmBoardController {
 
@@ -28,15 +30,42 @@ export class FilmBoardController {
   }
 
   render() {
+    console.log(this._container);
     const articleFilmsContainer = this._container.querySelector(`.films-list__container`);
 
-    render(mainContainer, this._sortingComponent);
-
-    const renderFilms = () => {
+    const renderFilms = (films) => {
       films.slice(0, SHOWN_FILMS).forEach((item) => {
         renderFilm(articleFilmsContainer, item);
       });
     };
+
+    let sortType = `default`;
+
+    render(mainContainer, this._sortingComponent);
+
+    this._sortingComponent.getElement().addEventListener(`click`, (evt) => {
+
+      if (evt.target.tagName !== `A`) {
+        return;
+      }
+
+      let sortedFilms = [];
+
+      // сортировка происходит при условии, что нажата другая кнопка. Иначе игнорируем
+
+      if (sortType === this._sortingComponent.getSortType(evt)) {
+        return;
+      } else {
+        // console.log(this._sortingComponent.getElement());
+        sortType = this._sortingComponent.getSortType(evt);
+      }
+
+      articleFilmsContainer.innerHTML = ``;
+      sortedFilms = this._sortingComponent.getSortListByType(films, sortType);
+
+      renderFilms(sortedFilms);
+
+    });
 
     // таймаут для того чтобы успела проинициализироваться ф-ция popupOpenHandlerParams
     setTimeout(() => {
@@ -60,7 +89,7 @@ export class FilmBoardController {
     // добавляем контейнер непосредственно для карточек фильмов
     render(mainContainer, filmsBoard);
 
-    renderFilms();
+    renderFilms(films);
 
   }
 }
