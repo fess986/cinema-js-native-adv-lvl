@@ -169,6 +169,7 @@ export const renderPopup = (film) => {
 
   renderComments(commentsContainer, film.comments);
 
+
   const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
 
   closePopup.addEventListener(`click`, () => {

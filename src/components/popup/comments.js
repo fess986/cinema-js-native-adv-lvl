@@ -34,10 +34,15 @@ export class CommentComponent extends AbstractComponent {
   constructor(comment) {
     super();
     this._comment = comment;
+    this._commentComponent = null;
   }
 
   getTemplate() {
     return createComment(this._comment);
   }
+
+  // render(commentsContainer, comments) {
+  //   renderComments(commentsContainer, comments);
+  // }
 
 }

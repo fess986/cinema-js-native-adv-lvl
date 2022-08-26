@@ -1,5 +1,4 @@
 import {AbstractComponent} from './abstract-component';
-import {renderFilms} from '../controlers/film-board-controler';
 import {SortTypes} from '../mock/sorting-mock';
 
 const sortItem = (item, isActive) => {
