@@ -12,8 +12,8 @@ import {FilmController} from "./film-controller";
 import {PopupController} from "./popup-controller";
 import {TopFilmsComponent} from "../components/top-rated-films-container";
 import {MostCommendedFilmsComponent} from "../components/most-commended-films";
-import { NoFilms } from "../components/no-films";
-import { Loading } from "../components/loading";
+import {NoFilms} from "../components/no-films";
+// import {Loading} from "../components/loading";  // пока будет заккоменчена
 
 const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
@@ -30,17 +30,21 @@ export class FilmBoardController {
 
   constructor(container) {
     this._container = container;
+    this._films = films;
+    this._sortType = `default`;
+
     this._articleFilmsContainer = this._container.querySelector(`.films-list__container`);
+
     this._moreButtonComponent = new ShowMoreButtonComponent();
     this._sortingComponent = new SortingComponent(sortDataMock);
+    this._topFilmsComponent = new TopFilmsComponent();
+    this._mostCommendedComponent = new MostCommendedFilmsComponent();
 
     this._filmController = null; // хранилище для фильмконтроллеров
     this._newFilmsControllers = [];
     this._showedFilmControllers = []; // все показываемые контроллеры фильмов
-    this._topFilmsComponent = new TopFilmsComponent();
-    this._mostCommendedComponent = new MostCommendedFilmsComponent();
 
-    this._sortType = `default`;
+    // прибиваем методы к собственному контексту
     this._renderFilms = this._renderFilms.bind(this);
     this._onSortChange = this._onSortChange.bind(this);
     this._moreButtonHandler = this._moreButtonHandler.bind(this);
@@ -94,12 +98,17 @@ export class FilmBoardController {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
 
-    // NoFilms
-    const noFilms = new NoFilms();
-    console.log(noFilms.getElement());
+    // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
+    // this._films = null;  // проверка работоспособности
+    if (!this._films) {
+      const noFilms = new NoFilms();
+      render(mainContainer, noFilms);
+      return;
+    }
 
-    const loading = new Loading();
-    console.log(loading.getElement());
+    // загрузочный экран
+    // const loading = new Loading();
+    // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
 
     // добавляем кнопку "показать больше фильмов"
     render(this._articleFilmsContainer, this._moreButtonComponent, `afterend`);

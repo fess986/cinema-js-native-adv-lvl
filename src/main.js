@@ -12,7 +12,7 @@ import {UserStatsComponent} from './components/user-stats';
 export const TOTAL_FILMS = 20;
 
 // генерируем массив фильмов количеством TOTAL_FILMS
-export const films = generateFilms(TOTAL_FILMS);
+export let films = generateFilms(TOTAL_FILMS);
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
