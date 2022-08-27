@@ -41,8 +41,4 @@ export class CommentComponent extends AbstractComponent {
     return createComment(this._comment);
   }
 
-  // render(commentsContainer, comments) {
-  //   renderComments(commentsContainer, comments);
-  // }
-
 }

@@ -5,8 +5,8 @@ import {footerContainer} from "../main";
 import {renderComments} from "../components/popup/comments";
 
 export class PopupController {
-  constructor(film) {
-    this._film = film;
+  constructor() {
+    // this._film = film;
     this._commentComponent = null;
     this._popupComponent = null;
     this._unRenderPopup = this._unRenderPopup.bind(this);
@@ -17,6 +17,7 @@ export class PopupController {
 
   _unRenderPopup() {
     remove(this._popupComponent);
+    console.log('render from controller');
   }
 
   _closePopupWidthKeybord(evt) {
@@ -24,6 +25,7 @@ export class PopupController {
       document.body.style.overflowY = `auto`; // возвращаем прокрутку
       this._unRenderPopup();
       document.removeEventListener(`keydown`, this._closePopupWidthKeybord);
+      console.log('render from controller');
     }
   }
 
@@ -42,14 +44,24 @@ export class PopupController {
         const targetFilm = films.find((item) => item.id.toString() === thisFilm);
         if (targetFilm) {
           this.render(targetFilm);
+          console.log('render from controller');
         }
       }
     });
   }
 
-  render() {
+  _renderComments(commentsContainer, comments) {
+    let renderComment;
+    for (let i = 0; i < comments.length; i++) {
+      renderComment = new CommentComponent(comments[i]);
+      render(commentsContainer, renderComment);
+      console.log('render from controller');
+    }
+  }
 
-    this._popupComponent = new PopupComponent(this._film);
+  render(targetFilm) {
+
+    this._popupComponent = new PopupComponent(targetFilm);
 
     document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
@@ -57,7 +69,8 @@ export class PopupController {
 
     // рендерим комменты
     const commentsContainer = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
-    renderComments(commentsContainer, this._film.comments);
+    this._renderComments(commentsContainer, targetFilm.comments);
+    // renderComments(commentsContainer, targetFilm.comments);
 
 
     this._popupComponent.setCloseHandler(() => {
