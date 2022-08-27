@@ -11,7 +11,9 @@ import {sortDataMock} from "../mock/sorting-mock";
 import {FilmController} from "./film-controller";
 import {PopupController} from "./popup-controller";
 import {TopFilmsComponent} from "../components/top-rated-films-container";
-import { MostCommendedFilmsComponent } from "../components/most-commended-films";
+import {MostCommendedFilmsComponent} from "../components/most-commended-films";
+import { NoFilms } from "../components/no-films";
+import { Loading } from "../components/loading";
 
 const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
@@ -91,6 +93,13 @@ export class FilmBoardController {
   render() {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
+
+    // NoFilms
+    const noFilms = new NoFilms();
+    console.log(noFilms.getElement());
+
+    const loading = new Loading();
+    console.log(loading.getElement());
 
     // добавляем кнопку "показать больше фильмов"
     render(this._articleFilmsContainer, this._moreButtonComponent, `afterend`);
