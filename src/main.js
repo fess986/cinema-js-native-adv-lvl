@@ -3,7 +3,7 @@ import {FilmBoardController} from './controlers/film-board-controler';
 import {RankUserComponent} from './components/rank-user';
 import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
 import {FilmsContainerComponent} from './components/films-container';
-import {MostCommendedFilmsContainerComponent} from './components/most-commended-films';
+import {MostCommendedFilmsComponent} from './components/most-commended-films';
 import {StatisticsComponent} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {generateFilms} from './mock/film-articles-mock';
@@ -37,11 +37,6 @@ filterAndStatistics.setClickHandler(() => { // листнер на кнопку 
 export const filmsBoard = new FilmsContainerComponent();
 const boardController = new FilmBoardController(filmsBoard.getElement());
 boardController.render(films);
-
-// добавляем самые комментируемые фильмы
-const mostRecomendedFilms = new MostCommendedFilmsContainerComponent();
-mostRecomendedFilms.render();
-mostRecomendedFilms.setClickHandler(popupOpenHandlerParams(false));
 
 // добавление статистики
 render(footerContainer, new StatisticsComponent());
