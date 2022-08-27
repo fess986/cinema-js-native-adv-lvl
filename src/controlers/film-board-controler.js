@@ -10,6 +10,7 @@ import {SortingComponent} from "../components/sorting";
 import {sortDataMock} from "../mock/sorting-mock";
 import {FilmController} from "./film-controller";
 import {PopupController} from "./popup-controller";
+import {TopFilmsComponent} from "../components/top-rated-films-container";
 
 const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
@@ -33,6 +34,7 @@ export class FilmBoardController {
     this._filmController = null; // хранилище для фильмконтроллеров
     this._newFilmsControllers = [];
     this._showedFilmControllers = []; // все показываемые контроллеры фильмов
+    this._topFilmsComponent = new TopFilmsComponent();
 
     this._sortType = `default`;
     this._renderFilms = this._renderFilms.bind(this);
@@ -96,11 +98,15 @@ export class FilmBoardController {
     render(mainContainer, filmsBoard);
 
     // подключаем контроллер попапа
-    const popup = new PopupController(films[0]);
+    const popup = new PopupController();
 
     // рендерим начальные фильмы и добавляем их в _showedFilmControllers
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, films, 0, SHOWN_FILMS);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+
+    // рендерим топ фильмы
+    render(filmsBoard.getElement(), this._topFilmsComponent);
+    this._renderFilms(this._topFilmsComponent.getFilmsContainer(), films, 0, 2);
 
     // сортировка
     this._sortingComponent.setClickHandler(this._onSortChange);
