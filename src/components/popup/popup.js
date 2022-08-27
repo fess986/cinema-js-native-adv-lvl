@@ -6,10 +6,10 @@ import {render, remove} from "../utils/render";
 import {footerContainer} from "../../main";
 import {renderComments} from "./comments";
 
-export const createPopup = (filmArticle) => {
-  const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
+export const createPopup = (film) => {
+  const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = film;
 
-  const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
+  const releaseDate = new Date(Date.parse(film.releaseDate));
   const releaseFullDate = `${releaseDate.getDate()} ${MONTH[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
 
   const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
@@ -134,70 +134,17 @@ export const createPopup = (filmArticle) => {
   );
 };
 
-export const popupOpenHandlerParams = (isMainFilmsContainer) => {
-  return (function (evt) {
-    if (isMainFilmsContainer) {
-      if (event.defaultPrevented) {
-        return;
-      }
-    } else {
-      evt.preventDefault();
-    }
-
-    if (evt.target.className === `film-card__poster` || `film-card__comments`) {
-      const thisFilm = evt.target.parentElement.dataset.id;
-      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-      if (targetFilm) {
-        renderPopup(targetFilm);
-      }
-    }
-  });
-};
-
-export const renderPopup = (film) => {
-
-  document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
-
-  const unRenderPopup = () => {
-    remove(popupComponent);
-  };
-
-  const popupComponent = new PopupComponent(film);
-  render(footerContainer, popupComponent, `afterend`);
-
-  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
-
-  renderComments(commentsContainer, film.comments);
-
-  const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
-
-  closePopup.addEventListener(`click`, () => {
-    document.body.style.overflowY = `auto`; // возвращаем прокрутку
-    unRenderPopup();
-  });
-
-  const closePopupWidthKeybord = (evt) => {
-    if (evt.code === `Escape`) {
-      document.body.style.overflowY = `auto`; // возвращаем прокрутку
-      unRenderPopup();
-      document.removeEventListener(`keydown`, closePopupWidthKeybord);
-    }
-  };
-
-  document.addEventListener(`keydown`, closePopupWidthKeybord);
-};
-
 export class PopupComponent extends AbstractComponent {
-  constructor(filmArticle) {
+  constructor(film) {
     super();
-    this._filmArticle = filmArticle;
+    this._film = film;
   }
 
   getTemplate() {
-    return createPopup(this._filmArticle);
+    return createPopup(this._film);
   }
 
-  render(film) {
-    renderPopup(film);
+  setCloseHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }
