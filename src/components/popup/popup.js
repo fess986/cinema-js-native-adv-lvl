@@ -6,10 +6,10 @@ import {render, remove} from "../utils/render";
 import {footerContainer} from "../../main";
 import {renderComments} from "./comments";
 
-export const createPopup = (filmArticle) => {
-  const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = filmArticle;
+export const createPopup = (film) => {
+  const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = film;
 
-  const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
+  const releaseDate = new Date(Date.parse(film.releaseDate));
   const releaseFullDate = `${releaseDate.getDate()} ${MONTH[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
 
   const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
@@ -134,7 +134,7 @@ export const createPopup = (filmArticle) => {
   );
 };
 
-export const popupOpenHandlerParams = (isMainFilmsContainer) => {
+export const popupOpenHandlerParams = (isMainFilmsContainer) => { // реализовано в popup-controller. Эту оставляем чтобы работали другие части кода (мейна)
   return (function (evt) {
     if (isMainFilmsContainer) {
       if (event.defaultPrevented) {
@@ -154,7 +154,7 @@ export const popupOpenHandlerParams = (isMainFilmsContainer) => {
   });
 };
 
-export const renderPopup = (film) => {
+export const renderPopup = (film) => { // есть написанная версия для компонента PopupComponent . Эту оставляем чтобы работали другие части кода
 
   document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
 
@@ -165,10 +165,9 @@ export const renderPopup = (film) => {
   const popupComponent = new PopupComponent(film);
   render(footerContainer, popupComponent, `afterend`);
 
+  // рендерим комменты
   const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
-
   renderComments(commentsContainer, film.comments);
-
 
   const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
 
@@ -189,16 +188,21 @@ export const renderPopup = (film) => {
 };
 
 export class PopupComponent extends AbstractComponent {
-  constructor(filmArticle) {
+  constructor(film) {
     super();
-    this._filmArticle = filmArticle;
+    this._film = film;
   }
 
   getTemplate() {
-    return createPopup(this._filmArticle);
+    return createPopup(this._film);
   }
 
   render(film) {
     renderPopup(film);
+
+  }
+
+  setCloseHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

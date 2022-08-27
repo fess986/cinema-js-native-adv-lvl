@@ -48,9 +48,12 @@ export class SortingComponent extends AbstractComponent {
       case SortTypes.RATING:
         sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
         break;
-
     }
     return sortedFilms;
+  }
+
+  setClickHandler(handler) {
+    this.getElement().addEventListener('click', handler);
   }
 
 }
