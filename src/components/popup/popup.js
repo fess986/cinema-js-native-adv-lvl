@@ -134,59 +134,6 @@ export const createPopup = (film) => {
   );
 };
 
-export const popupOpenHandlerParams = (isMainFilmsContainer) => { // реализовано в popup-controller. Эту оставляем чтобы работали другие части кода (мейна)
-  return (function (evt) {
-    if (isMainFilmsContainer) {
-      if (event.defaultPrevented) {
-        return;
-      }
-    } else {
-      evt.preventDefault();
-    }
-
-    if (evt.target.className === `film-card__poster` || `film-card__comments`) {
-      const thisFilm = evt.target.parentElement.dataset.id;
-      const targetFilm = films.find((item) => item.id.toString() === thisFilm);
-      if (targetFilm) {
-        renderPopup(targetFilm);
-      }
-    }
-  });
-};
-
-export const renderPopup = (film) => { // есть написанная версия для компонента PopupComponent . Эту оставляем чтобы работали другие части кода
-
-  document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
-
-  const unRenderPopup = () => {
-    remove(popupComponent);
-  };
-
-  const popupComponent = new PopupComponent(film);
-  render(footerContainer, popupComponent, `afterend`);
-
-  // рендерим комменты
-  const commentsContainer = popupComponent.getElement().querySelector(`.film-details__comments-list`);
-  renderComments(commentsContainer, film.comments);
-
-  const closePopup = popupComponent.getElement().querySelector(`.film-details__close-btn`);
-
-  closePopup.addEventListener(`click`, () => {
-    document.body.style.overflowY = `auto`; // возвращаем прокрутку
-    unRenderPopup();
-  });
-
-  const closePopupWidthKeybord = (evt) => {
-    if (evt.code === `Escape`) {
-      document.body.style.overflowY = `auto`; // возвращаем прокрутку
-      unRenderPopup();
-      document.removeEventListener(`keydown`, closePopupWidthKeybord);
-    }
-  };
-
-  document.addEventListener(`keydown`, closePopupWidthKeybord);
-};
-
 export class PopupComponent extends AbstractComponent {
   constructor(film) {
     super();
@@ -195,11 +142,6 @@ export class PopupComponent extends AbstractComponent {
 
   getTemplate() {
     return createPopup(this._film);
-  }
-
-  render(film) {
-    renderPopup(film);
-
   }
 
   setCloseHandler(handler) {

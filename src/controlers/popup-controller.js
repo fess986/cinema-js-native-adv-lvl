@@ -2,7 +2,6 @@ import {CommentComponent} from "../components/popup/comments";
 import {PopupComponent} from "../components/popup/popup";
 import {render, remove} from "../components/utils/render";
 import {footerContainer} from "../main";
-import {renderComments} from "../components/popup/comments";
 
 export class PopupController {
   constructor() {
@@ -71,7 +70,6 @@ export class PopupController {
     const commentsContainer = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
     this._renderComments(commentsContainer, targetFilm.comments);
     // renderComments(commentsContainer, targetFilm.comments);
-
 
     this._popupComponent.setCloseHandler(() => {
       document.body.style.overflowY = `auto`; // возвращаем прокрутку

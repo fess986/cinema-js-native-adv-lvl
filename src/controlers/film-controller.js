@@ -11,7 +11,6 @@ export class FilmController {
   render(film) {
     this._film = film;
     this._filmComponent = new FilmArticleComponent(this._film);
-
     render(this._container, this._filmComponent);
   }
 }
