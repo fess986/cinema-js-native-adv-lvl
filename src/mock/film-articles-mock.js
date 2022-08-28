@@ -100,8 +100,8 @@ const filmArticleDataMock = () => {
     "actors": generateActors(),
     "country": FILM_ARTICLES.country[Math.floor(Math.random() * FILM_ARTICLES.country.length)],
     "userDetails": {
-      'isWatchlistActive': Math.random() > 0.5,
-      'isWatchedtActive': Math.random() > 0.5,
+      'isWatchListActive': Math.random() > 0.5,
+      'isWatchedActive': Math.random() > 0.5,
       'isFavoriteActive': Math.random() > 0.5,
       'watchingDate': `2019-04-12T16:12:32.554Z`
     }
