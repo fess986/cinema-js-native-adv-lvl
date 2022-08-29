@@ -43,6 +43,8 @@ export class FilmBoardController {
     this._filmController = null; // хранилище для фильмконтроллеров
     this._newFilmsControllers = [];
     this._showedFilmControllers = []; // все показываемые контроллеры фильмов
+    this._topFilmsControllers = [];
+    this._mostCommendedFilmsControllers = [];
 
     // прибиваем методы к собственному контексту
     this._renderFilms = this._renderFilms.bind(this);
@@ -52,11 +54,17 @@ export class FilmBoardController {
   }
 
   _onDataChange(oldData, newData) {
+    // ищем фильм нажатой клавиши сравнивая таргетный со всем списком фильмов
+    const index = this._films.findIndex((item) => item === oldData);
 
-    const index = this._films.findIndex((item) => item === oldData);  // ищем фильм нажатой клавиши сравнивая таргетный со всем списком фильмов
+    // ищем фильм в секции top films
+    const topIndex = this._topFilmsControllers.map((item) => item._film).findIndex((item) => item === oldData);
+
+    // ищем фильм в секции most commended films
+    const mostCommendedIndex = this._mostCommendedFilmsControllers.map((item) => item._film).findIndex((item) => item === oldData);
 
     // проверяем нашли ли что то, если нет, то ничего не делаем
-    if (index === -1 ) {
+    if (index === -1) {
       return;
     }
 
@@ -65,6 +73,17 @@ export class FilmBoardController {
 
     // дорендериваем измененную карточку фильма
     this._showedFilmControllers[index].render(this._films[index]);
+
+    // по необходимости дорендериваем top films
+    if (topIndex !== -1) {
+      this._topFilmsControllers[topIndex].render(this._films[index]);
+    }
+
+    // по необходимости дорендериваем most commended films
+    if (mostCommendedIndex !== -1) {
+      this._mostCommendedFilmsControllers[topIndex].render(this._films[index]);
+    }
+
   }
 
   // рендер фильмов через их контроллеры и сохранение этих контроллеров в массиве
@@ -143,11 +162,11 @@ export class FilmBoardController {
 
     // рендерим топ фильмы
     render(filmsBoard.getElement(), this._topFilmsComponent);
-    this._renderFilms(this._topFilmsComponent.getFilmsContainer(), films, 0, 2, this._onDataChange);
+    this._topFilmsControllers = this._renderFilms(this._topFilmsComponent.getFilmsContainer(), films, 0, 2, this._onDataChange);
 
     // рендерим самые комментируемые фильмы
     render(filmsBoard.getElement(), this._mostCommendedComponent);
-    this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), films, 0, 2, this._onDataChange);
+    this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), films, 0, 2, this._onDataChange);
 
     // сортировка
     this._sortingComponent.setClickHandler(this._onSortChange);

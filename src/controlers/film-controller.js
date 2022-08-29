@@ -37,6 +37,7 @@ export class FilmController {
     });
 
     this._filmComponent.setFavoriteClickHandle((evt) => {
+      console.log('click')
       evt.preventDefault();
 
       const newFilm = this._film;
@@ -51,7 +52,6 @@ export class FilmController {
     } else {
       render(this._container, this._filmComponent);
     }
-
 
   }
 }
