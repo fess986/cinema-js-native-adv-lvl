@@ -20,11 +20,19 @@ export const render = (container, component, place = `beforeend`) => {
   }
 };
 
-// export const remove = (element) => {
-//   element.remove();
-// };
-
 export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
+};
+
+export const replace = (oldComponent, newComponent) => {
+  const oldElement = oldComponent.getElement();
+  const parentElement = oldElement.parentElement;
+  const newElement = newComponent.getElement();
+
+  const isExist = !!(oldElement && parentElement && newElement);
+
+  if (isExist && parentElement.contains(oldElement)) {
+    parentElement.replaceChild(newElement, oldComponent.getElement());
+  }
 };

@@ -1,5 +1,5 @@
 import {FilmArticleComponent} from "../components/film-article";
-import {render} from "../components/utils/render";
+import {render, replace} from "../components/utils/render";
 
 export class FilmController {
   constructor(container, onDataChange) {
@@ -11,13 +11,14 @@ export class FilmController {
 
   render(film) {
     this._film = film;
-    this._filmComponent = new FilmArticleComponent(this._film);
+    const oldComponent = this._filmComponent;
+    this._filmComponent = new FilmArticleComponent(this._film, this._onDataChange);
 
     this._filmComponent.setWatchListClickHandle((evt) => {
       evt.preventDefault();
 
       // переписываем поле, которое содержит информацию о поле WatchList
-      const newFilm = Object.assign({}, this._film);
+      const newFilm = this._film;
       newFilm.userDetails.isWatchListActive = !newFilm.userDetails.isWatchListActive;
 
       // запускаем метод, который изменит информацию в объекте карточки фильма и перерендерит нам сам фильм
@@ -26,9 +27,10 @@ export class FilmController {
     });
 
     this._filmComponent.setWatchedClickHandle((evt) => {
+
       evt.preventDefault();
 
-      const newFilm = Object.assign({}, this._film);
+      const newFilm = this._film;
       newFilm.userDetails.isWatchedActive = !newFilm.userDetails.isWatchedActive;
 
       this._onDataChange(this._film, newFilm);
@@ -37,12 +39,19 @@ export class FilmController {
     this._filmComponent.setFavoriteClickHandle((evt) => {
       evt.preventDefault();
 
-      const newFilm = Object.assign({}, this._film);
+      const newFilm = this._film;
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);
     });
 
-    render(this._container, this._filmComponent);
+
+    if (oldComponent) {
+      replace(oldComponent, this._filmComponent);
+    } else {
+      render(this._container, this._filmComponent);
+    }
+
+
   }
 }

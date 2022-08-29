@@ -52,6 +52,7 @@ export class FilmBoardController {
   }
 
   _onDataChange(oldData, newData) {
+
     const index = this._films.findIndex((item) => item === oldData);  // ищем фильм нажатой клавиши сравнивая таргетный со всем списком фильмов
 
     // проверяем нашли ли что то, если нет, то ничего не делаем
