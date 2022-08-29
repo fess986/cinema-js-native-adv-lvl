@@ -154,7 +154,7 @@ export class FilmBoardController {
     render(mainContainer, filmsBoard);
 
     // подключаем контроллер попапа
-    const popup = new PopupController();
+    // const popup = new PopupController();
 
     // рендерим начальные фильмы и добавляем их в _showedFilmControllers
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, films, 0, SHOWN_FILMS, this._onDataChange);

@@ -1,10 +1,5 @@
 import {MONTH} from "../../const/const";
 import {AbstractComponent} from "../abstract-component";
-import {films} from "../../main";
-// import {renderPopup} from "../../main";
-import {render, remove} from "../utils/render";
-import {footerContainer} from "../../main";
-import {renderComments} from "./comments";
 
 export const createPopup = (film) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = film;
@@ -79,10 +74,10 @@ export const createPopup = (film) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${userDetails.isWatchlistActive ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${userDetails.isWatchListActive ? `checked` : ``}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${userDetails.isWatchedtActive ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${userDetails.isWatchedActive ? `checked` : ``}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
           <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${userDetails.isFavoriteActive ? `checked` : ``}>
@@ -142,9 +137,22 @@ export class PopupComponent extends AbstractComponent {
 
   getTemplate() {
     return createPopup(this._film);
+
   }
 
   setCloseHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+  }
+
+  setWatchListClickHandle(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+  }
+
+  setWatchedClickHandle(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoriteClickHandle(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
   }
 }

@@ -30,10 +30,9 @@ const createFilmArticle = (filmArticle) => {
 
 export class FilmArticleComponent extends AbstractComponent {
 
-  constructor(filmArticle, onDataChange) {
+  constructor(filmArticle) {
     super();
     this._article = filmArticle;
-    this._onDataChange = onDataChange;
   }
 
   getTemplate() {
@@ -41,15 +40,20 @@ export class FilmArticleComponent extends AbstractComponent {
   }
 
   setWatchListClickHandle(handler) {
-    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', handler);
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
   }
 
   setWatchedClickHandle(handler) {
-    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', handler);
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
   }
 
   setFavoriteClickHandle(handler) {
-    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', handler);
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
+
+  setPopupOpenHandler(handler) {
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 
 }
