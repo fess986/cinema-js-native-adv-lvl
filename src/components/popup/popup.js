@@ -203,6 +203,7 @@ export class PopupComponent extends SmartComponent {
 
     element.querySelector(`#smile`).addEventListener(`click`, () => {
       emojyContainer.innerHTML = `<img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">`;
+
       // this.rerender();
 
     });

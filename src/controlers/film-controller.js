@@ -3,11 +3,13 @@ import {render, replace} from "../components/utils/render";
 import { PopupController } from "./popup-controller";
 
 export class FilmController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._filmComponent = null;
+    this._popupController = null;
     this._film = null;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
   }
 
   render(film) {
@@ -47,9 +49,9 @@ export class FilmController {
     });
 
     this._filmComponent.setPopupOpenHandler(() => {
-      const popup = new PopupController(this._film, this._onDataChange);
-      // popup.render(popup);
-      popup.render();
+      this._onViewChange();
+      this._popupController = new PopupController(this._film, this._onDataChange);
+      this._popupController.render();
     });
 
 

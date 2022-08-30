@@ -29,8 +29,6 @@ export class SmartComponent extends AbstractComponent {
 
     // восстанавливаем листнеры
     this.recoveryListeners();
-
-    console.log(this);
   }
 
 }
