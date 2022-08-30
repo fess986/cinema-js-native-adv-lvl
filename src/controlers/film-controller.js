@@ -48,6 +48,7 @@ export class FilmController {
 
     this._filmComponent.setPopupOpenHandler(() => {
       const popup = new PopupController(this._film, this._onDataChange);
+      // popup.render(popup);
       popup.render();
     });
 
