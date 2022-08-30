@@ -1,4 +1,5 @@
 const path = require('path');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 // const {
 //   CleanWebpackPlugin
 // } = require("clean-webpack-plugin");
@@ -19,8 +20,16 @@ module.exports = {
     hot: true,
     port: 9000,
   },
-  // plugins: [
-  //   new CleanWebpackPlugin()
-  // ]
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+  plugins: [
+    new MomentLocalesPlugin(),
+  ]
 
 };

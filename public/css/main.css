@@ -95,6 +95,10 @@ button {
   letter-spacing: normal;
 }
 
+.calendar-input {
+  color: red;
+}
+
 .search {
   position: relative;
   display: flex;
@@ -242,6 +246,10 @@ button {
   margin-left: auto;
   padding: var(--vertical-gap) 0;
   color: var(--text-color);
+}
+
+.hidden {
+  display: none;
 }
 
 .main-navigation__item--active,

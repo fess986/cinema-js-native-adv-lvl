@@ -1,4 +1,6 @@
 import {AbstractComponent} from './abstract-component';
+import flatpickr from 'flatpickr';  // создаем только в поле инпута
+import 'flatpickr/dist/flatpickr.min.css';
 
 // создаем шаблон одного пункта меню
 const filterItem = (filter, isActive) => {
@@ -19,7 +21,9 @@ const createFilterAndStatistics = (filters) => {
         <div class="main-navigation__items">
           ${textData}
         </div>
-        <a href="#stats" class="main-navigation__additional">Stats</a>
+        <input class = "calendar-input hidden" id="Calendar"></input>
+        <a href="#" class="main-navigation__additional" id='calendarButton'>Calendar</a>
+        <a href="#stats" class="main-navigation__additional" id="Stats">Stats</a>
 
       </nav>`
   );
@@ -29,15 +33,45 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+    this._flatpickr = null;
+
+    this._applyFlatpickr = this._applyFlatpickr.bind(this);
   }
 
   getTemplate() {
     return createFilterAndStatistics(this._filters);
   }
 
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, handler);
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      // При своем создании `flatpickr` дополнительно создает вспомогательные DOM-элементы.
+      // Что бы их удалять, нужно вызывать метод `destroy` у созданного инстанса `flatpickr`.
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    const calendarElement = this.getElement().querySelector(`#Calendar`);
+    calendarElement.classList.toggle(`hidden`);
+    this._flatpickr = flatpickr(calendarElement, {
+      altInput: true,
+      allowInput: true,
+      defaultDate: `today`,
+    });
   }
+
+  setClickHandler(handler) {
+    this.getElement().querySelector(`#Stats`).addEventListener(`click`, handler);
+  }
+
+  setCalendarClickHandler() {
+    this.getElement().querySelector(`#calendarButton`).addEventListener(`click`, () => {
+      this._applyFlatpickr();
+    });
+  }
+
+  // this.getElement().querySelector(`#Calendar`).addEventListener(`click`, () => {
+  //   this._applyFlatpickr();
+  // })
 
 }
 
