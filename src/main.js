@@ -31,6 +31,12 @@ filterAndStatistics.setClickHandler(() => { // листнер на кнопку 
   render(mainContainer, userStats);
 });
 
+filterAndStatistics.setCalendarClickHandler(() => {
+  console.log('Calendar click');
+  console.log(this);
+  // this._applyFlatpickr();
+})
+
 // секция "фильмы"
 export const filmsBoard = new FilmsContainerComponent();
 const boardController = new FilmBoardController(filmsBoard.getElement());

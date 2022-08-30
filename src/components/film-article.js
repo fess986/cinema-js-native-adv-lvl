@@ -1,11 +1,15 @@
 import {AbstractComponent} from "./abstract-component";
+import {getYear, getDuration} from "./utils/common";
 
 const createFilmArticle = (filmArticle) => {
 
-  const {title, rating, year, genre, img, description, comments, userDetails, id} = filmArticle;
+  const {title, rating, genre, img, description, comments, userDetails, id, releaseDate, runTime} = filmArticle;
+
+  const year = getYear(releaseDate);
+  const duration = getDuration(runTime);
 
   // const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
-  const releaseDate = new Date(Date.parse(filmArticle.releaseDate));
+  // const releaseDate1 = new Date(Date.parse(filmArticle.releaseDate));
 
   return (
     `<article class="film-card" data-id = '${id}'>
@@ -13,7 +17,7 @@ const createFilmArticle = (filmArticle) => {
         <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${year}</span>
-          <span class="film-card__duration">${releaseDate.getFullYear()}</span>
+          <span class="film-card__duration">${duration}</span>
           <span class="film-card__genre">${genre[0]}</span>
         </p>
         <img src="${img}" alt="" class="film-card__poster">

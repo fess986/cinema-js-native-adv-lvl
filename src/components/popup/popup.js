@@ -1,15 +1,17 @@
-import {MONTH} from "../../const/const";
 import {SmartComponent} from "../smart-abstract-component";
-import {AbstractComponent} from "../abstract-component";
 import {createComments} from "./comments";
+import {getLongDate, getDuration} from "../utils/common";
 
 export const createPopup = (film) => {
   const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = film;
 
-  const releaseDate = new Date(Date.parse(film.releaseDate));
-  const releaseFullDate = `${releaseDate.getDate()} ${MONTH[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
+  // подсчет времени вручную, без moment.js
+  // const releaseDate = new Date(Date.parse(film.releaseDate));
+  // const releaseFullDate = `${releaseDate.getDate()} ${MONTH[releaseDate.getMonth()]} ${releaseDate.getFullYear()}`;
 
-  const duration = `${Math.floor(runTime / 60)}h ${runTime % 60}m`;
+  // читаем дату при помощи moment.js
+  const releaseDate = getLongDate(film.releaseDate);
+  const duration = getDuration(runTime);
 
   const commentsData = createComments(comments);
 
@@ -54,7 +56,7 @@ export const createPopup = (film) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${releaseFullDate}</td>
+                <td class="film-details__cell">${releaseDate}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
