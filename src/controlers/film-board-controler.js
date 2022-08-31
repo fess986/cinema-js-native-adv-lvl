@@ -5,7 +5,7 @@ import {FilmArticleComponent} from "../components/film-article";
 import {TOTAL_FILMS} from "../main";
 import {remove} from "../components/utils/render";
 import {mainContainer} from "../main";
-import {films} from "../main";
+// import {films} from "../main";
 import {SortingComponent} from "../components/sorting";
 import {sortDataMock} from "../mock/sorting-mock";
 import {FilmController} from "./film-controller";
@@ -26,10 +26,11 @@ export const renderFilm = (container, film) => {
 
 export class FilmBoardController {
 
-  constructor(container) {
+  constructor(container, filmsModel) {
     this._container = container;
-    this._films = films;
+    // this._films = films;
     this._sortType = `default`;
+    this._filmsModel = filmsModel;
 
     this._articleFilmsContainer = this._container.querySelector(`.films-list__container`);
 
@@ -53,34 +54,22 @@ export class FilmBoardController {
   }
 
   _onDataChange(oldData, newData) {
-    // ищем фильм нажатой клавиши сравнивая таргетный со всем списком фильмов
-    const index = this._films.findIndex((item) => item === oldData);
+    // ищем изменяемый фильм при помощи модели this._filmsModel по id фильма. На выходе функция сигнализирует о том, успешно ли прошла операция
+    const isSucsess = this._filmsModel.updateFilm(oldData.id, newData);
 
-    // ищем фильм в секции top films
-    const topIndex = this._topFilmsControllers.map((item) => item._film).findIndex((item) => item === oldData);
+    if (isSucsess) {
+      // перерендим карточку фильма на главной доске
+      this._showedFilmControllers.find((item) => item._film.id === oldData.id).render(newData);
 
-    // ищем фильм в секции most commended films
-    const mostCommendedIndex = this._mostCommendedFilmsControllers.map((item) => item._film).findIndex((item) => item === oldData);
+      // перерендим топ филмс по необходимости
+      if (this._topFilmsControllers.find((item) => item._film.id === oldData.id)) {
+        this._topFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
+      }
 
-    // проверяем нашли ли что то, если нет, то ничего не делаем
-    if (index === -1) {
-      return;
-    }
-
-    // переписываем наш массив фильмов
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-
-    // дорендериваем измененную карточку фильма
-    this._showedFilmControllers[index].render(this._films[index]);
-
-    // по необходимости дорендериваем top films
-    if (topIndex !== -1) {
-      this._topFilmsControllers[topIndex].render(this._films[index]);
-    }
-
-    // по необходимости дорендериваем most commended films
-    if (mostCommendedIndex !== -1) {
-      this._mostCommendedFilmsControllers[topIndex].render(this._films[index]);
+      // перерендим топ филмс по необходимости
+      if (this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id)) {
+        this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
+      }
     }
   }
 
@@ -120,15 +109,16 @@ export class FilmBoardController {
     }
 
     this._articleFilmsContainer.innerHTML = ``;
-    sortedFilms = this._sortingComponent.getSortListByType(films, this._sortType);
+    sortedFilms = this._sortingComponent.getSortListByType(this._filmsModel.getFilms(), this._sortType);
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, sortedFilms, 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._newFilmsControllers;
   }
 
   _moreButtonHandler() {
+
     let currentFilms = prevFilms + ADD_FILMS;
 
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, films, prevFilms, currentFilms, this._onDataChange, this._onViewChange);
+    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
 
     prevFilms = currentFilms;
@@ -141,9 +131,11 @@ export class FilmBoardController {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
 
+    const films = this._filmsModel.getFilms();
+
     // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
     // this._films = null;  // проверка работоспособности
-    if (!this._films) {
+    if (!films) {
       const noFilms = new NoFilms();
       render(mainContainer, noFilms);
       return;
@@ -159,9 +151,6 @@ export class FilmBoardController {
 
     // добавляем контейнер непосредственно для карточек фильмов
     render(mainContainer, filmsBoard);
-
-    // подключаем контроллер попапа
-    // const popup = new PopupController();
 
     // рендерим начальные фильмы и добавляем их в _showedFilmControllers
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, films, 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);

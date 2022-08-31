@@ -7,12 +7,15 @@ import {StatisticsComponent} from './components/statistics';
 import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {generateFilms} from './mock/film-articles-mock';
 import {UserStatsComponent} from './components/user-stats';
+import {FilmsModel} from './model/movie';
 
 // константы
 export const TOTAL_FILMS = 20;
 
 // генерируем массив фильмов количеством TOTAL_FILMS
 export let films = generateFilms(TOTAL_FILMS);
+const filmsModel = new FilmsModel(films);
+filmsModel.setFilms(films);
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
@@ -31,15 +34,11 @@ filterAndStatistics.setClickHandler(() => { // листнер на кнопку 
   render(mainContainer, userStats);
 });
 
-filterAndStatistics.setCalendarClickHandler(() => {
-  console.log('Calendar click');
-  console.log(this);
-  // this._applyFlatpickr();
-})
+filterAndStatistics.setCalendarClickHandler(() => {});
 
 // секция "фильмы"
 export const filmsBoard = new FilmsContainerComponent();
-const boardController = new FilmBoardController(filmsBoard.getElement());
+const boardController = new FilmBoardController(filmsBoard.getElement(), filmsModel);
 boardController.render(films);
 
 // добавление статистики
