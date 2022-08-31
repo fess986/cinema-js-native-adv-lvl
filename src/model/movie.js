@@ -15,7 +15,7 @@ export class FilmsModel {
 
   updateFilm(id, updatedFilm) {
 
-    const index = this._films.findIndex((item) => item === updatedFilm);
+    const index = this._films.findIndex((item) => item.id === updatedFilm.id);
 
     // проверяем нашли ли что то, если нет, то ничего не делаем
     if (index === -1) {

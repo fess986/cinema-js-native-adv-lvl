@@ -1,6 +1,7 @@
 import {FilmArticleComponent} from "../components/film-article";
 import {render, replace} from "../components/utils/render";
 import {PopupController} from "./popup-controller";
+const object = require(`lodash/fp`);
 
 export class FilmController {
   constructor(container, onDataChange, onViewChange) {
@@ -21,7 +22,7 @@ export class FilmController {
       evt.preventDefault();
 
       // переписываем поле, которое содержит информацию о поле WatchList
-      const newFilm = this._film;
+      const newFilm = object.cloneDeep(this._film);
       newFilm.userDetails.isWatchListActive = !newFilm.userDetails.isWatchListActive;
 
       // запускаем метод, который изменит информацию в объекте карточки фильма и перерендерит нам сам фильм
@@ -33,7 +34,8 @@ export class FilmController {
 
       evt.preventDefault();
 
-      const newFilm = this._film;
+      // для того чтобы не мутировать изначальное значение делаем глубокий клон при помощи библиотеки Lodash
+      const newFilm = object.cloneDeep(this._film);
       newFilm.userDetails.isWatchedActive = !newFilm.userDetails.isWatchedActive;
 
       this._onDataChange(this._film, newFilm);
@@ -42,7 +44,7 @@ export class FilmController {
     this._filmComponent.setFavoriteClickHandle((evt) => {
       evt.preventDefault();
 
-      const newFilm = this._film;
+      const newFilm = object.cloneDeep(this._film);
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);

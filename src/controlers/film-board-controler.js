@@ -71,7 +71,6 @@ export class FilmBoardController {
         this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
       }
     }
-
   }
 
   _onViewChange() {
