@@ -42,10 +42,19 @@ export class FilmController {
     this._filmComponent.setFavoriteClickHandle((evt) => {
       evt.preventDefault();
 
-      const newFilm = this._film;
-      newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
+      // const newFilm = this._film;
+      const veryNewFilm = Object.assign({}, this._film);
+        // veryNewFilm.userDetails.isFavoriteActive = !veryNewFilm.userDetails.isFavoriteActive;
+        console.log(veryNewFilm.userDetails)
+        console.log(Object.assign({}, veryNewFilm.userDetails, {isFavoriteActive: true}))
+        veryNewFilm.title = 'ass';
+      console.log(veryNewFilm)
+      console.log(this._film);
+//       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
+// console.log(newFilm === this._film);
 
-      this._onDataChange(this._film, newFilm);
+      this._onDataChange(this._film, veryNewFilm);
+
     });
 
     this._filmComponent.setPopupOpenHandler(() => {
