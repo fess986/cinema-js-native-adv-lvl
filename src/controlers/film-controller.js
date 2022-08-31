@@ -1,6 +1,6 @@
 import {FilmArticleComponent} from "../components/film-article";
 import {render, replace} from "../components/utils/render";
-import { PopupController } from "./popup-controller";
+import {PopupController} from "./popup-controller";
 
 export class FilmController {
   constructor(container, onDataChange, onViewChange) {
@@ -42,19 +42,10 @@ export class FilmController {
     this._filmComponent.setFavoriteClickHandle((evt) => {
       evt.preventDefault();
 
-      // const newFilm = this._film;
-      const veryNewFilm = Object.assign({}, this._film);
-        // veryNewFilm.userDetails.isFavoriteActive = !veryNewFilm.userDetails.isFavoriteActive;
-        console.log(veryNewFilm.userDetails)
-        console.log(Object.assign({}, veryNewFilm.userDetails, {isFavoriteActive: true}))
-        veryNewFilm.title = 'ass';
-      console.log(veryNewFilm)
-      console.log(this._film);
-//       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
-// console.log(newFilm === this._film);
+      const newFilm = this._film;
+      newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
-      this._onDataChange(this._film, veryNewFilm);
-
+      this._onDataChange(this._film, newFilm);
     });
 
     this._filmComponent.setPopupOpenHandler(() => {

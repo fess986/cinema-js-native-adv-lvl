@@ -1,4 +1,4 @@
-export class FilmModel {
+export class FilmsModel {
   constructor() {
     this._films = [];
 
