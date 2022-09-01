@@ -20,3 +20,10 @@ export const FILM_COMMENTS = {
 };
 
 export const MONTH = [`January`, `February`, `Marth`, `April`, `May`, `June`, `July`, `August`, `September`, `November`, `December`];
+
+export const FILM_FILTERS_NAMES = {
+  ALL: `All films`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`,
+};

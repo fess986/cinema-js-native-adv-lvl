@@ -1,10 +1,10 @@
 const filterNames = [`All movies`, `Watchlist`, `History`, `Favorites`];
 
 const filtersDataMock = () => {
-  return filterNames.map((item, index) => {
+  return filterNames.map((item) => {
     return {
       name: item,
-      count: index === 0 ? 0 : Math.floor(Math.random() * 100)
+      count: Math.floor(Math.random() * 100)
     };
   });
 };

@@ -3,10 +3,10 @@ import flatpickr from 'flatpickr';  // создаем только в поле �
 import 'flatpickr/dist/flatpickr.min.css';
 
 // создаем шаблон одного пункта меню
-const filterItem = (filter, isActive) => {
-  const {name, count} = filter;
+const filterItem = (filter) => {
+  const {name, count, checked} = filter;
   return (
-    `<a href="#watchlist" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">${name} ${count !== 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
+    `<a href="#watchlist" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name} ${count !== 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
   );
 };
 
