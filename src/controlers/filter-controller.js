@@ -13,13 +13,16 @@ export class FilterController {
     this._activeFilterType = FILM_FILTERS_NAMES.ALL;
 
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+
+    this._filmsModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
     const filters = Object.values(FILM_FILTERS_NAMES).map((item) => {
       return {
         name: item,
-        count: getFilteredFilms(this._allFilms, item).length,
+        count: getFilteredFilms(this._filmsModel._films, item).length,
         checked: item === this._activeFilterType,
       };
     });
@@ -37,11 +40,11 @@ export class FilterController {
 
   _onFilterChange(filterType) {
     this._activeFilterType = filterType;
-
     this._filmsModel.setFilter(filterType);
+  }
 
-    console.log(`filter controller:`);
-    console.log(this._filmsModel.getFilms());
+  _onDataChange() {
+    this.render();
   }
 
 

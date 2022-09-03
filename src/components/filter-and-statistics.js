@@ -73,7 +73,6 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
     this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
       const active = evt.target.id;
       handler(active);
-      console.log(evt.target.id, 'from component. setFilterChangeHandler(handler)');
     });
 
   }

@@ -1,7 +1,7 @@
 import {FilmArticleComponent} from "../components/film-article";
-import {render, replace} from "../components/utils/render";
+import {render, replace, remove} from "../components/utils/render";
 import {PopupController} from "./popup-controller";
-import { FILM_FILTERS_NAMES } from "../const/const";
+import {FILM_FILTERS_NAMES} from "../const/const";
 
 
 const object = require(`lodash/fp`);
@@ -35,7 +35,6 @@ export class FilmController {
 
       // запускаем метод, который изменит информацию в объекте карточки фильма и перерендерит нам сам фильм
       this._onDataChange(this._film, newFilm);
-
     });
 
     this._filmComponent.setWatchedClickHandle((evt) => {
@@ -59,6 +58,7 @@ export class FilmController {
     });
 
     this._filmComponent.setPopupOpenHandler(() => {
+      // закрываем все открытые на данный момент попапы
       this._onViewChange();
       this._popupController = new PopupController(this._film, this._onDataChange);
       this._popupController.render();
@@ -69,6 +69,9 @@ export class FilmController {
     } else {
       render(this._container, this._filmComponent);
     }
+  }
 
+  remove() {
+    remove(this._filmComponent);
   }
 }
