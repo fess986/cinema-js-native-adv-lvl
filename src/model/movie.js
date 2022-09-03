@@ -1,12 +1,20 @@
+import {getFilteredFilms} from "../components/utils/filter";
+import { FILM_FILTERS_NAMES } from "../const/const";
+
 export class FilmsModel {
   constructor() {
     this._films = [];
 
     this._dataChangeHandlers = [];
+    this._activeFilterType = FILM_FILTERS_NAMES.ALL;
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
   }
 
   getFilms() {
-    return this._films;
+    return getFilteredFilms(this._films, this._activeFilterType);
   }
 
   getAllFilms() {

@@ -23,7 +23,7 @@ export const MONTH = [`January`, `February`, `Marth`, `April`, `May`, `June`, `J
 
 export const FILM_FILTERS_NAMES = {
   ALL: `All films`,
-  WATCHLIST: `watchlist`,
+  WATCHLIST: `Watchlist`,
   HISTORY: `History`,
   FAVORITES: `Favorites`,
 };

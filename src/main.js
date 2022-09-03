@@ -17,6 +17,7 @@ export const TOTAL_FILMS = 20;
 export let films = generateFilms(TOTAL_FILMS);
 const filmsModel = new FilmsModel(films);
 filmsModel.setFilms(films);
+console.log(filmsModel.getFilms());
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);

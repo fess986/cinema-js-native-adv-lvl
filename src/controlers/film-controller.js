@@ -1,7 +1,11 @@
 import {FilmArticleComponent} from "../components/film-article";
 import {render, replace} from "../components/utils/render";
 import {PopupController} from "./popup-controller";
+import { FILM_FILTERS_NAMES } from "../const/const";
+
+
 const object = require(`lodash/fp`);
+
 
 export class FilmController {
   constructor(container, onDataChange, onViewChange) {
@@ -9,6 +13,10 @@ export class FilmController {
     this._filmComponent = null;
     this._popupController = null;
     this._film = null;
+    this._films = [];
+
+    this._activeFilterType = FILM_FILTERS_NAMES.ALL;
+
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
   }
@@ -55,7 +63,6 @@ export class FilmController {
       this._popupController = new PopupController(this._film, this._onDataChange);
       this._popupController.render();
     });
-
 
     if (oldComponent) {
       replace(oldComponent, this._filmComponent);
