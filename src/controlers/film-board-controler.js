@@ -62,7 +62,10 @@ export class FilmBoardController {
 
     if (isSucsess) {
       // перерендим карточку фильма на главной доске
-      this._showedFilmControllers.find((item) => item._film.id === oldData.id).render(newData);
+      if (this._showedFilmControllers.find((item) => item._film.id === oldData.id)) {
+        this._showedFilmControllers.find((item) => item._film.id === oldData.id).render(newData);
+      }
+
 
       // перерендим топ филмс по необходимости
       if (this._topFilmsControllers.find((item) => item._film.id === oldData.id)) {
@@ -148,7 +151,6 @@ export class FilmBoardController {
   }
 
   _renderLoadmoreButton() {
-
     // удаляем старые компоненты
     remove(this._moreButtonComponent);
 
@@ -159,6 +161,18 @@ export class FilmBoardController {
 
     render(this._articleFilmsContainer, this._moreButtonComponent, `afterend`);
     this._moreButtonComponent.setClickHandler(this._moreButtonHandler);
+  }
+
+  _renderTopFilms() {
+    render(filmsBoard.getElement(), this._topFilmsComponent);
+    const topListFilms = this._filmsModel.getFilms().slice().sort((a, b) => b.rating - a.rating);
+    this._topFilmsControllers = this._renderFilms(this._topFilmsComponent.getFilmsContainer(), topListFilms, 0, 2, this._onDataChange, this._onViewChange);
+  }
+
+  _renderMostCommendedFilms() {
+    render(filmsBoard.getElement(), this._mostCommendedComponent);
+    const mostCommendedFilms = this._filmsModel.getFilms().slice().sort((a, b) => b.comments.length - a.comments.length);
+    this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), mostCommendedFilms, 0, 2, this._onDataChange, this._onViewChange);
   }
 
   render() {
@@ -189,14 +203,14 @@ export class FilmBoardController {
     this._renderLoadmoreButton();
 
     // рендерим топ фильмы
-    render(filmsBoard.getElement(), this._topFilmsComponent);
-    this._topFilmsControllers = this._renderFilms(this._topFilmsComponent.getFilmsContainer(), films, 0, 2, this._onDataChange, this._onViewChange);
+    this._renderTopFilms();
 
     // рендерим самые комментируемые фильмы
-    render(filmsBoard.getElement(), this._mostCommendedComponent);
-    this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), films, 0, 2, this._onDataChange, this._onViewChange);
+    this._renderMostCommendedFilms();
 
     // сортировка
     this._sortingComponent.setClickHandler(this._onSortChange);
   }
+
+
 }
