@@ -1,12 +1,12 @@
 import {AbstractComponent} from './abstract-component';
-import flatpickr from 'flatpickr';  // создаем только в поле инпута
+import flatpickr from 'flatpickr'; // создаем только в поле инпута
 import 'flatpickr/dist/flatpickr.min.css';
 
 // создаем шаблон одного пункта меню
-const filterItem = (filter, isActive) => {
-  const {name, count} = filter;
+const filterItem = (filter) => {
+  const {name, count, checked} = filter;
   return (
-    `<a href="#watchlist" class="main-navigation__item ${isActive ? `main-navigation__item--active` : ``}">${name} ${count !== 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
+    `<a id="${name}" href="#watchlist" class="main-navigation__item ${checked ? `main-navigation__item--active` : ``}">${name} ${count !== 0 ? `<span class="main-navigation__item-count">${count}</span>` : ``}</a>`
   );
 };
 
@@ -69,9 +69,13 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
     });
   }
 
-  // this.getElement().querySelector(`#Calendar`).addEventListener(`click`, () => {
-  //   this._applyFlatpickr();
-  // })
+  setFilterChangeHandler(handler) {
+    this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
+      const active = evt.target.id;
+      handler(active);
+    });
+
+  }
 
 }
 

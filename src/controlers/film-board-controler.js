@@ -2,7 +2,6 @@ import {ShowMoreButtonComponent} from "../components/show-more-button";
 import {filmsBoard} from "../main";
 import {render} from "../components/utils/render";
 import {FilmArticleComponent} from "../components/film-article";
-import {TOTAL_FILMS} from "../main";
 import {remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 // import {films} from "../main";
@@ -51,6 +50,10 @@ export class FilmBoardController {
     this._moreButtonHandler = this._moreButtonHandler.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+
   }
 
   _onDataChange(oldData, newData) {
@@ -71,6 +74,23 @@ export class FilmBoardController {
         this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
       }
     }
+  }
+
+  _onFilterChange() {
+    // вызываем при смене фильтров из нашей модели
+    // удаление показываемых фильмов
+    this._showedFilmControllers.forEach((controller) => {
+      controller.remove();
+    });
+
+    this._showedFilmControllers = [];
+
+    // рендеринг новых с учетом гетфилмов
+    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
+    this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+
+    // рендер кнопки
+    this._renderLoadmoreButton();
   }
 
   _onViewChange() {
@@ -115,22 +135,35 @@ export class FilmBoardController {
   }
 
   _moreButtonHandler() {
-
+    // пересчитываем количество показываемых фильмов на основании _showedFilmControllers
+    prevFilms = this._showedFilmControllers.length;
     let currentFilms = prevFilms + ADD_FILMS;
 
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
 
-    prevFilms = currentFilms;
-    if (currentFilms >= TOTAL_FILMS) {
+    if (currentFilms >= this._filmsModel.getFilms().length) {
       remove(this._moreButtonComponent);
     }
+  }
+
+  _renderLoadmoreButton() {
+
+    // удаляем старые компоненты
+    remove(this._moreButtonComponent);
+
+    // проверяем кол-во показываемых фильмов, чтобы в случае чего не рендерить кнопку
+    if (this._showedFilmControllers.length >= this._filmsModel.getFilms().length) {
+      return;
+    }
+
+    render(this._articleFilmsContainer, this._moreButtonComponent, `afterend`);
+    this._moreButtonComponent.setClickHandler(this._moreButtonHandler);
   }
 
   render() {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
-
     const films = this._filmsModel.getFilms();
 
     // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
@@ -145,16 +178,15 @@ export class FilmBoardController {
     // const loading = new Loading();
     // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
 
-    // добавляем кнопку "показать больше фильмов"
-    render(this._articleFilmsContainer, this._moreButtonComponent, `afterend`);
-    this._moreButtonComponent.setClickHandler(this._moreButtonHandler);
-
     // добавляем контейнер непосредственно для карточек фильмов
     render(mainContainer, filmsBoard);
 
     // рендерим начальные фильмы и добавляем их в _showedFilmControllers
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, films, 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
+    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+
+    // добавляем кнопку "показать больше фильмов"
+    this._renderLoadmoreButton();
 
     // рендерим топ фильмы
     render(filmsBoard.getElement(), this._topFilmsComponent);
@@ -166,6 +198,5 @@ export class FilmBoardController {
 
     // сортировка
     this._sortingComponent.setClickHandler(this._onSortChange);
-
   }
 }

@@ -34,13 +34,13 @@ const createFilmArticle = (filmArticle) => {
 
 export class FilmArticleComponent extends AbstractComponent {
 
-  constructor(filmArticle) {
+  constructor(film) {
     super();
-    this._article = filmArticle;
+    this._film = film;
   }
 
   getTemplate() {
-    return createFilmArticle(this._article);
+    return createFilmArticle(this._film);
   }
 
   setWatchListClickHandle(handler) {

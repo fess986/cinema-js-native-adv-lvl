@@ -8,6 +8,7 @@ import {filtersDataMock} from './mock/filter-and-statistics-mok';
 import {generateFilms} from './mock/film-articles-mock';
 import {UserStatsComponent} from './components/user-stats';
 import {FilmsModel} from './model/movie';
+import { FilterController } from './controlers/filter-controller';
 
 // константы
 export const TOTAL_FILMS = 20;
@@ -25,7 +26,9 @@ const filterAndStatistics = new FilterAndStatisticsComponent(filtersDataMock());
 
 // рендерим фильтры и статистику
 render(rankUserContainer, new RankUserComponent());
-render(mainContainer, filterAndStatistics);
+
+const filterController = new FilterController(mainContainer, filmsModel);
+filterController.render();
 
 // статистика
 const userStats = new UserStatsComponent(); // инициализация компонента
