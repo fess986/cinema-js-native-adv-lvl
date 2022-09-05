@@ -25,6 +25,8 @@ export class SortingComponent extends AbstractComponent {
     super();
     this._data = data;
     this._sortingType = `default`;
+    this._isFirstChange = true;
+    this._initialFilms = [];
   }
 
   getTemplate() {
@@ -36,24 +38,8 @@ export class SortingComponent extends AbstractComponent {
     return this._sortingType;
   }
 
-  getSortListByType(films, type) {
-    let sortedFilms = [];
-    switch (type) {
-      case SortTypes.DEFAULT:
-        sortedFilms = films.slice();
-        break;
-      case SortTypes.DATE:
-        sortedFilms = films.slice().sort((a, b) => b.year - a.year);
-        break;
-      case SortTypes.RATING:
-        sortedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-        break;
-    }
-    return sortedFilms;
-  }
-
   setClickHandler(handler) {
-    this.getElement().addEventListener('click', handler);
+    this.getElement().addEventListener(`click`, handler);
   }
 
 }
