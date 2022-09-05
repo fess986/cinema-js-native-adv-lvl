@@ -46,6 +46,4 @@ export class FilterController {
   _onDataChange() {
     this.render();
   }
-
-
 }

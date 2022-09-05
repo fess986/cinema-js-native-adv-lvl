@@ -49,11 +49,22 @@ export class FilmBoardController {
     this._onSortChange = this._onSortChange.bind(this);
     this._moreButtonHandler = this._moreButtonHandler.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onCommentsChange = this._onCommentsChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
 
+  }
+
+  _onCommentsChange(newComment, deleteComment) {
+    if (newComment) {
+      console.log(`new comment`);
+    }
+
+    if (deleteComment) {
+      console.log(`delete comment`);
+    }
   }
 
   _onDataChange(oldData, newData) {
@@ -128,10 +139,17 @@ export class FilmBoardController {
       this._sortingComponent.getElement().querySelector(`[data-sorting = '${this._sortType}']`).classList.add(`sort__button--active`);
     }
 
-    this._articleFilmsContainer.innerHTML = ``;
-    sortedFilms = this._sortingComponent.getSortListByType(this._filmsModel.getFilms(), this._sortType);
+    // сохраняем тип сортировки в модель
+    this._filmsModel._activeSortingType = this._sortType;
+
+    this._showedFilmControllers.forEach((controller) => controller.remove());
+
+    sortedFilms = this._filmsModel.getSortedAndFilteredFilms();
+
     this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, sortedFilms, 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._newFilmsControllers;
+
+    this._renderLoadmoreButton();
   }
 
   _moreButtonHandler() {
@@ -139,7 +157,7 @@ export class FilmBoardController {
     prevFilms = this._showedFilmControllers.length;
     let currentFilms = prevFilms + ADD_FILMS;
 
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
+    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
 
     if (currentFilms >= this._filmsModel.getFilms().length) {
@@ -148,7 +166,6 @@ export class FilmBoardController {
   }
 
   _renderLoadmoreButton() {
-
     // удаляем старые компоненты
     remove(this._moreButtonComponent);
 

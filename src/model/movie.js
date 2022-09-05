@@ -1,4 +1,5 @@
 import {getFilteredFilms} from "../components/utils/filter";
+import {getSortListByType} from "../components/utils/sorting";
 import {FILM_FILTERS_NAMES} from "../const/const";
 
 export class FilmsModel {
@@ -6,6 +7,7 @@ export class FilmsModel {
     this._films = [];
 
     this._activeFilterType = FILM_FILTERS_NAMES.ALL;
+    this._activeSortingType = `default`;
 
     this._dataChangeHandlers = []; // хендлеры для смены данных пользователя
     this._filterChangeHandlers = []; // хендлеры для смены фильтров
@@ -21,13 +23,17 @@ export class FilmsModel {
     return getFilteredFilms(this._films, this._activeFilterType);
   }
 
+  getSortedAndFilteredFilms() {
+    const filteredFilms = getFilteredFilms(this._films, this._activeFilterType);
+    return getSortListByType(filteredFilms, this._activeSortingType);
+  }
+
   getAllFilms() {
     return this._films;
   }
 
   setFilms(films) {
     this._films = Array.from(films);
-    this._callHandlers(this._filterChangeHandlers);
   }
 
   updateFilm(id, updatedFilm) {
