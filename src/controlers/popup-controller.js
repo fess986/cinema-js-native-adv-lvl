@@ -1,6 +1,7 @@
 import {PopupComponent} from "../components/popup/popup";
 import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
+import { CommentComponent } from "../components/popup/comments";
 
 export class PopupController {
   constructor(film, onDataChange) {
@@ -29,11 +30,15 @@ export class PopupController {
 
   render() {
     this._popupComponent = new PopupComponent(this._film);
+    this._commentComponent = new CommentComponent(null, this._film);
+
 
     document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
     // document.scrollIntoView(false);
 
     render(mainContainer, this._popupComponent, `afterend`);
+
+    render(this._popupComponent.getCommentsContainer(), this._commentComponent, `beforeend`);
 
     this._popupComponent.setCloseHandler(() => {
       document.body.style.overflowY = `auto`; // возвращаем прокрутку
@@ -66,11 +71,6 @@ export class PopupController {
       this._onDataChange(this._film, newFilm);
     });
 
-    this._popupComponent._subscribeOnEmojiEvents();
-
-    // this._popupComponent.setDeleteCommentHandler(() => {
-    //   console.log('delete comment');
-    // })
   }
 }
 
