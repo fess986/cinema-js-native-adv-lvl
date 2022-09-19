@@ -22,11 +22,9 @@ export const getFilteredFilms = (films, filterType) => {
       filterdFilms = filterByWatchlist(films);
       break;
     case FILM_FILTERS_NAMES.HISTORY:
-      filterdFilms = films;
       filterdFilms = filterByWatched(films);
       break;
     case FILM_FILTERS_NAMES.FAVORITES:
-      filterdFilms = films;
       filterdFilms = filterByFovorites(films);
       break;
   }

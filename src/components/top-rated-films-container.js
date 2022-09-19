@@ -17,10 +17,6 @@ export class TopFilmsComponent extends AbstractComponent {
     return createTopFilmsContainer();
   }
 
-  setClickHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
-  }
-
   getFilmsContainer() {
     return this.getElement().querySelector(`#top-films__container`);
   }
