@@ -8,7 +8,6 @@ export class FilterController {
     this._filmsModel = filmsModel;
     this._container = container;
     this._filterComponent = null;
-    this._allFilms = this._filmsModel.getAllFilms();
 
     this._activeFilterType = FILM_FILTERS_NAMES.ALL;
 

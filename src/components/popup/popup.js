@@ -3,7 +3,22 @@ import {createComments} from "./comments";
 import {getLongDate, getDuration} from "../utils/common";
 
 export const createPopup = (film) => {
-  const {title, rating, runTime, genre, img, description, comments, userDetails, alternativeTitle, ageRating, director, writers, actors, country} = film;
+  const {
+    title,
+    rating,
+    runTime,
+    genre,
+    img,
+    description,
+    comments,
+    userDetails,
+    alternativeTitle,
+    ageRating,
+    director,
+    writers,
+    actors,
+    country,
+  } = film;
 
   // подсчет времени вручную, без moment.js
   // const releaseDate = new Date(Date.parse(film.releaseDate));
@@ -15,8 +30,7 @@ export const createPopup = (film) => {
 
   const commentsData = createComments(comments);
 
-  return (
-    `<section class="film-details">
+  return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -80,20 +94,28 @@ export const createPopup = (film) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${userDetails.isWatchListActive ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${
+  userDetails.isWatchListActive ? `checked` : ``
+}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${userDetails.isWatchedActive ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${
+  userDetails.isWatchedActive ? `checked` : ``
+}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${userDetails.isFavoriteActive ? `checked` : ``}>
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${
+  userDetails.isFavoriteActive ? `checked` : ``
+}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>
 
       <div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${
+  comments.length
+}</span></h3>
 
           <ul class="film-details__comments-list">
             ${commentsData}
@@ -133,8 +155,7 @@ export const createPopup = (film) => {
         </section>
       </div>
     </form>
-  </section>`
-  );
+  </section>`;
 };
 
 export class PopupComponent extends SmartComponent {
@@ -145,7 +166,6 @@ export class PopupComponent extends SmartComponent {
     this._watchListHandler = null;
     this._watchedHandler = null;
     this._favoriteHandler = null;
-
   }
 
   rerender() {
@@ -157,13 +177,11 @@ export class PopupComponent extends SmartComponent {
     console.log(`recoveryListeners`);
 
     this._subscribeOnEvents();
-
   }
 
   getTemplate() {
     return createPopup(this._film);
   }
-
 
   _subscribeOnEvents() {
     console.log(`subscribing on events`);
@@ -176,38 +194,46 @@ export class PopupComponent extends SmartComponent {
     // this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
     //   console.log(`discribing`);
     // });
-
   }
 
   setCloseHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this.getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
     this._closeHandler = handler;
   }
 
   setWatchListClickHandle(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this.getElement()
+      .querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
     this._watchListHandler = handler;
   }
 
   setWatchedClickHandle(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this.getElement()
+      .querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
     this._watchedHandler = handler;
   }
 
   setFavoriteClickHandle(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this.getElement()
+      .querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
     this._favoriteHandler = handler;
   }
 
   _subscribeOnEmojiEvents() {
     const element = this.getElement();
-    const emojyContainer = element.querySelector(`.film-details__add-emoji-label`);
+    const emojyContainer = element.querySelector(
+        `.film-details__add-emoji-label`
+    );
 
     element.querySelector(`#smile`).addEventListener(`click`, () => {
       emojyContainer.innerHTML = `<img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">`;
 
       // this.rerender();
-
     });
 
     element.querySelector(`#sleeping`).addEventListener(`click`, () => {
@@ -222,6 +248,4 @@ export class PopupComponent extends SmartComponent {
       emojyContainer.innerHTML = `<img src="images/emoji/angry.png" width="55" height="55" alt="emoji-smile">`;
     });
   }
-
-
 }

@@ -1,5 +1,4 @@
 import {AbstractComponent} from './abstract-component';
-import {SortTypes} from '../mock/sorting-mock';
 
 const sortItem = (item, isActive) => {
   return (
@@ -25,8 +24,8 @@ export class SortingComponent extends AbstractComponent {
     super();
     this._data = data;
     this._sortingType = `default`;
-    this._isFirstChange = true;
-    this._initialFilms = [];
+    // this._isFirstChange = true;
+    // this._initialFilms = [];
   }
 
   getTemplate() {

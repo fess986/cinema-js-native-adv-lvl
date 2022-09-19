@@ -1,14 +1,37 @@
-import {render, remove} from './components/utils/render';
-import {FilmBoardController} from './controlers/film-board-controler';
-import {RankUserComponent} from './components/rank-user';
-import {FilterAndStatisticsComponent} from './components/filter-and-statistics';
-import {FilmsContainerComponent} from './components/films-container';
-import {StatisticsComponent} from './components/statistics';
-import {filtersDataMock} from './mock/filter-and-statistics-mok';
-import {generateFilms} from './mock/film-articles-mock';
-import {UserStatsComponent} from './components/user-stats';
-import {FilmsModel} from './model/movie';
-import { FilterController } from './controlers/filter-controller';
+import {
+  render,
+  remove
+} from './components/utils/render';
+import {
+  FilmBoardController
+} from './controlers/film-board-controler';
+import {
+  RankUserComponent
+} from './components/rank-user';
+import {
+  FilterAndStatisticsComponent
+} from './components/filter-and-statistics';
+import {
+  FilmsContainerComponent
+} from './components/films-container';
+import {
+  StatisticsComponent
+} from './components/statistics';
+import {
+  filtersDataMock
+} from './mock/filter-and-statistics-mok';
+import {
+  generateFilms
+} from './mock/film-articles-mock';
+import {
+  UserStatsComponent
+} from './components/user-stats';
+import {
+  FilmsModel
+} from './model/movie';
+import {
+  FilterController
+} from './controlers/filter-controller';
 
 // константы
 export const TOTAL_FILMS = 20;

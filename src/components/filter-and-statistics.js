@@ -71,6 +71,9 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
+      if (event.target.tagName !== `A`) {
+        return;
+      }
       const active = evt.target.id;
       handler(active);
     });

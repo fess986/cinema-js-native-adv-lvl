@@ -67,6 +67,10 @@ export class PopupController {
     });
 
     this._popupComponent._subscribeOnEmojiEvents();
+
+    // this._popupComponent.setDeleteCommentHandler(() => {
+    //   console.log('delete comment');
+    // })
   }
 }
 

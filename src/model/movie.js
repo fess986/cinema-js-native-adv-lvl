@@ -13,10 +13,18 @@ export class FilmsModel {
     this._filterChangeHandlers = []; // хендлеры для смены фильтров
   }
 
+  getComments(film) {
+    console.log(film.comments);
+  }
+
+  removeComment() {
+    console.log(`removing comment`);
+  }
+
   setFilter(filterType) {
     this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers); // вызываем ререндеринг фильтров при смене фильтра
-    this._callHandlers(this._dataChangeHandlers); // // вызываем ререндеринг карточек фильмов
+    this._callHandlers(this._filterChangeHandlers); // вызываем ререндеринг карточек фильмов.
+    this._callHandlers(this._dataChangeHandlers); // // вызываем ререндеринг фильтров при его смене. Хэндлер прописан в filter Controller и ререндерит фильтры на основе активного фильтра и количества фильмов в каждой категории
   }
 
   getFilms() {

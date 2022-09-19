@@ -1,10 +1,8 @@
 import {ShowMoreButtonComponent} from "../components/show-more-button";
 import {filmsBoard} from "../main";
 import {render} from "../components/utils/render";
-import {FilmArticleComponent} from "../components/film-article";
 import {remove} from "../components/utils/render";
 import {mainContainer} from "../main";
-// import {films} from "../main";
 import {SortingComponent} from "../components/sorting";
 import {sortDataMock} from "../mock/sorting-mock";
 import {FilmController} from "./film-controller";
@@ -17,17 +15,11 @@ const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
 let prevFilms = SHOWN_FILMS;
 
-// оставляем пока, тк он используется еще в других местах, но конкретно тут уже использоваться не будет
-export const renderFilm = (container, film) => {
-  const filmComponent = new FilmArticleComponent(film);
-  render(container, filmComponent);
-};
-
 export class FilmBoardController {
 
   constructor(container, filmsModel) {
     this._container = container;
-    // this._films = films;
+    this._films = null;
     this._sortType = `default`;
     this._filmsModel = filmsModel;
 
@@ -54,6 +46,7 @@ export class FilmBoardController {
     this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    this._sortingComponent.setClickHandler(this._onSortChange);
 
   }
 
@@ -68,6 +61,8 @@ export class FilmBoardController {
   }
 
   _onDataChange(oldData, newData) {
+    // расширяем метод для работы с комментариями. Если отсутствует oldData - то добавляем комментарий, содержащийся в newData
+    // если нет newData, то удаляем комментарий из фильма oldData
     // ищем изменяемый фильм при помощи модели this._filmsModel по id фильма. На выходе функция сигнализирует о том, успешно ли прошла операция
     const isSucsess = this._filmsModel.updateFilm(oldData.id, newData);
 
@@ -97,7 +92,7 @@ export class FilmBoardController {
     this._showedFilmControllers = [];
 
     // рендеринг новых с учетом гетфилмов
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getFilms(), 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
+    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), 0, SHOWN_FILMS, this._onDataChange, this._onViewChange);
     this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
 
     // рендер кнопки
@@ -134,6 +129,7 @@ export class FilmBoardController {
     if (this._sortType === this._sortingComponent.getSortType(evt)) {
       return;
     } else {
+      // логика перекраски активного пункта
       this._sortingComponent.getElement().querySelector(`[data-sorting = '${this._sortType}']`).classList.remove(`sort__button--active`);
       this._sortType = this._sortingComponent.getSortType(evt);
       this._sortingComponent.getElement().querySelector(`[data-sorting = '${this._sortType}']`).classList.add(`sort__button--active`);
@@ -181,11 +177,11 @@ export class FilmBoardController {
   render() {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
-    const films = this._filmsModel.getFilms();
+    this._films = this._filmsModel.getFilms();
 
     // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
     // this._films = null;  // проверка работоспособности
-    if (!films) {
+    if (!this._films) {
       const noFilms = new NoFilms();
       render(mainContainer, noFilms);
       return;
@@ -207,13 +203,11 @@ export class FilmBoardController {
 
     // рендерим топ фильмы
     render(filmsBoard.getElement(), this._topFilmsComponent);
-    this._topFilmsControllers = this._renderFilms(this._topFilmsComponent.getFilmsContainer(), films, 0, 2, this._onDataChange, this._onViewChange);
+    this._topFilmsControllers = this._renderFilms(this._topFilmsComponent.getFilmsContainer(), this._films, 0, 2, this._onDataChange, this._onViewChange);
 
     // рендерим самые комментируемые фильмы
     render(filmsBoard.getElement(), this._mostCommendedComponent);
-    this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), films, 0, 2, this._onDataChange, this._onViewChange);
+    this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), this._films, 0, 2, this._onDataChange, this._onViewChange);
 
-    // сортировка
-    this._sortingComponent.setClickHandler(this._onSortChange);
   }
 }
