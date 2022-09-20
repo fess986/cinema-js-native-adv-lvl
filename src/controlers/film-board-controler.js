@@ -63,6 +63,7 @@ export class FilmBoardController {
   _onDataChange(oldData, newData) {
     // расширяем метод для работы с комментариями. Если отсутствует oldData - то добавляем комментарий, содержащийся в newData
     // если нет newData, то удаляем комментарий из фильма oldData
+
     // ищем изменяемый фильм при помощи модели this._filmsModel по id фильма. На выходе функция сигнализирует о том, успешно ли прошла операция
     const isSucsess = this._filmsModel.updateFilm(oldData.id, newData);
 

@@ -1,6 +1,7 @@
 import {PopupComponent} from "../components/popup/popup";
 import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
+import {CommentComponent} from "../components/popup/comments";
 
 export class PopupController {
   constructor(film, onDataChange) {
@@ -29,11 +30,15 @@ export class PopupController {
 
   render() {
     this._popupComponent = new PopupComponent(this._film);
+    this._commentComponent = new CommentComponent(this._film);
 
     document.body.style.overflow = `hidden`; // убираем прокрутку основного документа
     // document.scrollIntoView(false);
 
     render(mainContainer, this._popupComponent, `afterend`);
+
+    render(this._popupComponent.getCommentsContainer(), this._commentComponent, `beforeend`);
+    // this._popupComponent.rerender();
 
     this._popupComponent.setCloseHandler(() => {
       document.body.style.overflowY = `auto`; // возвращаем прокрутку
@@ -47,6 +52,7 @@ export class PopupController {
       newFilm.userDetails.isWatchListActive = !newFilm.userDetails.isWatchListActive;
 
       this._onDataChange(this._film, newFilm);
+
 
     });
 
@@ -64,13 +70,23 @@ export class PopupController {
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);
+      // this._popupComponent.rerender();
+      // this._popupComponent.rerender();
     });
 
-    this._popupComponent._subscribeOnEmojiEvents();
+    this._commentComponent._setDeleteClickHandler((evt) => {
+      evt.preventDefault();
+      console.log(evt.target.dataset.commentid);
 
-    // this._popupComponent.setDeleteCommentHandler(() => {
-    //   console.log('delete comment');
-    // })
+      const newFilm = this._film;
+      newFilm.comments = newFilm.comments.filter((item) => item.id != evt.target.dataset.commentid);
+
+      this._onDataChange(this._film, newFilm);
+
+      this._commentComponent.rerender();
+
+    });
+
   }
 }
 

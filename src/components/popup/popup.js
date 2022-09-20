@@ -28,7 +28,7 @@ export const createPopup = (film) => {
   const releaseDate = getLongDate(film.releaseDate);
   const duration = getDuration(runTime);
 
-  const commentsData = createComments(comments);
+  // const commentsData = createComments(comments);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -112,47 +112,7 @@ export const createPopup = (film) => {
       </div>
 
       <div class="form-details__bottom-container">
-        <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${
-  comments.length
-}</span></h3>
 
-          <ul class="film-details__comments-list">
-            ${commentsData}
-          </ul>
-
-          <div class="film-details__new-comment">
-            <div for="add-emoji" class="film-details__add-emoji-label">
-
-            </div>
-
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-            </label>
-
-            <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="./images/emoji/smile.png" id="smile" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="./images/emoji/sleeping.png" id="sleeping" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
-                <img src="./images/emoji/puke.png" id="puke" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="./images/emoji/angry.png" id="angry" width="30" height="30" alt="emoji">
-              </label>
-            </div>
-          </div>
-        </section>
       </div>
     </form>
   </section>`;
@@ -183,17 +143,16 @@ export class PopupComponent extends SmartComponent {
     return createPopup(this._film);
   }
 
+  getCommentsContainer() {
+    return this.getElement().querySelector(`.form-details__bottom-container`);
+  }
+
   _subscribeOnEvents() {
-    console.log(`subscribing on events`);
+    console.log(`subscribing on popup events`);
     this.setCloseHandler(this._closeHandler);
     this.setWatchListClickHandle(this._watchListHandler);
     this.setWatchedClickHandle(this._watchedHandler);
     this.setFavoriteClickHandle(this._favoriteHandler);
-    this._subscribeOnEmojiEvents();
-
-    // this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, () => {
-    //   console.log(`discribing`);
-    // });
   }
 
   setCloseHandler(handler) {
@@ -224,28 +183,4 @@ export class PopupComponent extends SmartComponent {
     this._favoriteHandler = handler;
   }
 
-  _subscribeOnEmojiEvents() {
-    const element = this.getElement();
-    const emojyContainer = element.querySelector(
-        `.film-details__add-emoji-label`
-    );
-
-    element.querySelector(`#smile`).addEventListener(`click`, () => {
-      emojyContainer.innerHTML = `<img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">`;
-
-      // this.rerender();
-    });
-
-    element.querySelector(`#sleeping`).addEventListener(`click`, () => {
-      emojyContainer.innerHTML = `<img src="images/emoji/sleeping.png" width="55" height="55" alt="emoji-smile">`;
-    });
-
-    element.querySelector(`#puke`).addEventListener(`click`, () => {
-      emojyContainer.innerHTML = `<img src="images/emoji/puke.png" width="55" height="55" alt="emoji-smile">`;
-    });
-
-    element.querySelector(`#angry`).addEventListener(`click`, () => {
-      emojyContainer.innerHTML = `<img src="images/emoji/angry.png" width="55" height="55" alt="emoji-smile">`;
-    });
-  }
 }
