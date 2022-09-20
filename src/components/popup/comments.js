@@ -7,7 +7,7 @@ const createComment = (comment) => {
     watchingDate.getMonth() + 1
   }/${watchingDate.getDate()} ${watchingDate.getHours()}:${watchingDate.getMinutes()}`;
 
-  return `<li class="film-details__comment">
+  return `<li class="film-details__comment ">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${
   comment.emotion
@@ -22,7 +22,7 @@ const createComment = (comment) => {
     ? `One minute ago`
     : fullWatchingDate
 }</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button data-commentId = '${comment.id}' class="film-details__comment-delete">Delete</button>
       </p>
     </div>
   </li>`;
@@ -84,32 +84,46 @@ const createTemplate = (film) => {
 
 export class CommentComponent extends SmartComponent {
 
-  constructor(comment, film) {
+  constructor(film) {
     super();
-    this._comment = comment;
     this._comments = film.comments;
     this._film = film;
+    this._deleteHandler = null;
 
-    this._subscribeOnEmojiEvents();
+    this._subscribeOnEvents(); // подписываемся на первоначальные события
+    this.rerender = this.rerender.bind(this);
   }
 
   rerender() {
-    console.log(`rerender from component`);
+    console.log(`rerender from Smart component`);
     super.rerender();
   }
 
   recoveryListeners() {
-    console.log(`recoveryListeners`);
+    console.log(`recovery comments Listeners`);
 
     this._subscribeOnEvents();
   }
 
   _subscribeOnEvents() {
     this._subscribeOnEmojiEvents();
+    this._setDeleteClickHandler(this._deleteHandler);
   }
 
   getTemplate() {
     return createTemplate(this._film);
+  }
+
+  _setDeleteClickHandler(handler) {
+    console.log(handler)
+    const commentsCollection = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+    const arrayCommentsCollection = Array.from(commentsCollection);
+    arrayCommentsCollection.forEach((element) => {
+      element.addEventListener(`click`, handler);
+    });
+
+    // важно сохранять хэндлер, если мы ререндерим компонент внутри другого компонента, иначе он исчезнет!
+    this._deleteHandler = handler;
   }
 
   _subscribeOnEmojiEvents() {
@@ -121,7 +135,7 @@ export class CommentComponent extends SmartComponent {
     element.querySelector(`#smile`).addEventListener(`click`, () => {
       emojyContainer.innerHTML = `<img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">`;
 
-      this.rerender();
+      // this.rerender();
     });
 
     element.querySelector(`#sleeping`).addEventListener(`click`, () => {

@@ -128,16 +128,16 @@ export class PopupComponent extends SmartComponent {
     this._favoriteHandler = null;
   }
 
-  // rerender() {
-  //   console.log(`rerender from component`);
-  //   super.rerender();
-  // }
+  rerender() {
+    console.log(`rerender from component`);
+    super.rerender();
+  }
 
-  // recoveryListeners() {
-  //   console.log(`recoveryListeners`);
+  recoveryListeners() {
+    console.log(`recoveryListeners`);
 
-  //   this._subscribeOnEvents();
-  // }
+    this._subscribeOnEvents();
+  }
 
   getTemplate() {
     return createPopup(this._film);
