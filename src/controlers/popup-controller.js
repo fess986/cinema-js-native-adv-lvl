@@ -53,7 +53,6 @@ export class PopupController {
 
       this._onDataChange(this._film, newFilm);
 
-
     });
 
     this._popupComponent.setWatchedClickHandle(() => {
@@ -71,12 +70,10 @@ export class PopupController {
 
       this._onDataChange(this._film, newFilm);
       // this._popupComponent.rerender();
-      // this._popupComponent.rerender();
     });
 
-    this._commentComponent._setDeleteClickHandler((evt) => {
+    this._commentComponent.setDeleteClickHandler((evt) => {
       evt.preventDefault();
-      console.log(evt.target.dataset.commentid);
 
       const newFilm = this._film;
       newFilm.comments = newFilm.comments.filter((item) => item.id != evt.target.dataset.commentid);
@@ -84,7 +81,25 @@ export class PopupController {
       this._onDataChange(this._film, newFilm);
 
       this._commentComponent.rerender();
+    });
 
+
+    this._commentComponent.setCommentSendHandler((evt) => {
+
+      if ((evt.code === `Enter`) && (event.ctrlKey || event.metaKey)) {
+
+        // добавляем в массив комментариев новый, который мы спарсили из формы
+        const newComment = this._popupComponent.getComment();
+        if (!newComment) {
+          return;
+        }
+        const newFilm = this._film;
+        newFilm.comments.push(newComment);
+
+        this._onDataChange(this._film, newFilm);
+
+        this._commentComponent.rerender();
+      }
     });
 
   }

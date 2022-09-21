@@ -31,7 +31,7 @@ export const createPopup = (film) => {
   // const commentsData = createComments(comments);
 
   return `<section class="film-details">
-    <form class="film-details__inner" action="" method="get">
+    <form class="film-details__inner" action="#" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
           <button class="film-details__close-btn" type="button">close</button>
@@ -147,6 +147,28 @@ export class PopupComponent extends SmartComponent {
     return this.getElement().querySelector(`.form-details__bottom-container`);
   }
 
+  getForm() {
+    return this.getElement().querySelector(`.film-details__inner`);
+  }
+
+  getComment() {
+
+    // получаем данные из формы
+    const formData = new FormData(this.getForm());
+
+    if (!formData.get(`comment-emoji`) || (!formData.get(`comment`))) {
+      return null;
+    }
+
+    return {
+      'id': Math.floor(Math.random() * 500),
+      'author': `Its ME!!`,
+      "comment": `${formData.get(`comment`)}`,
+      'date': `2019-05-11T16:12:32.554Z`,
+      "emotion": `${formData.get(`comment-emoji`)}`,
+    };
+  }
+
   _subscribeOnEvents() {
     console.log(`subscribing on popup events`);
     this.setCloseHandler(this._closeHandler);
@@ -182,5 +204,4 @@ export class PopupComponent extends SmartComponent {
       .addEventListener(`click`, handler);
     this._favoriteHandler = handler;
   }
-
 }
