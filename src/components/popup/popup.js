@@ -1,6 +1,7 @@
 import {SmartComponent} from "../smart-abstract-component";
 import {createComments} from "./comments";
 import {getLongDate, getDuration} from "../utils/common";
+import {encode} from "he";
 
 export const createPopup = (film) => {
   const {
@@ -160,10 +161,13 @@ export class PopupComponent extends SmartComponent {
       return null;
     }
 
+    // вставляем безопасную версию коммента
+    const comment = encode(formData.get(`comment`));
+
     return {
       'id': Math.floor(Math.random() * 500),
       'author': `Its ME!!`,
-      "comment": `${formData.get(`comment`)}`,
+      "comment": `${comment}`,
       'date': `2019-05-11T16:12:32.554Z`,
       "emotion": `${formData.get(`comment-emoji`)}`,
     };

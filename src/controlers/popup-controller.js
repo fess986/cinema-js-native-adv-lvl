@@ -3,6 +3,8 @@ import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 import {CommentComponent} from "../components/popup/comments";
 
+
+
 export class PopupController {
   constructor(film, onDataChange) {
     this._film = film;

@@ -36,6 +36,7 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
     this._flatpickr = null;
 
     this._applyFlatpickr = this._applyFlatpickr.bind(this);
+
   }
 
   getTemplate() {
@@ -59,7 +60,7 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
     });
   }
 
-  setClickHandler(handler) {
+  setStatsClickHandler(handler) {
     this.getElement().querySelector(`#Stats`).addEventListener(`click`, handler);
   }
 
@@ -77,8 +78,6 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
       const active = evt.target.id;
       handler(active);
     });
-
   }
-
 }
 

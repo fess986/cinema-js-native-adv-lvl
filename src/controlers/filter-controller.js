@@ -30,6 +30,13 @@ export class FilterController {
 
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
+    this._filterComponent.setStatsClickHandler(() => {
+      console.log(`mega`);
+    });
+
+    this._filterComponent.setCalendarClickHandler();
+
+
     if (oldComponent) {
       replace(oldComponent, this._filterComponent);
     } else {

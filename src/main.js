@@ -45,7 +45,7 @@ filmsModel.setFilms(films);
 const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
 export const footerContainer = document.querySelector(`.footer`);
-const filterAndStatistics = new FilterAndStatisticsComponent(filtersDataMock());
+// const filterAndStatistics = new FilterAndStatisticsComponent(filtersDataMock());
 
 // рендерим фильтры и статистику
 render(rankUserContainer, new RankUserComponent());
@@ -55,12 +55,8 @@ filterController.render();
 
 // статистика
 const userStats = new UserStatsComponent(); // инициализация компонента
-filterAndStatistics.setClickHandler(() => { // листнер на кнопку статистики
-  remove(filmsBoard);
-  render(mainContainer, userStats);
-});
 
-filterAndStatistics.setCalendarClickHandler(() => {});
+// filterAndStatistics.setCalendarClickHandler(() => {});
 
 // секция "фильмы"
 export const filmsBoard = new FilmsContainerComponent();
