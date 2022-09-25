@@ -1,4 +1,4 @@
-import { SmartComponent } from "../smart-abstract-component";
+import {SmartComponent} from "../smart-abstract-component";
 
 // создаем шаблон для комментов
 const createComment = (comment) => {
@@ -39,7 +39,7 @@ export const createComments = (comments) => {
 };
 
 const createTemplate = (film) => {
-  return   `<section class="film-details__comments-wrap">
+  return `<section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${
   film.comments.length
 }</span></h3>
@@ -89,6 +89,7 @@ export class CommentComponent extends SmartComponent {
     this._comments = film.comments;
     this._film = film;
     this._deleteHandler = null;
+    this._setCommentSendHandler = null;
 
     this._subscribeOnEvents(); // подписываемся на первоначальные события
     this.rerender = this.rerender.bind(this);
@@ -107,15 +108,15 @@ export class CommentComponent extends SmartComponent {
 
   _subscribeOnEvents() {
     this._subscribeOnEmojiEvents();
-    this._setDeleteClickHandler(this._deleteHandler);
+    this.setDeleteClickHandler(this._deleteHandler);
+    this.setCommentSendHandler(this._setCommentSendHandler);
   }
 
   getTemplate() {
     return createTemplate(this._film);
   }
 
-  _setDeleteClickHandler(handler) {
-    console.log(handler)
+  setDeleteClickHandler(handler) {
     const commentsCollection = this.getElement().querySelectorAll(`.film-details__comment-delete`);
     const arrayCommentsCollection = Array.from(commentsCollection);
     arrayCommentsCollection.forEach((element) => {
@@ -124,6 +125,12 @@ export class CommentComponent extends SmartComponent {
 
     // важно сохранять хэндлер, если мы ререндерим компонент внутри другого компонента, иначе он исчезнет!
     this._deleteHandler = handler;
+  }
+
+  setCommentSendHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener('keydown', handler);
+
+    this._setCommentSendHandler = handler;
   }
 
   _subscribeOnEmojiEvents() {
