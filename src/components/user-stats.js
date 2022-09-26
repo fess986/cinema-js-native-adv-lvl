@@ -1,4 +1,4 @@
-import {AbstractComponent} from "./abstract-component";
+import { SmartComponent } from "./smart-abstract-component";
 
 const createUserStats = () => {
   return (
@@ -50,8 +50,7 @@ const createUserStats = () => {
 </section>`);
 };
 
-export class UserStatsComponent extends AbstractComponent {
-
+export class UserStatsComponent extends SmartComponent {
   getTemplate() {
     return createUserStats();
   }

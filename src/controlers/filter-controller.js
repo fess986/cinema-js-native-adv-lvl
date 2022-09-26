@@ -4,10 +4,11 @@ import {render, replace} from "../components/utils/render";
 import {getFilteredFilms} from "../components/utils/filter";
 
 export class FilterController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, changeStatistics) {
     this._filmsModel = filmsModel;
     this._container = container;
     this._filterComponent = null;
+    this._changeStatistics = changeStatistics;
 
     this._activeFilterType = FILM_FILTERS_NAMES.ALL;
 
@@ -31,11 +32,10 @@ export class FilterController {
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     this._filterComponent.setStatsClickHandler(() => {
-      console.log(`mega`);
+      this._changeStatistics(`statistics`);
     });
 
     this._filterComponent.setCalendarClickHandler();
-
 
     if (oldComponent) {
       replace(oldComponent, this._filterComponent);
@@ -45,6 +45,7 @@ export class FilterController {
   }
 
   _onFilterChange(filterType) {
+    this._changeStatistics(`board`);
     this._activeFilterType = filterType;
     this._filmsModel.setFilter(filterType);
   }
