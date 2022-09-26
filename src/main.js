@@ -1,6 +1,5 @@
 import {
   render,
-  remove
 } from './components/utils/render';
 import {
   FilmBoardController
@@ -9,23 +8,14 @@ import {
   RankUserComponent
 } from './components/rank-user';
 import {
-  FilterAndStatisticsComponent
-} from './components/filter-and-statistics';
-import {
   FilmsContainerComponent
 } from './components/films-container';
 import {
   StatisticsComponent
 } from './components/statistics';
 import {
-  filtersDataMock
-} from './mock/filter-and-statistics-mok';
-import {
   generateFilms
 } from './mock/film-articles-mock';
-import {
-  UserStatsComponent
-} from './components/user-stats';
 import {
   FilmsModel
 } from './model/movie';
@@ -56,14 +46,12 @@ const changeVision = (mode) => {
     userStatsController.hide();
     boardController.show();
   }
-
 };
 
 // загружаем контроллеры
 const filterController = new FilterController(mainContainer, filmsModel, changeVision);
 const boardController = new FilmBoardController(filmsBoard.getElement(), filmsModel);
-const userStatsController = new UserStatsController(mainContainer); // инициализация компонента
-
+const userStatsController = new UserStatsController(mainContainer, filmsModel); // инициализация компонента
 
 // рендерим фильтры, доску и статистику
 render(rankUserContainer, new RankUserComponent());

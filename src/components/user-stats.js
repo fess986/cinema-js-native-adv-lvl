@@ -1,58 +1,105 @@
-import { SmartComponent } from "./smart-abstract-component";
+import {SmartComponent} from "./smart-abstract-component";
+import {StatsType} from "../const/const";
 
-const createUserStats = () => {
+const createFilterItemTemplate = (filter, currentFilter) => {
+  const {type, name} = filter;
+
+  const checkedFilter = type === currentFilter
+    ? `checked`
+    : ``;
+
+  return `
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${type}" value="${type}" ${checkedFilter}>
+      <label for="statistic-${type}" class="statistic__filters-label">${name}</label>
+  `;
+};
+
+const createStatisticTemplate = (data, filters) => {
+  const {
+    watchedFilmsCount,
+    userRank,
+    totalDurationHours,
+    totalDurationMinutes,
+    topGenre,
+    currentFilter
+  } = data;
+
+  const filterItemsTemplate = filters
+    .map((filter) => createFilterItemTemplate(filter, currentFilter))
+    .join(``);
+
   return (
     `<section class="statistic">
-  <p class="statistic__rank">
-    Your rank
-    <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">Sci-Fighter</span>
-  </p>
+    <p class="statistic__rank">
+      Your rank
+      <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+      <span class="statistic__rank-label">${userRank}</span>
+    </p>
 
-  <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
-    <p class="statistic__filters-description">Show stats:</p>
+    <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
+      <p class="statistic__filters-description">Show stats:</p>
+      ${filterItemsTemplate}
+    </form>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
-    <label for="statistic-all-time" class="statistic__filters-label">All time</label>
+    <ul class="statistic__text-list">
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">You watched</h4>
+        <p class="statistic__item-text">${watchedFilmsCount}<span class="statistic__item-description">movies</span></p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Total duration</h4>
+        <p class="statistic__item-text">${totalDurationHours} <span class="statistic__item-description">h</span> ${totalDurationMinutes} <span class="statistic__item-description">m</span></p>
+      </li>
+      <li class="statistic__text-item">
+        <h4 class="statistic__item-title">Top genre</h4>
+        <p class="statistic__item-text">${topGenre}</p>
+      </li>
+    </ul>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-    <label for="statistic-today" class="statistic__filters-label">Today</label>
+    <div class="statistic__chart-wrap">
+      <canvas class="statistic__chart" width="1000"></canvas>
+    </div>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-    <label for="statistic-week" class="statistic__filters-label">Week</label>
-
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-    <label for="statistic-month" class="statistic__filters-label">Month</label>
-
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-    <label for="statistic-year" class="statistic__filters-label">Year</label>
-  </form>
-
-  <ul class="statistic__text-list">
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
-    </li>
-  </ul>
-
-  <div class="statistic__chart-wrap">
-    <canvas class="statistic__chart" width="1000"></canvas>
-  </div>
-
-</section>`);
+  </section>`);
 };
 
 export class UserStatsComponent extends SmartComponent {
-  getTemplate() {
-    return createUserStats();
+
+  constructor(data) {
+    super();
+    this._data = data;
+    this._filters = this._getFilters();
+
   }
+
+  getTemplate() {
+    return createStatisticTemplate(this._data, this._filters);
+  }
+
+  _getFilters() {
+    return [
+      {
+        type: StatsType.ALL,
+        name: `All time`
+      },
+      {
+        type: StatsType.TODAY,
+        name: `Today`
+      },
+      {
+        type: StatsType.WEEK,
+        name: `Week`
+      },
+      {
+        type: StatsType.MONTH,
+        name: `Month`
+      },
+      {
+        type: StatsType.YEAR,
+        name: `Year`
+      }
+    ];
+  }
+
 
 }

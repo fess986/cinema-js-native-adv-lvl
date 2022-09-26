@@ -27,3 +27,29 @@ export const FILM_FILTERS_NAMES = {
   HISTORY: `History`,
   FAVORITES: `Favorites`,
 };
+
+export const StatsType = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+
+export const RankScore = {
+  NOVICE: {
+    MIN: 1,
+    MAX: 10
+  },
+  FAN: {
+    MIN: 11,
+    MAX: 20
+  }
+};
+
+export const RankTitle = {
+  NONE: ``,
+  NOVICE: `Novice`,
+  FAN: `Fan`,
+  MOVIE_BUFF: `Movie Buff`
+};
