@@ -1,5 +1,6 @@
+import moment from "moment";
 import {UserStatsComponent} from "../components/user-stats";
-import {render} from "../components/utils/render";
+import {render, replace} from "../components/utils/render";
 import {StatsType} from "../const/const";
 import {getUserRank} from "../components/utils/common";
 
@@ -9,9 +10,9 @@ export class UserStatsController {
 
     this._filmsModel = filmsModel;
     this._container = container;
-    this._statsType = StatsType.ALL;
     this._userStatsComponent = null;
-    this.currentFilter = StatsType.ALL;
+    this._currentFilter = StatsType.YEAR;
+
     this._data = null;
   }
 
@@ -21,28 +22,39 @@ export class UserStatsController {
 
     let filmsWatched = [];
 
+    const currentDate = new Date();
+    const yearAgo = moment().subtract(1, `year`).toDate();
+    const monthAgo = moment().subtract(1, `month`).toDate();
+    const weekAgo = moment().subtract(7, `days`).toDate();
+
     switch (currentFilter) {
       case StatsType.ALL:
         filmsWatched = films
           .filter((film) => film.userDetails.isWatchedActive);
         break;
-
       case StatsType.TODAY:
+        filmsWatched = films
+        .filter((film) => film.userDetails.isWatchedActive && moment(film.userDetails.watchingDate).isSame(currentDate, `day`));
         break;
 
       case StatsType.WEEK:
+        filmsWatched = films
+        .filter((film) => film.userDetails.isWatchedActive && moment(film.userDetails.watchingDate).isBetween(weekAgo, currentDate));
         break;
 
       case StatsType.MONTH:
+        filmsWatched = films
+        .filter((film) => film.userDetails.isWatchedActive && moment(film.userDetails.watchingDate).isBetween(monthAgo, currentDate));
         break;
 
       case StatsType.YEAR:
+        filmsWatched = films
+        .filter((film) => film.userDetails.isWatchedActive && moment(film.userDetails.watchingDate).isBetween(yearAgo, currentDate));
         break;
     }
 
     const watchedFilmsCount = filmsWatched.length;
     const totalDuration = filmsWatched.reduce((count, film) => count + film.runTime, 0);
-
     const totalDurationHours = Math.floor(totalDuration / 60);
     const totalDurationMinutes = totalDuration % 60;
 
@@ -52,9 +64,8 @@ export class UserStatsController {
       return genres;
     }, []);
 
-    let allFilmsGenres = new Map();
-
     // считаем жанры каждого вида
+    let allFilmsGenres = new Map();
     allGenres.forEach((genre) => {
       if (!allFilmsGenres.has(genre)) {
         allFilmsGenres.set(genre, 1);
@@ -64,8 +75,10 @@ export class UserStatsController {
       }
     });
 
+    // сортируем жанры по количеству
     allFilmsGenres = Array.from(allFilmsGenres).sort((a, b) => b[1] - a[1]);
-    const topGenre = allFilmsGenres[0][0]
+
+    const topGenre = allFilmsGenres.length === 0 ? `No Films` : allFilmsGenres[0][0];
 
     return {
       watchedFilmsCount,
@@ -78,9 +91,21 @@ export class UserStatsController {
   }
 
   render() {
-    this._data = this._getDatabyFilter(this._filmsModel.getAllFilms(), this.currentFilter);
+    const oldComponent = this._userStatsComponent;
+
+    this._data = this._getDatabyFilter(this._filmsModel.getAllFilms(), this._currentFilter);
     this._userStatsComponent = new UserStatsComponent(this._data);
-    render(this._container, this._userStatsComponent);
+
+    this._userStatsComponent.setFilterItemsChangeHandler((value) => {
+      this._currentFilter = value;
+      this.render();
+    });
+
+    if (oldComponent) {
+      replace(oldComponent, this._userStatsComponent);
+    } else {
+      render(this._container, this._userStatsComponent);
+    }
   }
 
   show() {

@@ -68,8 +68,9 @@ export class UserStatsComponent extends SmartComponent {
   constructor(data) {
     super();
     this._data = data;
+    this._handler = null;
     this._filters = this._getFilters();
-
+    this._filter = null;
   }
 
   getTemplate() {
@@ -100,6 +101,15 @@ export class UserStatsComponent extends SmartComponent {
       }
     ];
   }
+  setFilterItemsChangeHandler(handler) {
+    this._handler = handler;
 
+    this.getElement()
+      .querySelector(`.statistic__filters`)
+      .addEventListener(`change`, (evt) => {
+        this._filter = evt.target.value;
+        handler(this._filter);
+      });
+  }
 
 }
