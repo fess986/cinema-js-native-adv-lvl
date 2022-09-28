@@ -1,6 +1,19 @@
-import {FILM_ARTICLES} from "../const/const";
 import {FILM_COMMENTS} from "../const/const";
 import moment from "moment";
+
+export const FILM_ARTICLES = {
+  title: [`one`, `two`, `three`, `four`, `five`, `six`],
+  img: [`made-for-each-other.png`, `popeye-meets-sinbad.png`, `sagebrush-trail.jpg`, `santa-claus-conquers-the-martians.jpg`, `the-dance-of-life.jpg`, `the-great-flamarion.jpg`, `the-man-with-the-golden-arm.jpg`],
+  description: `Lorem ipsum dolor sit amet,  consectetur adipiscing elit. Cras aliquet  varius magna, non porta ligula feugiat
+  eget. Fusce tristique felis at fermentum  pharetra. Aliquam id orci ut lectus varius  viverra. Nullam nunc ex, convallis sed
+  finibus eget, sollicitudin eget ante.  Phasellus eros mauris, condimentum sed
+  nibh vitae, sodales efficitur ipsum. Sed  blandit, eros vel aliquam faucibus, purus  ex euismod diam, eu luctus nunc ante ut  dui. Sed sed nisi sed augue convallis  suscipit in sed felis. Aliquam erat  volutpat. Nunc fermentum tortor ac porta  dapibus. In rutrum ac purus sit amet tempus.`,
+  genre: [`comedy`, `fighting`, `horror`, `drama`, `musical`],
+  writers: [`Din Kuntz`, `Pehov`, `Joe Abercrombi`, `Patrik Ruffus`, `Erixon`],
+  actors: [`Lui De Fines`, `Charli Chaplin`, `Janifer Aniston`, `Big Ban`],
+  country: [`Russia`, `USA`, `India`],
+
+};
 
 const generateTitle = () => {
   return FILM_ARTICLES.title[Math.floor(Math.random() * FILM_ARTICLES.title.length)];
