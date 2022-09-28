@@ -9,6 +9,7 @@ import {FilmController} from "./film-controller";
 import {TopFilmsComponent} from "../components/top-rated-films-container";
 import {MostCommendedFilmsComponent} from "../components/most-commended-films";
 import {NoFilms} from "../components/no-films";
+import { UserStatsController } from "./statistics-controller";
 // import {Loading} from "../components/loading";  // пока будет заккоменчена
 
 const ADD_FILMS = 5;
@@ -22,6 +23,7 @@ export class FilmBoardController {
     this._films = null;
     this._sortType = `default`;
     this._filmsModel = filmsModel;
+    this._boardMode = `films`;  // или statistics  - определяет режим показа доски
 
     this._articleFilmsContainer = this._container.querySelector(`.films-list__container`);
 
@@ -29,6 +31,8 @@ export class FilmBoardController {
     this._sortingComponent = new SortingComponent(sortDataMock);
     this._topFilmsComponent = new TopFilmsComponent();
     this._mostCommendedComponent = new MostCommendedFilmsComponent();
+
+    this._userStatsController = null;
 
     this._filmController = null; // хранилище для фильмконтроллеров
     this._newFilmsControllers = [];
@@ -41,7 +45,6 @@ export class FilmBoardController {
     this._onSortChange = this._onSortChange.bind(this);
     this._moreButtonHandler = this._moreButtonHandler.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
-    this._onCommentsChange = this._onCommentsChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
 
@@ -50,21 +53,8 @@ export class FilmBoardController {
 
   }
 
-  _onCommentsChange(newComment, deleteComment) {
-    if (newComment) {
-      console.log(`new comment`);
-    }
-
-    if (deleteComment) {
-      console.log(`delete comment`);
-    }
-  }
-
   _onDataChange(oldData, newData) {
-    // расширяем метод для работы с комментариями. Если отсутствует oldData - то добавляем комментарий, содержащийся в newData
-    // если нет newData, то удаляем комментарий из фильма oldData
-
-    // ищем изменяемый фильм при помощи модели this._filmsModel по id фильма. На выходе функция сигнализирует о том, успешно ли прошла операция
+    // действия при смене данных о фильма. Сначала меняем в базе саму карточку, и если всё прошло удачно, ререндим эту карточку на доске
     const isSucsess = this._filmsModel.updateFilm(oldData.id, newData);
 
     if (isSucsess) {
@@ -84,7 +74,6 @@ export class FilmBoardController {
   }
 
   _onFilterChange() {
-    // вызываем при смене фильтров из нашей модели
     // удаление показываемых фильмов
     this._showedFilmControllers.forEach((controller) => {
       controller.remove();
@@ -175,7 +164,7 @@ export class FilmBoardController {
     this._moreButtonComponent.setClickHandler(this._moreButtonHandler);
   }
 
-  render() {
+  renderBoard() {
     // рендерим сортировку
     render(mainContainer, this._sortingComponent);
     this._films = this._filmsModel.getFilms();
@@ -211,4 +200,16 @@ export class FilmBoardController {
     this._mostCommendedFilmsControllers = this._renderFilms(this._mostCommendedComponent.getFilmsContainer(), this._films, 0, 2, this._onDataChange, this._onViewChange);
 
   }
+
+  show() {
+    this._sortingComponent._element.classList.remove('hidden');
+    filmsBoard._element.classList.remove('hidden');
+  }
+
+  hide() {
+    this._sortingComponent._element.classList.add('hidden');
+    filmsBoard._element.classList.add('hidden');
+  }
 }
+
+

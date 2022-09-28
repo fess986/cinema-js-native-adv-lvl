@@ -1,5 +1,6 @@
 import {FILM_ARTICLES} from "../const/const";
 import {FILM_COMMENTS} from "../const/const";
+import moment from "moment";
 
 const generateTitle = () => {
   return FILM_ARTICLES.title[Math.floor(Math.random() * FILM_ARTICLES.title.length)];
@@ -81,6 +82,11 @@ const generateComments = () => {
   });
 };
 
+const generateUserWathedDate = () => {
+  let daysBefore = Math.floor(Math.random() * 100);
+  return moment().subtract(daysBefore, `days`).toDate();
+};
+
 const filmArticleDataMock = () => {
   return {
     'id': Math.floor(Math.random() * 500),
@@ -103,7 +109,7 @@ const filmArticleDataMock = () => {
       'isWatchListActive': Math.random() > 0.5,
       'isWatchedActive': Math.random() > 0.5,
       'isFavoriteActive': Math.random() > 0.5,
-      'watchingDate': `2019-04-12T16:12:32.554Z`
+      'watchingDate': generateUserWathedDate()
     }
 
   };

@@ -26,6 +26,7 @@ export class SortingComponent extends AbstractComponent {
     this._sortingType = `default`;
     // this._isFirstChange = true;
     // this._initialFilms = [];
+    this.getSortingContainer = this.getSortingContainer.bind(this);
   }
 
   getTemplate() {
@@ -39,6 +40,12 @@ export class SortingComponent extends AbstractComponent {
 
   setClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
+  }
+
+  getSortingContainer() {
+    // this.getElement().querySelector(`.sort`);
+    this
+
   }
 
 }

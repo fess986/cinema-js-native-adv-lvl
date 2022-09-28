@@ -24,6 +24,7 @@
     "node": "10"
   },
   "dependencies": {
+    "chart.js": "^3.9.1",
     "flatpickr": "^4.6.13",
     "he": "^1.2.0",
     "lodash": "^4.17.21",
