@@ -1,5 +1,9 @@
 import {SmartComponent} from "./smart-abstract-component";
 import {StatsType} from "../const/const";
+import {Chart, registerables} from "chart.js";
+
+Chart.register(...registerables); // пишем для регистрации всех вариантов чартов
+Chart.defaults.font.size = 26;
 
 const createFilterItemTemplate = (filter, currentFilter) => {
   const {type, name} = filter;
@@ -68,9 +72,13 @@ export class UserStatsComponent extends SmartComponent {
   constructor(data) {
     super();
     this._data = data;
+    this._canvas = null;
     this._handler = null;
     this._filters = this._getFilters();
     this._filter = null;
+    this._chart = null;
+
+    this._setChart();
   }
 
   getTemplate() {
@@ -101,6 +109,60 @@ export class UserStatsComponent extends SmartComponent {
       }
     ];
   }
+
+  _renderChart(statisticCtx, labels, values) {
+    return new Chart(statisticCtx, {
+      type: `bar`,
+      data: {
+        // label: 'ass',
+        labels: [...labels],
+        datasets: [{
+          label: 'film categories',
+          data: [...values],
+          backgroundColor: `#ffe800`,
+          hoverBackgroundColor: `#ffe800`,
+          anchor: `start`,
+          barThickness: 48,
+          fontSize: '30px'
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        // Elements options apply to all of the options unless overridden in a dataset
+        // In this case, we are setting the border of each horizontal bar to be 2px wide
+        elements: {
+          bar: {
+            borderWidth: 2,
+          }
+        },
+        responsive: true,
+
+      }
+    });
+  }
+
+  _setChart() {
+    if (this._chart !== null) {
+      // уничтожаем предыдущий экземпляр статистики
+      this._chart.destroy();
+      this._chart = null;
+    }
+
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+
+    const {allFilmsGenres} = this._data;
+    const BAR_HEIGHT = 100;
+    statisticCtx.height = BAR_HEIGHT * allFilmsGenres.length;
+    let labels = [];
+    let values = [];
+    allFilmsGenres.forEach((item) => {
+      labels.push(item[0]);
+      values.push(item[1]);
+    });
+
+    this._chart = this._renderChart(statisticCtx, labels, values);
+  }
+
   setFilterItemsChangeHandler(handler) {
     this._handler = handler;
 
@@ -109,7 +171,7 @@ export class UserStatsComponent extends SmartComponent {
       .addEventListener(`change`, (evt) => {
         this._filter = evt.target.value;
         handler(this._filter);
+        this._setChart();
       });
   }
-
 }

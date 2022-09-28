@@ -84,6 +84,7 @@ export class UserStatsController {
       watchedFilmsCount,
       totalDurationHours,
       totalDurationMinutes,
+      allFilmsGenres,
       userRank,
       topGenre,
       currentFilter,
@@ -103,8 +104,10 @@ export class UserStatsController {
 
     if (oldComponent) {
       replace(oldComponent, this._userStatsComponent);
+      oldComponent._setChart();
     } else {
       render(this._container, this._userStatsComponent);
+      this._userStatsComponent._setChart();
     }
   }
 
