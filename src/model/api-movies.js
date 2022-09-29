@@ -1,35 +1,91 @@
 import moment from "moment";
 
 export class FilmsAPI {
-  constructor(data) {
-    this.id = data.id;
-    this.title = data.film_info.title;
-    this.rating = data.film_info.total_rating;
-    this.year = moment(data.film_info.release.date).format(`YYYY`);
-    this.releaseDate = data.film_info.release.date;
-    this.runTime = data.film_info.runtime;
-    this.genre = data.film_info.genre;
-    this.img = data.film_info.poster;
-    this.description = data.film_info.description;
-    this.comments = data.comments;
-    this.alternativeTitle = data.film_info.alternative_title;
-    this.ageRating = data.film_info.age_rating;
-    this.director = data.film_info.director;
-    this.writers = data.film_info.writers;
-    this.actors = data.film_info.actors;
-    this.country = data.film_info.release.release_country;
-    this.userDetails = {};
-    this.userDetails.isWatchListActive = data.user_details.watchlist;
-    this.userDetails.isWatchedActive = data.user_details.already_watched;
-    this.userDetails.isFavoriteActive = data.user_details.favorite;
-    this.userDetails.watchingDate = moment(data.user_details.watching_date).toDate();
+  constructor() {
+    this.films = [];
   }
 
-  static parseFilm(data) {
-    return new FilmsAPI(data);
+  static transformDataFromServer(data) {
+    const transformedData = Object.assign(
+        {},
+        {
+          id: data.id,
+          title: data.film_info.title,
+          rating: data.film_info.total_rating,
+          year: moment(data.film_info.release.date).format(`YYYY`),
+          releaseDate: data.film_info.release.date,
+          runTime: data.film_info.runtime,
+          genre: data.film_info.genre,
+          img: data.film_info.poster,
+          description: data.film_info.description,
+          comments: data.comments,
+          alternativeTitle: data.film_info.alternative_title,
+          ageRating: data.film_info.age_rating,
+          director: data.film_info.director,
+          writers: data.film_info.writers,
+          actors: data.film_info.actors,
+          country: data.film_info.release.release_country,
+          userDetails: {
+            isWatchListActive: data.user_details.watchlist,
+            isWatchedActive: data.user_details.already_watched,
+            isFavoriteActive: data.user_details.favorite,
+            watchingDate: moment(data.user_details.watching_date).toDate(),
+          },
+        }
+    );
+
+    return transformedData;
   }
 
-  static parseFilms(data) {
-    return data.map(FilmsAPI.parseFilm);
+
+  static transformDataToServer(film) {
+    const transformedData = Object.assign(
+        {},
+        {
+          'id': film.id,
+
+          "film_info": {
+            'id': film.id,
+            'title': film.title,
+            'alternative_title': film.alternativeTitle,
+            'poster': film.img,
+            'director': film.director,
+            'description': film.description,
+            'writers': film.writers,
+            'actors': film.actors,
+            'genre': film.genre,
+
+            'release': {
+              'date': film.releaseDate,
+              'release_country': film.country,
+            },
+
+            'runtime': film.runTime,
+            'total_rating': film.rating,
+            'age_rating': film.ageRating,
+          },
+
+          'user_details': {
+            'watchlist': film.userDetails.isWatchListActive,
+            'already_watched': film.userDetails.isWatchedActive,
+            'favorite': film.userDetails.isFavoriteActive,
+            // 'watching_date': film.userDetails.watchingDate instanceof Date ? film.userDetails.watchingDate.toISOString() : null
+            'watching_date': film.userDetails.watchingDate
+          },
+
+          'comments': film.comments[0] instanceof Object ? film.comments.map((comment) => comment.id) : film.comments,
+        }
+    );
+
+    return transformedData;
+  }
+
+  static transformAllDataFromServer(data) {
+    return data.map(FilmsAPI.transformDataFromServer);
+  }
+
+  static transformAllDataToServer(data) {
+    return data.map(FilmsAPI.transformDataToServer);
   }
 }
+

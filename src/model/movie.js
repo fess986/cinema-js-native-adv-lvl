@@ -13,14 +13,6 @@ export class FilmsModel {
     this._filterChangeHandlers = []; // хендлеры для смены фильтров
   }
 
-  getComments(film) {
-    console.log(film.comments);
-  }
-
-  removeComment() {
-    console.log(`removing comment`);
-  }
-
   setFilter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers); // вызываем ререндеринг карточек фильмов.

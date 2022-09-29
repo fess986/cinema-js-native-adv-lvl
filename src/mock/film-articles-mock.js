@@ -1,5 +1,11 @@
-import {FILM_COMMENTS} from "../const/const";
 import moment from "moment";
+
+export const FILM_COMMENTS = {
+  arthor: [`Max`, `Illia`, `John Snow`, `Lady Gaga`, `Brad Pitt`, `Ass Hole`],
+  comment: [`good Film!`, `Amazing Film!`, `Not good film`, `Boooooooriiiing!!!`, `it's terrible! I have pised my shorts!`, `It's very funny!`, `its very dramatic!`],
+  emotion: [`smile`, `sleeping`, `puke`, `angry`],
+  date: `2019-05-11T16:12:32.554Z`,
+};
 
 export const FILM_ARTICLES = {
   title: [`one`, `two`, `three`, `four`, `five`, `six`],

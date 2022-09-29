@@ -1,10 +1,3 @@
-export const FILM_COMMENTS = {
-  arthor: [`Max`, `Illia`, `John Snow`, `Lady Gaga`, `Brad Pitt`, `Ass Hole`],
-  comment: [`good Film!`, `Amazing Film!`, `Not good film`, `Boooooooriiiing!!!`, `it's terrible! I have pised my shorts!`, `It's very funny!`, `its very dramatic!`],
-  emotion: [`smile`, `sleeping`, `puke`, `angry`],
-  date: `2019-05-11T16:12:32.554Z`,
-};
-
 export const MONTH = [`January`, `February`, `Marth`, `April`, `May`, `June`, `July`, `August`, `September`, `November`, `December`];
 
 export const FILM_FILTERS_NAMES = {
@@ -40,7 +33,9 @@ export const RankTitle = {
   MOVIE_BUFF: `Movie Buff`
 };
 
-export const AUTHORIZATION = `its my Basic token 5bewZsMc2zbdX`;
+// export const AUTHORIZATION = `its my Basic token 5bewZsMc2zbdX`;
+export const AUTHORIZATION = `Basic 5bewZsMc2zbdX`;
+
 export const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
 export const TOTAL_FILMS = 20;
