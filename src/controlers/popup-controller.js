@@ -3,11 +3,10 @@ import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 import {CommentComponent} from "../components/popup/comments";
 
-
-
 export class PopupController {
-  constructor(film, onDataChange) {
+  constructor(film, onDataChange, api) {
     this._film = film;
+    this._api = api;
     this._commentComponent = null;
     this._popupComponent = null;
     this.unRenderPopup = this.unRenderPopup.bind(this);
@@ -31,6 +30,7 @@ export class PopupController {
   }
 
   render() {
+
     this._popupComponent = new PopupComponent(this._film);
     this._commentComponent = new CommentComponent(this._film);
 
@@ -71,7 +71,6 @@ export class PopupController {
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);
-      // this._popupComponent.rerender();
     });
 
     this._commentComponent.setDeleteClickHandler((evt) => {
@@ -79,6 +78,8 @@ export class PopupController {
 
       const newFilm = this._film;
       newFilm.comments = newFilm.comments.filter((item) => item.id != evt.target.dataset.commentid);
+
+      this._api.deleteComment(evt.target.dataset.commentid);
 
       this._onDataChange(this._film, newFilm);
 

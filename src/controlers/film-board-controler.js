@@ -9,7 +9,8 @@ import {FilmController} from "./film-controller";
 import {TopFilmsComponent} from "../components/top-rated-films-container";
 import {MostCommendedFilmsComponent} from "../components/most-commended-films";
 import {NoFilms} from "../components/no-films";
-import { UserStatsController } from "./statistics-controller";
+
+
 // import {Loading} from "../components/loading";  // пока будет заккоменчена
 
 const ADD_FILMS = 5;
@@ -18,12 +19,14 @@ let prevFilms = SHOWN_FILMS;
 
 export class FilmBoardController {
 
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, api) {
     this._container = container;
+    this._filmsModel = filmsModel;
+    this._api = api;
+
     this._films = null;
     this._sortType = `default`;
-    this._filmsModel = filmsModel;
-    this._boardMode = `films`;  // или statistics  - определяет режим показа доски
+    this._boardMode = `films`; // или statistics  - определяет режим показа доски
 
     this._articleFilmsContainer = this._container.querySelector(`.films-list__container`);
 
@@ -54,23 +57,35 @@ export class FilmBoardController {
   }
 
   _onDataChange(oldData, newData) {
-    // действия при смене данных о фильма. Сначала меняем в базе саму карточку, и если всё прошло удачно, ререндим эту карточку на доске
-    const isSucsess = this._filmsModel.updateFilm(oldData.id, newData);
+    // сначала при получении данных мы их обновляем на сервере, получаем с него эти же данные в случае успешного обновления и после этого ререндерим карточки в соответствующих категориях
 
-    if (isSucsess) {
+    this._api.updateFilm(oldData.id, newData)
+    .then((newApiData) => {
+
+      // добавляем комменты для фильма
+      this._api.getComments(newApiData.id).then((data) => {
+        newApiData.comments = data;
+      });
+
+      // выполняем логику замены
+      // действия при смене данных о фильма: Сначала меняем в базе саму карточку, и если всё прошло удачно, ререндим эту карточку на доске
+      const isSucsess = this._filmsModel.updateFilm(oldData.id, newApiData);
+
+      if (isSucsess) {
       // перерендим карточку фильма на главной доске
-      this._showedFilmControllers.find((item) => item._film.id === oldData.id).render(newData);
+        this._showedFilmControllers.find((item) => item._film.id === oldData.id).render(newApiData);
 
-      // перерендим топ филмс по необходимости
-      if (this._topFilmsControllers.find((item) => item._film.id === oldData.id)) {
-        this._topFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
-      }
+        // перерендим топ филмс по необходимости
+        if (this._topFilmsControllers.find((item) => item._film.id === oldData.id)) {
+          this._topFilmsControllers.find((item) => item._film.id === oldData.id).render(newApiData);
+        }
 
-      // перерендим топ филмс по необходимости
-      if (this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id)) {
-        this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newData);
+        // перерендим топ филмс по необходимости
+        if (this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id)) {
+          this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newApiData);
+        }
       }
-    }
+    });
   }
 
   _onFilterChange() {
@@ -101,7 +116,7 @@ export class FilmBoardController {
   // рендер фильмов через их контроллеры и сохранение этих контроллеров в массиве
   _renderFilms(container, films, from, to, onDataChange, onViewChange) {
     return films.slice(from, to).map((item) => {
-      this._filmController = new FilmController(container, onDataChange, onViewChange);
+      this._filmController = new FilmController(container, onDataChange, onViewChange, this._api);
       this._filmController.render(item);
       return this._filmController;
     });
@@ -202,13 +217,13 @@ export class FilmBoardController {
   }
 
   show() {
-    this._sortingComponent._element.classList.remove('hidden');
-    filmsBoard._element.classList.remove('hidden');
+    this._sortingComponent._element.classList.remove(`hidden`);
+    filmsBoard._element.classList.remove(`hidden`);
   }
 
   hide() {
-    this._sortingComponent._element.classList.add('hidden');
-    filmsBoard._element.classList.add('hidden');
+    this._sortingComponent._element.classList.add(`hidden`);
+    filmsBoard._element.classList.add(`hidden`);
   }
 }
 

@@ -8,12 +8,13 @@ const object = require(`lodash/fp`);
 
 
 export class FilmController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
     this._filmComponent = null;
     this._popupController = null;
     this._film = null;
     this._films = [];
+    this._api = api;
 
     this._activeFilterType = FILM_FILTERS_NAMES.ALL;
 
@@ -60,7 +61,7 @@ export class FilmController {
     this._filmComponent.setPopupOpenHandler(() => {
       // закрываем все открытые на данный момент попапы
       this._onViewChange();
-      this._popupController = new PopupController(this._film, this._onDataChange);
+      this._popupController = new PopupController(this._film, this._onDataChange, this._api);
       this._popupController.render();
     });
 

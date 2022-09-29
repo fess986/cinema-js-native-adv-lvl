@@ -18,7 +18,7 @@ module.exports = {
     },
     watchFiles: ['src/**/*', 'public/**/*'],
     hot: true,
-    port: 9000,
+    port: 9001,
   },
   module: {
     rules: [
