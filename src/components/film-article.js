@@ -15,6 +15,15 @@ const createFilmArticle = (filmArticle) => {
     runTime,
   } = filmArticle;
 
+  const isComments = (comment) => {
+    if (!comment) {
+      return 0;
+    } else {
+      return comment.length;
+    }
+  };
+
+
   const year = getYear(releaseDate);
   const duration = getDuration(runTime);
 
@@ -35,7 +44,7 @@ const createFilmArticle = (filmArticle) => {
     ? description.slice(1, 139) + `...`
     : description
 }</p>
-        <a class="film-card__comments">${comments.length} comments</a>
+        <a class="film-card__comments">${isComments(comments)} comments</a>
         <form class="film-card__controls">
           <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${
   userDetails.isWatchListActive

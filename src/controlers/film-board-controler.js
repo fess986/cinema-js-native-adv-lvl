@@ -116,7 +116,7 @@ export class FilmBoardController {
   // рендер фильмов через их контроллеры и сохранение этих контроллеров в массиве
   _renderFilms(container, films, from, to, onDataChange, onViewChange) {
     return films.slice(from, to).map((item) => {
-      this._filmController = new FilmController(container, onDataChange, onViewChange);
+      this._filmController = new FilmController(container, onDataChange, onViewChange, this._api);
       this._filmController.render(item);
       return this._filmController;
     });

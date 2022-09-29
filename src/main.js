@@ -9,7 +9,6 @@ import {UserStatsController} from './controlers/statistics-controller';
 import {AUTHORIZATION, END_POINT} from './const/const';
 import {API} from './api/api';
 import {FilmsAPI} from './model/api-movies';
-// import { FilmsAPI2 } from './model/api-movies2';
 
 const api = new API(END_POINT, AUTHORIZATION);
 
@@ -40,6 +39,7 @@ api.getFilms()
   films = films.map((film) => {
     api.getComments(film.id).then((data) => {
       film.comments = data;
+      // console.log(data)
     });
 
     return film;

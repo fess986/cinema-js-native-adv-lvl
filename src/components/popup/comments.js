@@ -29,20 +29,28 @@ const createComment = (comment) => {
 };
 
 export const createComments = (comments) => {
-  console.log(comments);
+
+  if (!comments) {
+    return ``;
+  }
+
   const commentData = comments
     .map((item) => {
       return createComment(item);
     })
     .join(`\n`);
+
   return commentData;
+};
+
+const commentsCount = (film) => {
+  return film.comments ? film.comments.length : `0`;
 };
 
 const createTemplate = (film) => {
   return `<section class="film-details__comments-wrap">
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${
-  film.comments.length
-}</span></h3>
+  commentsCount(film)}</span></h3>
 
           <ul class="film-details__comments-list">
             ${createComments(film.comments)}
@@ -128,7 +136,7 @@ export class CommentComponent extends SmartComponent {
   }
 
   setCommentSendHandler(handler) {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener('keydown', handler);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, handler);
 
     this._setCommentSendHandler = handler;
   }

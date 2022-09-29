@@ -33,7 +33,7 @@ export const RankTitle = {
   MOVIE_BUFF: `Movie Buff`
 };
 
-// export const AUTHORIZATION = `its my Basic token 5bewZsMc2zbdX`;
+// export const AUTHORIZATION = `Basic 5bewZsMc2zbdX`;
 export const AUTHORIZATION = `Basic 5bewZsMc2zbdX`;
 
 export const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;

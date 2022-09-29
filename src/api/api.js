@@ -22,7 +22,6 @@ export class API {
     // метод возвращает промис из феча. При этом делает необходимые начальные обработки
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
     .then(API.checkStatus)
-    .then(API.toJSON);
   }
 
   static checkStatus(response) {
@@ -34,11 +33,20 @@ export class API {
   }
 
   getFilms() {
-    return this._loadData({url: `movies`});
+    return this._loadData({url: `movies`})
+    .then(API.toJSON);
   }
 
   getComments(id) {
-    return this._loadData({url: `comments/${id}`});
+    return this._loadData({url: `comments/${id}`})
+    .then(API.toJSON);
+  }
+
+  deleteComment(id) {
+    return this._loadData({
+      url: `comments/${id}`,
+      method: RequestMethod.DELETE,
+    });
   }
 
   static toJSON(response) {
@@ -46,17 +54,15 @@ export class API {
   }
 
   updateFilm(id, data) {
-    // console.log(FilmsAPI.transformDataToServer(data));
-
     const body = JSON.stringify(FilmsAPI.transformDataToServer(data));
-    // console.log(body)
 
     return this._loadData({url: `movies/${id}`, method: RequestMethod.PUT, body, headers: new Headers({"Content-Type": `application/json`})})
+    .then(API.toJSON)
     .then(FilmsAPI.transformDataFromServer);
   }
 
   sendFilm(id, film) {
-    return this._loadData({url: `movies/${id}`, method: RequestMethod.PUT, body: JSON.stringify(film), headers: new Headers({"Content-Type": `application/json`})});
+    return this._loadData({url: `movies/${id}`, method: RequestMethod.PUT, body: JSON.stringify(film), headers: new Headers({"Content-Type": `application/json`})})
+    .then(API.toJSON);
   }
-
 }

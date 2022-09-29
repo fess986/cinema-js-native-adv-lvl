@@ -39,6 +39,19 @@ export class FilmsAPI {
 
 
   static transformDataToServer(film) {
+
+    const comments = (filmList) => {
+      if (!filmList.comments) {
+        return [];
+      } else {
+        if (filmList.comments[0] instanceof Object) {
+          return filmList.comments.map((comment) => comment.id);
+        } else {
+          return filmList.comments;
+        }
+      }
+    };
+
     const transformedData = Object.assign(
         {},
         {
@@ -69,11 +82,10 @@ export class FilmsAPI {
             'watchlist': film.userDetails.isWatchListActive,
             'already_watched': film.userDetails.isWatchedActive,
             'favorite': film.userDetails.isFavoriteActive,
-            // 'watching_date': film.userDetails.watchingDate instanceof Date ? film.userDetails.watchingDate.toISOString() : null
             'watching_date': film.userDetails.watchingDate
           },
 
-          'comments': film.comments[0] instanceof Object ? film.comments.map((comment) => comment.id) : film.comments,
+          'comments': comments(film),
         }
     );
 
