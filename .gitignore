@@ -5,7 +5,6 @@ Thumbs.db
 # Файлы редактора
 .idea
 *.sublime*
-.vscode
 
 # Вспомогательные файлы
 *.log*
