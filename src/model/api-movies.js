@@ -5,6 +5,19 @@ export class FilmsAPI {
     this.films = [];
   }
 
+  static transformCommentToServer(data) {
+    const transformedData = Object.assign(
+        {},
+        {
+          'emotion': data.emotion,
+          'comment': data.comment,
+          'date': new Date().toISOString(),
+        }
+    );
+
+    return transformedData;
+  }
+
   static transformDataFromServer(data) {
     const transformedData = Object.assign(
         {},
