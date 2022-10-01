@@ -40,7 +40,6 @@ export class PopupController {
     render(mainContainer, this._popupComponent, `afterend`);
 
     render(this._popupComponent.getCommentsContainer(), this._commentComponent, `beforeend`);
-    // this._popupComponent.rerender();
 
     this._popupComponent.setCloseHandler(() => {
       document.body.style.overflowY = `auto`; // возвращаем прокрутку
@@ -93,15 +92,22 @@ export class PopupController {
 
         // добавляем в массив комментариев новый, который мы спарсили из формы
         const newComment = this._popupComponent.getComment();
+
         if (!newComment) {
           return;
         }
-        const newFilm = this._film;
-        newFilm.comments.push(newComment);
 
-        this._onDataChange(this._film, newFilm);
+        this._api.addComment(newComment, this._film.id)
+        .then((data) => {
 
-        this._commentComponent.rerender();
+          let newFilm = this._film;
+          newFilm.comments.push(data.comments.at(-1))
+
+          this._onDataChange(this._film, newFilm);
+
+          this._commentComponent.rerender();
+        });
+
       }
     });
 

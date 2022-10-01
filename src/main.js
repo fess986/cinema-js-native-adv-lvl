@@ -26,8 +26,8 @@ export const filmsBoard = new FilmsContainerComponent();
 // .then(FilmsAPI.transformAllDataFromServer) // преобразуем в  JSON-клиент
 // .then(FilmsAPI.transformAllDataToServer) // превращаем JSON-сервер
 // .then((films) => {
-//   console.log(films[0]); // фильмы в формате JSON - серверного вида
-
+//   console.log(films[0])}); // фильмы в формате JSON - серверного вида
+//   api.getComments(0).then(console.log)
 //   api.sendFilm(8, films[0]) // отправляем по номеру айди = 8
 //   .then(console.log); // возвращается с сервера именно этот фильм в формате JSON
 // });
@@ -39,7 +39,6 @@ api.getFilms()
   films = films.map((film) => {
     api.getComments(film.id).then((data) => {
       film.comments = data;
-      // console.log(data)
     });
 
     return film;

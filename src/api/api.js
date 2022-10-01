@@ -21,7 +21,7 @@ export class API {
 
     // метод возвращает промис из феча. При этом делает необходимые начальные обработки
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-    .then(API.checkStatus)
+    .then(API.checkStatus);
   }
 
   static checkStatus(response) {
@@ -47,6 +47,18 @@ export class API {
       url: `comments/${id}`,
       method: RequestMethod.DELETE,
     });
+  }
+
+  addComment(comment, filmId) {
+    const body = JSON.stringify(FilmsAPI.transformCommentToServer(comment));
+
+    return this._loadData({
+      url: `comments/${filmId}`,
+      method: RequestMethod.POST,
+      body,
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+    .then(API.toJSON);
   }
 
   static toJSON(response) {
