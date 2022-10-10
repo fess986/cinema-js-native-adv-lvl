@@ -70,6 +70,7 @@ export class PopupController {
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);
+
     });
 
     this._commentComponent.setDeleteClickHandler((evt) => {

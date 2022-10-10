@@ -44,6 +44,7 @@ export class FilmController {
 
       // для того чтобы не мутировать изначальное значение делаем глубокий клон при помощи библиотеки Lodash
       const newFilm = object.cloneDeep(this._film);
+
       newFilm.userDetails.isWatchedActive = !newFilm.userDetails.isWatchedActive;
 
       this._onDataChange(this._film, newFilm);
@@ -56,6 +57,7 @@ export class FilmController {
       newFilm.userDetails.isFavoriteActive = !newFilm.userDetails.isFavoriteActive;
 
       this._onDataChange(this._film, newFilm);
+
     });
 
     this._filmComponent.setPopupOpenHandler(() => {
