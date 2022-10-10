@@ -1,4 +1,4 @@
-import {render} from './components/utils/render';
+import {render, remove} from './components/utils/render';
 import {FilmBoardController} from './controlers/film-board-controler';
 import {RankUserComponent} from './components/rank-user';
 import {FilmsContainerComponent} from './components/films-container';
@@ -9,6 +9,7 @@ import {UserStatsController} from './controlers/statistics-controller';
 import {AUTHORIZATION, END_POINT} from './const/const';
 import {API} from './api/api';
 import {FilmsAPI} from './model/api-movies';
+import {Loading} from './components/loading';
 
 const api = new API(END_POINT, AUTHORIZATION);
 
@@ -21,6 +22,10 @@ const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
 export const footerContainer = document.querySelector(`.footer`);
 export const filmsBoard = new FilmsContainerComponent();
+
+// загрузочный экран
+const loading = new Loading();
+render(mainContainer, loading, `afterbegin`);
 
 // api.getFilms() // скачиваем, получаем в формате JSON
 // .then(FilmsAPI.transformAllDataFromServer) // преобразуем в  JSON-клиент
@@ -60,6 +65,9 @@ api.getFilms()
   const filterController = new FilterController(mainContainer, filmsModel, changeVision);
   const boardController = new FilmBoardController(filmsBoard.getElement(), filmsModel, api);
   const userStatsController = new UserStatsController(mainContainer, filmsModel);
+
+  // убираем загрузочный экран после загрузки фильмов
+  remove(loading);
 
   // рендерим фильтры, доску и статистику
   render(rankUserContainer, new RankUserComponent());

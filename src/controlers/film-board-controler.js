@@ -10,8 +10,7 @@ import {TopFilmsComponent} from "../components/top-rated-films-container";
 import {MostCommendedFilmsComponent} from "../components/most-commended-films";
 import {NoFilms} from "../components/no-films";
 import {shake} from "../components/utils/render";
-
-// import {Loading} from "../components/loading";  // пока будет заккоменчена
+// import {Loading} from "../components/loading";
 
 const ADD_FILMS = 5;
 const SHOWN_FILMS = 5;
@@ -206,17 +205,20 @@ export class FilmBoardController {
     render(mainContainer, this._sortingComponent);
     this._films = this._filmsModel.getFilms();
 
+    // загрузочный экран
+    // const loading = new Loading();
+    // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
+
+
     // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
     // this._films = null;  // проверка работоспособности
+
     if (!this._films) {
+      console.log('ahgasdfhsdfhs')
       const noFilms = new NoFilms();
       render(mainContainer, noFilms);
       return;
     }
-
-    // загрузочный экран
-    // const loading = new Loading();
-    // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
 
     // добавляем контейнер непосредственно для карточек фильмов
     render(mainContainer, filmsBoard);
