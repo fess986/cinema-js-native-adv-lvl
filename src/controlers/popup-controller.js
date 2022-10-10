@@ -2,6 +2,7 @@ import {PopupComponent} from "../components/popup/popup";
 import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 import {CommentComponent} from "../components/popup/comments";
+import { shake } from "../components/utils/render";
 
 export class PopupController {
   constructor(film, onDataChange, api) {
@@ -95,6 +96,9 @@ export class PopupController {
         const newComment = this._popupComponent.getComment();
 
         if (!newComment) {
+
+          shake(this._popupComponent._element);
+
           return;
         }
 
