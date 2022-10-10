@@ -9,7 +9,7 @@ import {FilmController} from "./film-controller";
 import {TopFilmsComponent} from "../components/top-rated-films-container";
 import {MostCommendedFilmsComponent} from "../components/most-commended-films";
 import {NoFilms} from "../components/no-films";
-
+import {shake} from "../components/utils/render";
 
 // import {Loading} from "../components/loading";  // пока будет заккоменчена
 
@@ -84,7 +84,29 @@ export class FilmBoardController {
         if (this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id)) {
           this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id).render(newApiData);
         }
+      } else {
+        throw new Error();
       }
+    })
+    .catch(() => {
+
+      // добавляем эффект трясущейся головы, при ошибках, возникающих при изменении пользовательских данных в карточках фильма
+      let errorElement = this._showedFilmControllers.find((item) => item._film.id === oldData.id)._filmComponent._element;
+      if (errorElement) {
+        shake(errorElement);
+      }
+
+      let errorTopFilmsElement = this._topFilmsControllers.find((item) => item._film.id === oldData.id)._filmComponent._element;
+      if (errorTopFilmsElement) {
+        shake(errorTopFilmsElement);
+      }
+
+      let errorMostComendedFilmsElement = this._mostCommendedFilmsControllers.find((item) => item._film.id === oldData.id)._filmComponent._element;
+      if (errorMostComendedFilmsElement) {
+        shake(errorMostComendedFilmsElement);
+      }
+
+
     });
   }
 
