@@ -2,7 +2,7 @@ import {PopupComponent} from "../components/popup/popup";
 import {render, remove} from "../components/utils/render";
 import {mainContainer} from "../main";
 import {CommentComponent} from "../components/popup/comments";
-import { shake } from "../components/utils/render";
+import {shake} from "../components/utils/render";
 
 export class PopupController {
   constructor(film, onDataChange, api) {
@@ -80,11 +80,25 @@ export class PopupController {
       const newFilm = this._film;
       newFilm.comments = newFilm.comments.filter((item) => item.id != evt.target.dataset.commentid);
 
-      this._api.deleteComment(evt.target.dataset.commentid);
+      let delitingElement = evt.target;
+      delitingElement.innerText = `Deliting...`;
+      delitingElement.disabled = `true`;
 
-      this._onDataChange(this._film, newFilm);
+      setTimeout(() => {
+        this._api.deleteComment(evt.target.dataset.commentid)
+        .catch(() => {
+          shake(this._popupComponent._element);
+          delitingElement.innerText = `Delete`;
+          delitingElement.disabled = `false`;
+        }
+        );
 
-      this._commentComponent.rerender();
+        this._onDataChange(this._film, newFilm);
+
+        this._commentComponent.rerender();
+      }, 500);
+
+
     });
 
 
@@ -106,7 +120,7 @@ export class PopupController {
         .then((data) => {
 
           let newFilm = this._film;
-          newFilm.comments.push(data.comments.at(-1))
+          newFilm.comments.push(data.comments.at(-1));
 
           this._onDataChange(this._film, newFilm);
 

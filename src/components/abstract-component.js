@@ -28,5 +28,3 @@ export class AbstractComponent {
   }
 }
 
-// const newElem = new AbstractComponent();  // Ошибка
-// AbstractComponent.prototype.getTemplate(); // Ошибка
