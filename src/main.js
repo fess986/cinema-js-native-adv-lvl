@@ -10,8 +10,20 @@ import {AUTHORIZATION, END_POINT} from './const/const';
 import {API} from './api/api';
 import {FilmsAPI} from './model/api-movies';
 import {Loading} from './components/loading';
+import {Store} from './api/store';
+
+const STORE_FILMS_PREFIX = `kinomaster-localstorage-films`;
+const STORE_FILMS_VERSION = `V1`;
+const STORE_FILMS_NAME = `${STORE_FILMS_PREFIX}-${STORE_FILMS_VERSION}`;
+
+const STORE_COMMENTS_PREFIX = `kinomaster-localstorage-comments`;
+const STORE_COMMENTS_VERSION = `V1`;
+const STORE_COMMENTS_NAME = `${STORE_COMMENTS_PREFIX}-${STORE_COMMENTS_VERSION}`;
 
 const api = new API(END_POINT, AUTHORIZATION);
+const store = new Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
+
+
 
 // api.getFilms().then((films) => console.log(films[0]));
 // api.getFilms().then(FilmsAPI.transformAllDataFromServer).then(console.log);
@@ -37,10 +49,13 @@ render(mainContainer, loading, `afterbegin`);
 //   .then(console.log); // возвращается с сервера именно этот фильм в формате JSON
 // });
 
-api.getFilms()
-.then(FilmsAPI.transformAllDataFromServer)
+console.log(store);
+
+api.getFilms() // получаем список фильмов с сервера
+.then(FilmsAPI.transformAllDataFromServer) // преобразуем их в наш формат
 .then((films) => {
 
+  // добавляем каждому фильму комменты по их айдишникам, чтобы к каждому фильму присваивались его комменты в полном объеме, как реализовано в проекте
   films = films.map((film) => {
     api.getComments(film.id).then((data) => {
       film.comments = data;
