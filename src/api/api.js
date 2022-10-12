@@ -13,6 +13,18 @@ export class API {
     this._authorization = authorization;
   }
 
+  static checkStatus(response) {
+    if (response.status >= 200 && response.status <= 300) {
+      return response;
+    } else {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+  }
+
+  static toJSON(response) {
+    return response.json();
+  }
+
   // сделаем универсальный метод для загрузки из сети.
   _loadData({url, method = RequestMethod.GET, body = null, headers = new Headers()}) {
 
@@ -22,14 +34,6 @@ export class API {
     // метод возвращает промис из феча. При этом делает необходимые начальные обработки
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
     .then(API.checkStatus);
-  }
-
-  static checkStatus(response) {
-    if (response.status >= 200 && response.status <= 300) {
-      return response;
-    } else {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
   }
 
   getFilms() {
@@ -59,10 +63,6 @@ export class API {
       headers: new Headers({"Content-Type": `application/json`})
     })
     .then(API.toJSON);
-  }
-
-  static toJSON(response) {
-    return response.json();
   }
 
   updateFilm(id, data) {

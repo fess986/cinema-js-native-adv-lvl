@@ -11,6 +11,7 @@ import {API} from './api/api';
 import {FilmsAPI} from './model/api-movies';
 import {Loading} from './components/loading';
 import {Store} from './api/store';
+import { Provider } from './api/provider';
 
 const STORE_FILMS_PREFIX = `kinomaster-localstorage-films`;
 const STORE_FILMS_VERSION = `V1`;
@@ -22,8 +23,7 @@ const STORE_COMMENTS_NAME = `${STORE_COMMENTS_PREFIX}-${STORE_COMMENTS_VERSION}`
 
 const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
-
-
+const provider = new Provider(api, store);
 
 // api.getFilms().then((films) => console.log(films[0]));
 // api.getFilms().then(FilmsAPI.transformAllDataFromServer).then(console.log);
@@ -51,13 +51,13 @@ render(mainContainer, loading, `afterbegin`);
 
 console.log(store);
 
-api.getFilms() // получаем список фильмов с сервера
+provider.getFilms() // получаем список фильмов с сервера
 .then(FilmsAPI.transformAllDataFromServer) // преобразуем их в наш формат
 .then((films) => {
 
   // добавляем каждому фильму комменты по их айдишникам, чтобы к каждому фильму присваивались его комменты в полном объеме, как реализовано в проекте
   films = films.map((film) => {
-    api.getComments(film.id).then((data) => {
+    provider.getComments(film.id).then((data) => {
       film.comments = data;
     });
 
@@ -78,7 +78,7 @@ api.getFilms() // получаем список фильмов с сервера
   };
 
   const filterController = new FilterController(mainContainer, filmsModel, changeVision);
-  const boardController = new FilmBoardController(filmsBoard.getElement(), filmsModel, api);
+  const boardController = new FilmBoardController(filmsBoard.getElement(), filmsModel, provider);
   const userStatsController = new UserStatsController(mainContainer, filmsModel);
 
   // убираем загрузочный экран после загрузки фильмов
