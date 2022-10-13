@@ -47,7 +47,7 @@ export class Store {
   }
 
   // запишем в хранилище один коммент для фильма filmId
-  setComments(filmId, filmComment) {
+  setComment(filmId, filmComment) {
     const store = this.getComments();
     const comments = this.getFilmComments(filmId);
 
@@ -58,9 +58,9 @@ export class Store {
   }
 
   // удалим коммент из хранилища
-  removeComment(filmId, commentId) {
+  removeComment(commentId, filmId) {
     // так как у нас комменты хранятся в объекте с объектами
-    const store = this.getFilmComments(filmId);
+    let store = this.getFilmComments(filmId);
 
     store = store.filter((elem) => elem.id != commentId);
 

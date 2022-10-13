@@ -85,7 +85,7 @@ export class PopupController {
       delitingElement.disabled = `true`;
 
       setTimeout(() => {
-        this._api.deleteComment(evt.target.dataset.commentid)
+        this._api.deleteComment(evt.target.dataset.commentid, this._film.id)
         .catch(() => {
           shake(this._popupComponent._element);
           delitingElement.innerText = `Delete`;
