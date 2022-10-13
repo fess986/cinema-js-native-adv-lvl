@@ -60,12 +60,14 @@ export class Store {
   // удалим коммент из хранилища
   removeComment(commentId, filmId) {
     // так как у нас комменты хранятся в объекте с объектами
-    let store = this.getFilmComments(filmId);
+    const store = this.getComments();
+    let comments = this.getFilmComments(filmId);
 
-    store = store.filter((elem) => elem.id != commentId);
+    comments = comments.filter((elem) => elem.id != commentId);
 
     this._store.setItem(this._storeCommentsKey,
-        JSON.stringify(store));
+        JSON.stringify(Object.assign({}, store, {[filmId]: comments})));
+
   }
 
 
