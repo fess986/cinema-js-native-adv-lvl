@@ -64,6 +64,8 @@ provider.getFilms() // получаем список фильмов с серв�
     return film;
   });
 
+  console.log(films)
+
   const filmsModel = new FilmsModel();
   filmsModel.setFilms(films);
 
