@@ -1,4 +1,4 @@
-import { FilmsAPI } from "../model/api-movies";
+import {FilmsAPI} from "../model/api-movies";
 
 const isOnline = () => {
   return window.navigator.onLine;
@@ -22,23 +22,26 @@ export class Provider {
       });
     }
 
-    // тут реализуем логику getFilms() в оффлайн режиме
-    return Promise.reject(`getFilms offline logic`);
+    // тут реализуем логику getFilms() в оффлайн режиме. Так как мы записывали в хранилище объект с фильмами, а изначально  должны получить массив фильмов - обращаемся в значениям этих фильмов
+    const filmsArray = Object.values(this._store.getFilms());
+    return Promise.resolve(filmsArray);
   }
 
-  getComments(id) {
+  getComments(filmId) {
     if (isOnline()) {
-      return this._api.getComments(id)
+      return this._api.getComments(filmId)
       .then((comments) => {
-        this._store.setComments(id, comments);
+        this._store.setComments(filmId, comments);
 
         return comments;
       });
-
     }
 
-    // тут реализуем логику getFilms() в оффлайн режиме
-    return Promise.reject(`getFilms offline logic`);
+    let comments = this._store.getFilmComments(filmId);
+    this._store.setComments(filmId, comments);
+
+    // тут реализуем логику getComments() в оффлайн режиме
+    return Promise.resolve(comments);
   }
 
   deleteComment(id, filmid) {
@@ -57,16 +60,24 @@ export class Provider {
       return this._api.addComment(comment, filmId);
     }
 
-    // тут реализуем логику getFilms() в оффлайн режиме
+    // тут реализуем логику addComment() в оффлайн режиме
     return Promise.reject(`getFilms offline logic`);
   }
 
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     if (isOnline()) {
-      return this._api.updateFilm(id, data);
+      return this._api.updateFilm(id, film)
+      .then((newFilm) => {
+        this._store.setFilm(newFilm.id, FilmsAPI.transformDataToServer(newFilm));
+
+        return newFilm;
+      });
+
     }
 
-    // тут реализуем логику getFilms() в оффлайн режиме
-    return Promise.reject(`getFilms offline logic`);
+    this._store.setFilm(id, FilmsAPI.transformDataToServer(film));
+
+    // тут реализуем логику updateFilm() в оффлайн режиме
+    return Promise.resolve(film);
   }
 }
