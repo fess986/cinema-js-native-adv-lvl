@@ -49,8 +49,6 @@ render(mainContainer, loading, `afterbegin`);
 //   .then(console.log); // возвращается с сервера именно этот фильм в формате JSON
 // });
 
-console.log(store);
-
 provider.getFilms() // получаем список фильмов с сервера
 .then(FilmsAPI.transformAllDataFromServer) // преобразуем их в наш формат
 .then((films) => {
@@ -63,8 +61,6 @@ provider.getFilms() // получаем список фильмов с серв�
 
     return film;
   });
-
-  console.log(films)
 
   const filmsModel = new FilmsModel();
   filmsModel.setFilms(films);
