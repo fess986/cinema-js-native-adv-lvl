@@ -41,4 +41,22 @@ const installHandler = (evt) => {
   );
 };
 
+// активируем сервис воркер
+const handleActivate = (evt) => {
+  evt.waitUntil(
+      caches.keys() // получаем ключи
+        .then((keys) => Promise.all(
+            keys.map((key) => {
+              if (key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) {
+                return caches.delete(key); // чистим кэш от наших старых данных
+              }
+
+              return null;
+            })
+            .filter((key) => key !== null)
+        ))
+  );
+};
+
 self.addEventListener(`install`, installHandler);
+self.addEventListener(`activate`, handleActivate);
