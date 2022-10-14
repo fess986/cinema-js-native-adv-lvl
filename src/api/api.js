@@ -46,7 +46,7 @@ export class API {
     .then(API.toJSON);
   }
 
-  deleteComment(id, filmid) {
+  deleteComment(id) {
     return this._loadData({
       url: `comments/${id}`,
       method: RequestMethod.DELETE,

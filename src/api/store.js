@@ -63,7 +63,7 @@ export class Store {
     const store = this.getComments();
     let comments = this.getFilmComments(filmId);
 
-    comments = comments.filter((elem) => elem.id != commentId);
+    comments = comments.filter((elem) => elem.id !== commentId);
 
     this._store.setItem(this._storeCommentsKey,
         JSON.stringify(Object.assign({}, store, {[filmId]: comments})));

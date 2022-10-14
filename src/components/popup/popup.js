@@ -165,7 +165,7 @@ export class PopupComponent extends SmartComponent {
     const comment = encode(formData.get(`comment`));
 
     return {
-      'id': Math.floor(Math.random() * 500),
+      'id': Math.floor(Math.random() * 1000),
       'author': `Its ME!!`,
       "comment": `${comment}`,
       'date': `2019-05-11T16:12:32.554Z`,

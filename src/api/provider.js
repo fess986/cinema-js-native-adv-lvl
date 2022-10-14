@@ -57,11 +57,22 @@ export class Provider {
 
   addComment(comment, filmId) {
     if (isOnline()) {
-      return this._api.addComment(comment, filmId);
+      return this._api.addComment(comment, filmId)
+      .then((data) => {
+        this._store.setComment(filmId, data.comments.at(-1));
+
+        return data;
+      });
     }
 
-    // тут реализуем логику addComment() в оффлайн режиме
-    return Promise.reject(`getFilms offline logic`);
+    // тут реализуем логику addComment() в оффлайн режиме. Для того чтобы возвращать приложению ожидаемые им данные, нужно поместить новый комментарий сначала в массив, а потом этот массив в объект с полем comments
+    this._store.setComment(filmId, comment);
+
+    const commentsArray = new Array(comment);
+    const newObj = {};
+    newObj.comments = commentsArray;
+
+    return Promise.resolve(newObj);
   }
 
   updateFilm(id, film) {

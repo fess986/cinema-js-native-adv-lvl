@@ -60,7 +60,6 @@ export class FilmBoardController {
 
     this._api.updateFilm(oldData.id, newData)
     .then((newApiData) => {
-      console.log(newApiData)
 
       // добавляем комменты для фильма
       this._api.getComments(newApiData.id).then((data) => {
