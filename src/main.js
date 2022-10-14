@@ -25,15 +25,18 @@ const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
 const provider = new Provider(api, store);
 
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  provider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
+
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`./sw.js`)
-  .then((reg) => {
-    // код успешной регистрации
-    console.log(reg);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+  navigator.serviceWorker.register(`./sw.js`);
 });
 
 // основные элементы для вставки контента
@@ -89,14 +92,6 @@ provider.getFilms() // получаем список фильмов с серв�
   // добавление статистики
   render(footerContainer, new StatisticsComponent(filmsModel.getAllFilms()));
 
-  window.addEventListener(`online`, () => {
-    document.title = document.title.replace(` [offline]`, ``);
 
-    provider.sync();
-  });
-
-  window.addEventListener(`offline`, () => {
-    document.title += ` [offline]`;
-  });
 });
 
