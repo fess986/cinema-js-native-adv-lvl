@@ -8,7 +8,7 @@ Thumbs.db
 
 # Вспомогательные файлы
 *.log*
-public/
+
 node_modules/
 
 # Собранные файлы
