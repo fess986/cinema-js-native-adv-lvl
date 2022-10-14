@@ -25,6 +25,17 @@ const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
 const provider = new Provider(api, store);
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`)
+  .then((reg) => {
+    // код успешной регистрации
+    console.log(reg);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+});
+
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
