@@ -34,9 +34,9 @@ const cacheList = [
 
 const installHandler = (evt) => {
   evt.waitUntil(
-      caches.open(CACHE_NAME)  // открываем кэш
+      caches.open(CACHE_NAME) // открываем кэш
         .then((cache) => {
-          return cache.addAll(cacheList);  // добавляем в него статические данные
+          return cache.addAll(cacheList); // добавляем в него статические данные
         })
   );
 };
@@ -58,5 +58,41 @@ const handleActivate = (evt) => {
   );
 };
 
+const handleFetch = (evt) => {
+  const {request} = evt;
+
+  evt.respondWith(
+      caches.match(request) // проверяем, был ли уже такой запрос
+        .then((cacheResponse) => {
+          if (cacheResponse) { // если ответ такой уже был в кэше, мы его возвращаем его вместо ответа серверу
+            return cacheResponse;
+          }
+
+          // Если в кэше не нашёлся ответ, повторно вызываем fetch
+          // с тем же запросом (request), и возвращаем его
+          return fetch(request)
+            .then((response) => {
+              // Если ответа нет, или ответ со статусом отличным от 200 OK,
+              // или ответ небезопасного типа (не basic), тогда просто передаём
+              // ответ дальше, никак не обрабатываем
+              if (!response || response.status !== 200 || response.type !== `basic`) {
+                return response;
+              }
+
+              // А если ответ удовлетворяет всем условиям, клонируем его
+              const clonedResponse = response.clone();
+
+              // Копию кладём в кэш
+              caches.open(CACHE_NAME)
+                .then((cache) => cache.put(request, clonedResponse));
+
+              // Оригинал передаём дальше
+              return response;
+            });
+        })
+  );
+};
+
 self.addEventListener(`install`, installHandler);
 self.addEventListener(`activate`, handleActivate);
+self.addEventListener(`fetch`, handleFetch);
