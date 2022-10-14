@@ -36,6 +36,16 @@ export class API {
     .then(API.checkStatus);
   }
 
+  sync(data) {
+    return this._loadData({
+      url: `movies/sync`,
+      method: RequestMethod.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(API.toJSON);
+  }
+
   getFilms() {
     return this._loadData({url: `movies`})
     .then(API.toJSON);

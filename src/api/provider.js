@@ -83,12 +83,25 @@ export class Provider {
 
         return newFilm;
       });
-
     }
 
     this._store.setFilm(id, FilmsAPI.transformDataToServer(film));
 
     // тут реализуем логику updateFilm() в оффлайн режиме
     return Promise.resolve(film);
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storeFilms = Object.values(this._store.getFilms());
+
+      return this._api.sync(storeFilms)
+      .then((response) => {
+        this._store.setFilms(response.updated);
+
+      });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }
