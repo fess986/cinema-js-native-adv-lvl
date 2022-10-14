@@ -11,7 +11,7 @@ import {API} from './api/api';
 import {FilmsAPI} from './model/api-movies';
 import {Loading} from './components/loading';
 import {Store} from './api/store';
-import { Provider } from './api/provider';
+import {Provider} from './api/provider';
 
 const STORE_FILMS_PREFIX = `kinomaster-localstorage-films`;
 const STORE_FILMS_VERSION = `V1`;
@@ -25,10 +25,6 @@ const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
 const provider = new Provider(api, store);
 
-// api.getFilms().then((films) => console.log(films[0]));
-// api.getFilms().then(FilmsAPI.transformAllDataFromServer).then(console.log);
-// api.getFilms().then(FilmsAPI.transformAllDataFromServer).then((films) => FilmsAPI.transformAllDataToServer(films)).then(console.log)
-
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
 export const mainContainer = document.querySelector(`.main`);
@@ -38,16 +34,6 @@ export const filmsBoard = new FilmsContainerComponent();
 // загрузочный экран
 const loading = new Loading();
 render(mainContainer, loading, `afterbegin`);
-
-// api.getFilms() // скачиваем, получаем в формате JSON
-// .then(FilmsAPI.transformAllDataFromServer) // преобразуем в  JSON-клиент
-// .then(FilmsAPI.transformAllDataToServer) // превращаем JSON-сервер
-// .then((films) => {
-//   console.log(films[0])}); // фильмы в формате JSON - серверного вида
-//   api.getComments(0).then(console.log)
-//   api.sendFilm(8, films[0]) // отправляем по номеру айди = 8
-//   .then(console.log); // возвращается с сервера именно этот фильм в формате JSON
-// });
 
 provider.getFilms() // получаем список фильмов с сервера
 .then(FilmsAPI.transformAllDataFromServer) // преобразуем их в наш формат
@@ -91,5 +77,15 @@ provider.getFilms() // получаем список фильмов с серв�
 
   // добавление статистики
   render(footerContainer, new StatisticsComponent(filmsModel.getAllFilms()));
+
+  window.addEventListener(`online`, () => {
+    document.title = document.title.replace(` [offline]`, ``);
+
+    provider.sync();
+  });
+
+  window.addEventListener(`offline`, () => {
+    document.title += ` [offline]`;
+  });
 });
 

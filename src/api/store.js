@@ -38,6 +38,18 @@ export class Store {
         JSON.stringify(Object.assign({}, store, {[id]: film})));
   }
 
+  setFilms(films) {
+    const filmsStructure = films.reduce((acc, current) => {
+      return Object.assign({}, acc, {
+        [current.id]: current,
+      });
+    }, {});
+
+    this._store.setItem(this._storeFilmsKey,
+        JSON.stringify(Object.assign({}, filmsStructure)));
+
+  }
+
   // запишем в хранилище все комменты для фильма filmId
   setComments(filmId, filmComments) {
     const store = this.getComments();
