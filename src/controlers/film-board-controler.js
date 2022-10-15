@@ -145,6 +145,9 @@ export class FilmBoardController {
 
   // действия при смене сортировки
   _onSortChange(evt) {
+
+    evt.preventDefault();
+
     if (evt.target.tagName !== `A`) {
       return;
     }
