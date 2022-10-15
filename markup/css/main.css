@@ -355,7 +355,8 @@ button {
 .film-card__poster {
   border: dotted 1px rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  bottom: calc(100% - 340px - 50px);
+  /* bottom: calc(100% - 340px - 50px); */
+  bottom: calc(100% - 340px);
   height: 340px;
   overflow: hidden;
   position: absolute;
@@ -365,7 +366,7 @@ button {
 }
 
 .film-card--no-controls .film-card__poster {
-  bottom: calc(100% - 340px);
+  /* bottom: calc(100% - 340px); */
   transition: none;
 }
 
@@ -398,7 +399,7 @@ button {
   height: 0;
   justify-content: space-between;
   line-height: 50px;
-  overflow: hidden;
+  /* overflow: hidden; */
   padding: 10px 0;
   position: absolute;
   transition: height 0.1s ease-in;
@@ -455,9 +456,9 @@ button {
 }
 
 
-.film-card:hover .film-card__poster {
+/* .film-card:hover .film-card__poster {
   bottom: calc(100% - 340px);
-}
+} */
 
 .film-card:hover .film-card__controls {
   height: 50px;
