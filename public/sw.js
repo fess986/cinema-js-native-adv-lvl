@@ -1,5 +1,5 @@
 const CACHE_PREFIX = `cinemaddict-cache`;
-const CACHE_VER = `v1`;
+const CACHE_VER = `v2`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
 
@@ -75,16 +75,16 @@ const handleFetch = (evt) => {
               // Если ответа нет, или ответ со статусом отличным от 200 OK,
               // или ответ небезопасного типа (не basic), тогда просто передаём
               // ответ дальше, никак не обрабатываем
-              if (!response || response.status !== 200 || response.type !== `basic`) {
-                return response;
-              }
+              // if (!response || response.status !== 200 || response.type !== `basic`) {
+              //   return response;
+              // }
 
-              // А если ответ удовлетворяет всем условиям, клонируем его
-              const clonedResponse = response.clone();
+              // // А если ответ удовлетворяет всем условиям, клонируем его
+              // const clonedResponse = response.clone();
 
-              // Копию кладём в кэш
-              caches.open(CACHE_NAME)
-                .then((cache) => cache.put(request, clonedResponse));
+              // // Копию кладём в кэш
+              // caches.open(CACHE_NAME)
+              //   .then((cache) => cache.put(request, clonedResponse));
 
               // Оригинал передаём дальше
               return response;
