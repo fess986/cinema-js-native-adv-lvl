@@ -72,10 +72,11 @@ export class FilterAndStatisticsComponent extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
-      if (event.target.tagName !== `A`) {
+      if ((event.target.tagName !== `A`) && (event.target.tagName !== `SPAN`)) {
         return;
       }
-      const active = evt.target.id;
+      const active = event.target.tagName === `A` ? evt.target.id : event.target.parentElement.id;
+
       handler(active);
     });
   }
