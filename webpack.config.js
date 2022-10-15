@@ -1,8 +1,5 @@
 const path = require('path');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-// const {
-//   CleanWebpackPlugin
-// } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: 'development',
@@ -18,7 +15,7 @@ module.exports = {
     },
     watchFiles: ['src/**/*', 'public/**/*'],
     hot: true,
-    port: 9003,
+    port: 9005,
   },
   module: {
     rules: [
