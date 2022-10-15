@@ -1,5 +1,5 @@
 const CACHE_PREFIX = `cinemaddict-cache`;
-const CACHE_VER = `v2`;
+const CACHE_VER = `v4`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
 

@@ -35,9 +35,9 @@ window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
 });
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`./sw.js`);
-});
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`./sw.js`);
+// });
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);

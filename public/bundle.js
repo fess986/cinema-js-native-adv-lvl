@@ -10493,6 +10493,16 @@ class API {
     .then(API.checkStatus);
   }
 
+  sync(data) {
+    return this._loadData({
+      url: `movies/sync`,
+      method: RequestMethod.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(API.toJSON);
+  }
+
   getFilms() {
     return this._loadData({url: `movies`})
     .then(API.toJSON);
@@ -10503,7 +10513,7 @@ class API {
     .then(API.toJSON);
   }
 
-  deleteComment(id, filmid) {
+  deleteComment(id) {
     return this._loadData({
       url: `comments/${id}`,
       method: RequestMethod.DELETE,
@@ -10610,11 +10620,22 @@ class Provider {
 
   addComment(comment, filmId) {
     if (isOnline()) {
-      return this._api.addComment(comment, filmId);
+      return this._api.addComment(comment, filmId)
+      .then((data) => {
+        this._store.setComment(filmId, data.comments.at(-1));
+
+        return data;
+      });
     }
 
-    // тут реализуем логику addComment() в оффлайн режиме
-    return Promise.reject(`getFilms offline logic`);
+    // тут реализуем логику addComment() в оффлайн режиме. Для того чтобы возвращать приложению ожидаемые им данные, нужно поместить новый комментарий сначала в массив, а потом этот массив в объект с полем comments
+    this._store.setComment(filmId, comment);
+
+    const commentsArray = new Array(comment);
+    const newObj = {};
+    newObj.comments = commentsArray;
+
+    return Promise.resolve(newObj);
   }
 
   updateFilm(id, film) {
@@ -10625,13 +10646,26 @@ class Provider {
 
         return newFilm;
       });
-
     }
 
     this._store.setFilm(id, _model_api_movies__WEBPACK_IMPORTED_MODULE_0__.FilmsAPI.transformDataToServer(film));
 
     // тут реализуем логику updateFilm() в оффлайн режиме
     return Promise.resolve(film);
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storeFilms = Object.values(this._store.getFilms());
+
+      return this._api.sync(storeFilms)
+      .then((response) => {
+        this._store.setFilms(response.updated);
+
+      });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }
 
@@ -10689,6 +10723,18 @@ class Store {
         JSON.stringify(Object.assign({}, store, {[id]: film})));
   }
 
+  setFilms(films) {
+    const filmsStructure = films.reduce((acc, current) => {
+      return Object.assign({}, acc, {
+        [current.id]: current,
+      });
+    }, {});
+
+    this._store.setItem(this._storeFilmsKey,
+        JSON.stringify(Object.assign({}, filmsStructure)));
+
+  }
+
   // запишем в хранилище все комменты для фильма filmId
   setComments(filmId, filmComments) {
     const store = this.getComments();
@@ -10714,7 +10760,7 @@ class Store {
     const store = this.getComments();
     let comments = this.getFilmComments(filmId);
 
-    comments = comments.filter((elem) => elem.id != commentId);
+    comments = comments.filter((elem) => elem.id !== commentId);
 
     this._store.setItem(this._storeCommentsKey,
         JSON.stringify(Object.assign({}, store, {[filmId]: comments})));
@@ -11040,10 +11086,11 @@ class FilterAndStatisticsComponent extends _abstract_component__WEBPACK_IMPORTED
 
   setFilterChangeHandler(handler) {
     this.getElement().querySelector(`.main-navigation__items`).addEventListener(`click`, (evt) => {
-      if (event.target.tagName !== `A`) {
+      if ((event.target.tagName !== `A`) && (event.target.tagName !== `SPAN`)) {
         return;
       }
-      const active = evt.target.id;
+      const active = event.target.tagName === `A` ? evt.target.id : event.target.parentElement.id;
+
       handler(active);
     });
   }
@@ -11529,7 +11576,7 @@ class PopupComponent extends _smart_abstract_component__WEBPACK_IMPORTED_MODULE_
     const comment = (0,he__WEBPACK_IMPORTED_MODULE_3__.encode)(formData.get(`comment`));
 
     return {
-      'id': Math.floor(Math.random() * 500),
+      'id': Math.floor(Math.random() * 1000),
       'author': `Its ME!!`,
       "comment": `${comment}`,
       'date': `2019-05-11T16:12:32.554Z`,
@@ -12379,7 +12426,6 @@ class FilmBoardController {
 
     this._api.updateFilm(oldData.id, newData)
     .then((newApiData) => {
-      console.log(newApiData)
 
       // добавляем комменты для фильма
       this._api.getComments(newApiData.id).then((data) => {
@@ -13100,9 +13146,19 @@ const api = new _api_api__WEBPACK_IMPORTED_MODULE_9__.API(_const_const__WEBPACK_
 const store = new _api_store__WEBPACK_IMPORTED_MODULE_12__.Store(window.localStorage, STORE_FILMS_NAME, STORE_COMMENTS_NAME);
 const provider = new _api_provider__WEBPACK_IMPORTED_MODULE_13__.Provider(api, store);
 
-// api.getFilms().then((films) => console.log(films[0]));
-// api.getFilms().then(FilmsAPI.transformAllDataFromServer).then(console.log);
-// api.getFilms().then(FilmsAPI.transformAllDataFromServer).then((films) => FilmsAPI.transformAllDataToServer(films)).then(console.log)
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  provider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`);
+});
 
 // основные элементы для вставки контента
 const rankUserContainer = document.querySelector(`.header`);
@@ -13113,16 +13169,6 @@ const filmsBoard = new _components_films_container__WEBPACK_IMPORTED_MODULE_3__.
 // загрузочный экран
 const loading = new _components_loading__WEBPACK_IMPORTED_MODULE_11__.Loading();
 (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_0__.render)(mainContainer, loading, `afterbegin`);
-
-// api.getFilms() // скачиваем, получаем в формате JSON
-// .then(FilmsAPI.transformAllDataFromServer) // преобразуем в  JSON-клиент
-// .then(FilmsAPI.transformAllDataToServer) // превращаем JSON-сервер
-// .then((films) => {
-//   console.log(films[0])}); // фильмы в формате JSON - серверного вида
-//   api.getComments(0).then(console.log)
-//   api.sendFilm(8, films[0]) // отправляем по номеру айди = 8
-//   .then(console.log); // возвращается с сервера именно этот фильм в формате JSON
-// });
 
 provider.getFilms() // получаем список фильмов с сервера
 .then(_model_api_movies__WEBPACK_IMPORTED_MODULE_10__.FilmsAPI.transformAllDataFromServer) // преобразуем их в наш формат
@@ -13166,6 +13212,8 @@ provider.getFilms() // получаем список фильмов с серв�
 
   // добавление статистики
   (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_0__.render)(footerContainer, new _components_statistics__WEBPACK_IMPORTED_MODULE_4__.StatisticsComponent(filmsModel.getAllFilms()));
+
+
 });
 
 
