@@ -12075,7 +12075,7 @@ class UserStatsComponent extends _smart_abstract_component__WEBPACK_IMPORTED_MOD
       .addEventListener(`change`, (evt) => {
         this._filter = evt.target.value;
         handler(this._filter);
-        this._setChart();
+        // this._setChart();
       });
   }
 }
@@ -12222,13 +12222,12 @@ const remove = (component) => {
 
 const replace = (oldComponent, newComponent) => {
   const oldElement = oldComponent.getElement();
-  const parentElement = oldElement.parentElement;
   const newElement = newComponent.getElement();
 
-  const isExist = !!(oldElement && parentElement && newElement);
+  const isExist = !!(oldElement && newElement);
 
-  if (isExist && parentElement.contains(oldElement)) {
-    parentElement.replaceChild(newElement, oldComponent.getElement());
+  if (isExist) {
+    oldElement.replaceWith(newElement);
   }
 };
 
@@ -12511,6 +12510,9 @@ class FilmBoardController {
 
   // действия при смене сортировки
   _onSortChange(evt) {
+
+    evt.preventDefault();
+
     if (evt.target.tagName !== `A`) {
       return;
     }
@@ -12541,16 +12543,27 @@ class FilmBoardController {
   }
 
   _moreButtonHandler() {
-    // пересчитываем количество показываемых фильмов на основании _showedFilmControllers
-    prevFilms = this._showedFilmControllers.length;
-    let currentFilms = prevFilms + ADD_FILMS;
+    this._moreButtonComponent._element.innerText = `Loading more films...`;
+    this._moreButtonComponent._element.style.color = `red`;
+    this._moreButtonComponent._element.style.fontSize = `20px`;
 
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+    setTimeout(() => {
+      // пересчитываем количество показываемых фильмов на основании _showedFilmControllers
+      prevFilms = this._showedFilmControllers.length;
+      let currentFilms = prevFilms + ADD_FILMS;
 
-    if (currentFilms >= this._filmsModel.getFilms().length) {
-      (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.remove)(this._moreButtonComponent);
-    }
+      this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
+      this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+
+      if (currentFilms >= this._filmsModel.getFilms().length) {
+        (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.remove)(this._moreButtonComponent);
+      }
+
+      this._moreButtonComponent._element.innerText = `Show more`;
+      this._moreButtonComponent._element.style.color = `white`;
+      this._moreButtonComponent._element.style.fontSize = `14px`;
+    }, 1500);
+
   }
 
   _renderLoadmoreButton() {
@@ -12571,16 +12584,8 @@ class FilmBoardController {
     (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.render)(_main__WEBPACK_IMPORTED_MODULE_1__.mainContainer, this._sortingComponent);
     this._films = this._filmsModel.getFilms();
 
-    // загрузочный экран
-    // const loading = new Loading();
-    // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
-
-
-    // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
-    // this._films = null;  // проверка работоспособности
-
     if (!this._films) {
-      console.log('ahgasdfhsdfhs')
+      console.log(`ahgasdfhsdfhs`);
       const noFilms = new _components_no_films__WEBPACK_IMPORTED_MODULE_8__.NoFilms();
       (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.render)(_main__WEBPACK_IMPORTED_MODULE_1__.mainContainer, noFilms);
       return;
@@ -13068,14 +13073,17 @@ class UserStatsController {
 
     this._userStatsComponent.setFilterItemsChangeHandler((value) => {
       this._currentFilter = value;
+      this._userStatsComponent._setChart();
       this.render();
     });
 
     if (oldComponent) {
-      (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.replace)(oldComponent, this._userStatsComponent);
+      console.log('replace')
+      ;(0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.replace)(oldComponent, this._userStatsComponent);
       oldComponent._setChart();
     } else {
-      (0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.render)(this._container, this._userStatsComponent);
+      console.log('render')
+      ;(0,_components_utils_render__WEBPACK_IMPORTED_MODULE_2__.render)(this._container, this._userStatsComponent);
       this._userStatsComponent._setChart();
     }
   }
