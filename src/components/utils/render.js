@@ -29,13 +29,12 @@ export const remove = (component) => {
 
 export const replace = (oldComponent, newComponent) => {
   const oldElement = oldComponent.getElement();
-  const parentElement = oldElement.parentElement;
   const newElement = newComponent.getElement();
 
-  const isExist = !!(oldElement && parentElement && newElement);
+  const isExist = !!(oldElement && newElement);
 
-  if (isExist && parentElement.contains(oldElement)) {
-    parentElement.replaceChild(newElement, oldComponent.getElement());
+  if (isExist) {
+    oldElement.replaceWith(newElement);
   }
 };
 

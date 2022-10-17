@@ -491,8 +491,9 @@ button {
   font-size: var(--font-size-smaller);
   height: 60px;
   opacity: 1;
-  transition: opacity 0.1s ease-in;
   width: 100%;
+
+  transition: color 1.5s, opacity 0.1s, font-size 1.5s;
 }
 
 .films-list__show-more:hover {

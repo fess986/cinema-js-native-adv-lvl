@@ -178,16 +178,27 @@ export class FilmBoardController {
   }
 
   _moreButtonHandler() {
-    // пересчитываем количество показываемых фильмов на основании _showedFilmControllers
-    prevFilms = this._showedFilmControllers.length;
-    let currentFilms = prevFilms + ADD_FILMS;
+    this._moreButtonComponent._element.innerText = `Loading more films...`;
+    this._moreButtonComponent._element.style.color = `red`;
+    this._moreButtonComponent._element.style.fontSize = `20px`;
 
-    this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+    setTimeout(() => {
+      // пересчитываем количество показываемых фильмов на основании _showedFilmControllers
+      prevFilms = this._showedFilmControllers.length;
+      let currentFilms = prevFilms + ADD_FILMS;
 
-    if (currentFilms >= this._filmsModel.getFilms().length) {
-      remove(this._moreButtonComponent);
-    }
+      this._newFilmsControllers = this._renderFilms(this._articleFilmsContainer, this._filmsModel.getSortedAndFilteredFilms(), prevFilms, currentFilms, this._onDataChange, this._onViewChange);
+      this._showedFilmControllers = this._showedFilmControllers.concat(this._newFilmsControllers);
+
+      if (currentFilms >= this._filmsModel.getFilms().length) {
+        remove(this._moreButtonComponent);
+      }
+
+      this._moreButtonComponent._element.innerText = `Show more`;
+      this._moreButtonComponent._element.style.color = `white`;
+      this._moreButtonComponent._element.style.fontSize = `14px`;
+    }, 1500);
+
   }
 
   _renderLoadmoreButton() {
@@ -208,16 +219,8 @@ export class FilmBoardController {
     render(mainContainer, this._sortingComponent);
     this._films = this._filmsModel.getFilms();
 
-    // загрузочный экран
-    // const loading = new Loading();
-    // render(mainContainer, loading);  // пока пусть будет заккоментирован, добавим, когда будет реальная загрузка данных
-
-
-    // если фильмы не загружены, ничего не рендерим кроме компонента NoFilms
-    // this._films = null;  // проверка работоспособности
-
     if (!this._films) {
-      console.log('ahgasdfhsdfhs')
+      console.log(`ahgasdfhsdfhs`);
       const noFilms = new NoFilms();
       render(mainContainer, noFilms);
       return;

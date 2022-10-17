@@ -99,13 +99,16 @@ export class UserStatsController {
 
     this._userStatsComponent.setFilterItemsChangeHandler((value) => {
       this._currentFilter = value;
+      this._userStatsComponent._setChart();
       this.render();
     });
 
     if (oldComponent) {
+      console.log('replace')
       replace(oldComponent, this._userStatsComponent);
       oldComponent._setChart();
     } else {
+      console.log('render')
       render(this._container, this._userStatsComponent);
       this._userStatsComponent._setChart();
     }
