@@ -171,7 +171,7 @@ export class UserStatsComponent extends SmartComponent {
       .addEventListener(`change`, (evt) => {
         this._filter = evt.target.value;
         handler(this._filter);
-        this._setChart();
+        // this._setChart();
       });
   }
 }
